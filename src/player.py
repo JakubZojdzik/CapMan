@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
                 self.direction = self.trn
                 self.trn = 0
             if(self.direction == 2 or self.direction == 0):
-                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) < 0 and -(self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= 0 and -(self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
                     self.rect.center = (int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2), self.rect.center[1])
                     self.direction = self.trn
                     self.trn = 0
@@ -49,25 +49,29 @@ class Player(pygame.sprite.Sprite):
                     self.direction = self.trn
                     self.trn = 0
             if(self.direction == 3 or self.direction == 0):
-                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) < 0 and -(self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= 0 and -(self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
                     self.rect.center = (self.rect.center[0], int(self.rect.center[1] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2))
                     self.direction = self.trn
                     self.trn = 0
             
 
         if(self.direction == 1):
-            self.rect.y = self.rect.y - self.step
+            if(self.rect.y - self.step >= 0):
+                self.rect.y -= self.step
             self.image = img_u
 
         if(self.direction == 2):
-            self.rect.x = self.rect.x + self.step
+            if(self.rect.x + self.step + SPRITE_WIDTH <= Win.WIDTH):
+                self.rect.x += self.step
             self.image = img_r
 
         if(self.direction == 3):
-            self.rect.y = self.rect.y + self.step
+            if(self.rect.y + self.step + SPRITE_HEIGHT <= Win.HEIGHT):
+                self.rect.y += self.step
             self.image = img_d
             
         if(self.direction == 4):
-            self.rect.x = self.rect.x - self.step
+            if(self.rect.x - self.step >= 0):
+                self.rect.x -= self.step
             self.image = img_l
         
