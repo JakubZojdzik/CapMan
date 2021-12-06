@@ -1,2 +1,2 @@
 class Ghost:
-  pass
+    pass
