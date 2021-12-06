@@ -24,7 +24,7 @@ HEIGHT = 800
 FPS = 30
 BGCOLOR = CYAN
 
-colors = [RED, GREEN, BLUE]
+colors = [RED, GREEN, BLUE, GRAY, TEAL]
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -38,7 +38,7 @@ while running:
         if event.type == pygame.QUIT:
             pygame.quit()
 
-    screen.fill(colors[int(i / 15) % 3])
+    screen.fill(colors[int(i / 15) % 5])
     i += 1
     pygame.display.flip()
 
