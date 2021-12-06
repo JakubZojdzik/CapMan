@@ -3,7 +3,7 @@ from colors import Colors
 from win import Win
 from player import Player
 
-Win.BGCOLOR = Colors.CYAN
+Win.BGCOLOR = Colors.DARK_GRAY
 
 pygame.init()
 screen = pygame.display.set_mode((Win.WIDTH, Win.HEIGHT))
@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 player = Player()
 player_list = pygame.sprite.Group()
 player_list.add(player)
-steps = 10
+steps = 8
 
 main = True
 while main:

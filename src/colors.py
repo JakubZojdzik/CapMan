@@ -16,3 +16,4 @@ class Colors:
     YELLOW = (255, 255, 0)
     ORANGE = (255, 128, 0)
     CYAN = (0, 255, 255)
+    DARK_GRAY = (12, 12, 13)
