@@ -1,5 +1,4 @@
 import pygame
-from colors import Colors
 from win import Win
 
 SPRITE_WIDTH = 50
@@ -17,13 +16,45 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (Win.WIDTH / 2, Win.HEIGHT / 2)
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
+        self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames
         self.step = 10
     
     def turn(self, dir):
-        self.direction = dir
+        self.trn = dir
 
     def update(self):
+        if(self.trn == 1 or self.trn == 3):
+            if(self.direction == 1 or self.direction == 3):
+                self.direction = self.trn
+                self.trn = 0
+            if(self.direction == 2 or self.direction == 0):
+                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) < 0 and -(self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                    self.rect.center = (int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2), self.rect.center[1])
+                    self.direction = self.trn
+                    self.trn = 0
+            if(self.direction == 4 or self.direction == 0):
+                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                    self.rect.center = (int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2), self.rect.center[1])
+                    self.direction = self.trn
+                    self.trn = 0
+            
+        if(self.trn == 2 or self.trn == 4):
+            if(self.direction == 4 or self.direction == 2):
+                self.direction = self.trn
+                self.trn = 0
+            if(self.direction == 1 or self.direction == 0):
+                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                    self.rect.center = (self.rect.center[0], int(self.rect.center[1] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2))
+                    self.direction = self.trn
+                    self.trn = 0
+            if(self.direction == 3 or self.direction == 0):
+                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) < 0 and -(self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                    self.rect.center = (self.rect.center[0], int(self.rect.center[1] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2))
+                    self.direction = self.trn
+                    self.trn = 0
+            
+
         if(self.direction == 1):
             self.rect.y = self.rect.y - self.step
             self.image = img_u

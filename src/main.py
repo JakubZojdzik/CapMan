@@ -16,11 +16,18 @@ player_list = pygame.sprite.Group()
 player_list.add(player)
 steps = 8
 
+def drawGrid():
+    blockSize = Win.GRID_SIZE #Set the size of the grid block
+    for x in range(0, Win.WIDTH, blockSize):
+        for y in range(0, Win.HEIGHT, blockSize):
+            rect = pygame.Rect(x, y, blockSize, blockSize)
+            pygame.draw.rect(screen, Colors.WHITE, rect, 1)
+
 main = True
 while main:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit(); sys.exit()
+            pygame.quit()
             main = False
 
         if event.type == pygame.KEYDOWN:
@@ -38,6 +45,7 @@ while main:
                 print('turn down')
     player.update()
     screen.fill(Win.BGCOLOR)
+    drawGrid()
     player_list.draw(screen)
     pygame.display.flip()
     clock.tick(Win.FPS)
