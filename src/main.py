@@ -2,6 +2,7 @@ import pygame
 from colors import Colors
 from win import Win
 from player import Player
+from ghost import Ghost
 
 Win.BGCOLOR = Colors.DARK_GRAY
 
