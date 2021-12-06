@@ -1,45 +1,32 @@
 import pygame
-import random
-
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-BLACK = (0, 0, 0)       
-FUCHSIA = (255, 0, 255)
-GRAY = (128, 128, 128)
-LIME = (0, 128, 0)
-MAROON = (128, 0, 0)
-NAVYBLUE = (0, 0, 128)
-OLIVE = (128, 128, 0)
-PURPLE = (128, 0, 128)
-RED = (255, 0, 0)
-SILVER = (192, 192, 192)
-TEAL = (0, 128, 128)
-YELLOW = (255, 255, 0)
-ORANGE = (255, 128, 0)
-CYAN = (0, 255, 255)
+from colors import Colors
 
 WIDTH = 1200
 HEIGHT = 800
 FPS = 30
-BGCOLOR = CYAN
-
-colors = [RED, GREEN, BLUE, GRAY, TEAL]
+BGCOLOR = Colors.CYAN
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 i = 0
-running = True
-while running:
-    clock.tick(FPS)
+main = True
+while main:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
+            pygame.quit(); sys.exit()
+            main = False
 
-    screen.fill(colors[int(i / 15) % 5])
-    i += 1
-    pygame.display.flip()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT or event.key == ord('a'):
+                print('turn left')
+            if event.key == pygame.K_RIGHT or event.key == ord('d'):
+                print('turn right')
+            if event.key == pygame.K_UP or event.key == ord('w'):
+                print('turn up')
+            if event.key == pygame.K_DOWN or event.key == ord('s'):
+                print('turn down')
+ 
 
 pygame.quit()
