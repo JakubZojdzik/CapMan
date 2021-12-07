@@ -47,7 +47,7 @@ while main:
                 player.turn(1)
             if event.key == pygame.K_DOWN or event.key == ord('s'):
                 player.turn(3)
-    player.update()
+    player.update(lvl)
     screen.fill(Win.BGCOLOR)
     drawGrid()
     lvl.to_board(screen)
