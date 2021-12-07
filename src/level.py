@@ -33,7 +33,6 @@ class Level:
     def to_board(self, screen):
         for i in range(16):
             for j in range(14):
-                print(self.maps[self.lvl][j][i])
+
                 if(self.maps[self.lvl][j][i] == 1):
                     screen.blit(img, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
-                    print("RYSUJE!")
