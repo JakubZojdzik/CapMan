@@ -1,6 +1,6 @@
 class Win:
-    WIDTH = 1140
-    HEIGHT = 720
+    WIDTH = 960
+    HEIGHT = 840
     FPS = 30
     BGCOLOR = (0, 0, 0)
     FPS = 30
