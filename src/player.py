@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = img_r
         self.rect = self.image.get_rect()
-        self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT, Win.HEIGHT / 2 + Win.MARGIN_TOP)
+        self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT + ((Win.WIDTH / 2 + Win.MARGIN_LEFT + (Win.GRID_SIZE/2)) % Win.GRID_SIZE), Win.HEIGHT / 2 + Win.MARGIN_TOP + ((Win.HEIGHT / 2 + Win.MARGIN_TOP + (Win.GRID_SIZE/2)) % Win.GRID_SIZE))
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames
@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
                 self.direction = self.trn
                 self.trn = 0
             if(self.direction == 2 or self.direction == 0):
-                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= 0 and -(self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
                     self.rect.center = (int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2), self.rect.center[1])
                     self.direction = self.trn
                     self.trn = 0
@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
                     self.direction = self.trn
                     self.trn = 0
             if(self.direction == 3 or self.direction == 0):
-                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= 0 and -(self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
+                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
                     self.rect.center = (self.rect.center[0], int(self.rect.center[1] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2))
                     self.direction = self.trn
                     self.trn = 0
