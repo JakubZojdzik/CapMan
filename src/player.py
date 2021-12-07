@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = img_r
         self.rect = self.image.get_rect()
-        self.rect.center = (Win.WIDTH / 2, Win.HEIGHT / 2)
+        self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT, Win.HEIGHT / 2 + Win.MARGIN_TOP)
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames
@@ -56,22 +56,22 @@ class Player(pygame.sprite.Sprite):
             
 
         if(self.direction == 1):
-            if(self.rect.y - self.step >= 0):
+            if(self.rect.y - self.step >= Win.MARGIN_TOP):
                 self.rect.y -= self.step
             self.image = img_u
 
         if(self.direction == 2):
-            if(self.rect.x + self.step + SPRITE_WIDTH <= Win.WIDTH):
+            if(self.rect.x + self.step + SPRITE_WIDTH <= Win.WIDTH + Win.MARGIN_LEFT):
                 self.rect.x += self.step
             self.image = img_r
 
         if(self.direction == 3):
-            if(self.rect.y + self.step + SPRITE_HEIGHT <= Win.HEIGHT):
+            if(self.rect.y + self.step + SPRITE_HEIGHT <= Win.HEIGHT + Win.MARGIN_TOP):
                 self.rect.y += self.step
             self.image = img_d
             
         if(self.direction == 4):
-            if(self.rect.x - self.step >= 0):
+            if(self.rect.x - self.step >= Win.MARGIN_LEFT):
                 self.rect.x -= self.step
             self.image = img_l
         

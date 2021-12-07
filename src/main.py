@@ -7,7 +7,12 @@ from ghost import Ghost
 Win.BGCOLOR = Colors.DARK_GRAY
 
 pygame.init()
-screen = pygame.display.set_mode((Win.WIDTH, Win.HEIGHT))
+screen_info = pygame.display.Info()
+Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
+Win.MARGIN_LEFT = Win.GRID_SIZE * round(Win.MARGIN_LEFT / Win.GRID_SIZE)
+Win.MARGIN_TOP = int((screen_info.current_h - Win.HEIGHT) / 2)
+Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE)
+screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 
@@ -18,8 +23,8 @@ steps = 8
 
 def drawGrid():
     blockSize = Win.GRID_SIZE #Set the size of the grid block
-    for x in range(0, Win.WIDTH, blockSize):
-        for y in range(0, Win.HEIGHT, blockSize):
+    for x in range(Win.MARGIN_LEFT, Win.WIDTH + Win.MARGIN_LEFT, blockSize):
+        for y in range(Win.MARGIN_TOP, Win.HEIGHT + Win.MARGIN_TOP, blockSize):
             rect = pygame.Rect(x, y, blockSize, blockSize)
             pygame.draw.rect(screen, Colors.WHITE, rect, 1)
 
