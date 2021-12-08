@@ -2,7 +2,7 @@ import pygame
 from win import Win
 
 # 24x25
-img = pygame.transform.scale(pygame.image.load("../lib/block.jpg"), [Win.GRID_SIZE, Win.GRID_SIZE])
+img = pygame.transform.scale(pygame.image.load("../lib/block.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
 
 class Level:
     def __init__(self):
