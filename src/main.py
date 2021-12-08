@@ -2,10 +2,7 @@ import pygame
 from colors import Colors
 from win import Win
 from player import Player
-from ghost import Ghost
 from level import Level
-
-Win.BGCOLOR = Colors.DARK_GRAY
 
 pygame.init()
 screen_info = pygame.display.Info()
