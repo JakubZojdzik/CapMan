@@ -3,6 +3,7 @@ from colors import Colors
 from win import Win
 from player import Player
 from level import Level
+from points import Points
 
 pygame.init()
 screen_info = pygame.display.Info()
@@ -17,9 +18,10 @@ clock = pygame.time.Clock()
 player = Player()
 player_list = pygame.sprite.Group()
 player_list.add(player)
-steps = 8
 
 lvl = Level()
+
+points = Points()
 
 def drawGrid():
     blockSize = Win.GRID_SIZE #Set the size of the grid block
@@ -48,6 +50,7 @@ while main:
     screen.fill(Win.BGCOLOR)
     # drawGrid()
     lvl.to_board(screen)
+    points.to_board(screen, player)
     player_list.draw(screen)
     pygame.display.flip()
     clock.tick(Win.FPS)

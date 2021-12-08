@@ -23,6 +23,9 @@ class Player(pygame.sprite.Sprite):
     def turn(self, dir):
         self.trn = dir
 
+    def get_coords(self):
+        return (round((self.rect.center[0] - Win.MARGIN_LEFT) / Win.GRID_SIZE), round((self.rect.center[1] - Win.MARGIN_TOP) / Win.GRID_SIZE))
+
     def update(self, map):
         if(self.trn == 1 or self.trn == 3):
             x = int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
