@@ -49,7 +49,7 @@ while main:
                 player.turn(3)
     player.update(lvl)
     screen.fill(Win.BGCOLOR)
-    drawGrid()
+    # drawGrid()
     lvl.to_board(screen)
     player_list.draw(screen)
     pygame.display.flip()
