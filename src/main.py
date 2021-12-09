@@ -14,6 +14,18 @@ Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRI
 screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
+moja_grafika = pygame.image.load('../lib/ekranstartowyzapasowy.png')
+run=True
+while run:
+    screen.blit(moja_grafika, (350,0))
+    pygame.display.update()
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            pygame.quit()
+            run=False
+        if event.type == pygame.KEYDOWN:
+            if event.key == ord(' '):
+                run=False
 
 player = Player()
 player_list = pygame.sprite.Group()
