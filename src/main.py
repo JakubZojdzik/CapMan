@@ -15,17 +15,17 @@ screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 moja_grafika = pygame.image.load('../lib/ekranstartowyzapasowy.png')
-run=True
+run = True
 while run:
     screen.blit(moja_grafika, (350,0))
     pygame.display.update()
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             pygame.quit()
-            run=False
+            run = False
         if event.type == pygame.KEYDOWN:
             if event.key == ord(' '):
-                run=False
+                run = False
 
 player = Player()
 player_list = pygame.sprite.Group()
@@ -34,16 +34,16 @@ player_list.add(player)
 lvl = Level()
 
 points = Points()
+points.reset_points(lvl)
 
-def drawGrid():
-    blockSize = Win.GRID_SIZE #Set the size of the grid block
-    for x in range(Win.MARGIN_LEFT, Win.WIDTH + Win.MARGIN_LEFT, blockSize):
-        for y in range(Win.MARGIN_TOP, Win.HEIGHT + Win.MARGIN_TOP, blockSize):
-            rect = pygame.Rect(x, y, blockSize, blockSize)
-            pygame.draw.rect(screen, Colors.WHITE, rect, 1)
+def next_lvl():
+    lvl.lvl += 1
+    points.reset_points(lvl)
 
 main = True
 while main:
+    if(points.is_all()):
+        next_lvl()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
