@@ -9,3 +9,15 @@ class Win:
     GRID_SIZE = 25
     MARGIN_TOP = 120
     MARGIN_LEFT = 240
+
+    @staticmethod
+    def pixelPos_to_gridPos(x, y):
+        x -= Win.MARGIN_LEFT - (Win.GRID_SIZE+1)//2
+        y -= Win.MARGIN_TOP - (Win.GRID_SIZE+1)//2
+        if x%Win.GRID_SIZE == 0 and y%Win.GRID_SIZE == 0:
+            return [x//Win.GRID_SIZE, y//Win.GRID_SIZE, 0]
+        if x%Win.GRID_SIZE == 0:
+            y1 = y//Win.GRID_SIZE
+            y2 = y1 + Win.GRID_SIZE
+            if y2 > Win.HEIGHT:
+                y2 -= Win.HEIGHT
