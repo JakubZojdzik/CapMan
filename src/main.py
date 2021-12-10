@@ -14,18 +14,30 @@ Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRI
 screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
-moja_grafika = pygame.image.load('../lib/ekranstartowyzapasowy.png')
+menu = pygame.image.load('../lib/capmenu.png')
+credits=pygame.image.load('../lib/credits01.png')
 run = True
+current=menu
+current_width=Win.MENUWIDTH
 while run:
-    screen.blit(moja_grafika, (350,0))
+    screen.fill(Win.BGCOLOR)
+    screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
     pygame.display.update()
     for event in pygame.event.get():
-        if event.type==pygame.QUIT:
+        if event.type==pygame.QUIT: #zakończenie
             pygame.quit()
             run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == ord(' '):
+        if event.type == pygame.KEYDOWN: #przejście do gry
+            if event.key == ord(' ') or event.key==ord("p"):
                 run = False
+        if event.type == pygame.KEYDOWN: #przejście do settings
+            if event.key == ord('c'):
+                current=credits
+                current_width=Win.SETTINSGWIDTH
+        if event.type == pygame.KEYDOWN:  #powró do menu
+            if event.key == pygame.K_LEFT:
+                current=menu
+                current_width = Win.MENUWIDTH
 
 player = Player()
 player_list = pygame.sprite.Group()
@@ -60,7 +72,7 @@ while main:
                 player.turn(3)
     player.update(lvl)
     screen.fill(Win.BGCOLOR)
-    # drawGrid()
+    #drawGrid()
     lvl.to_board(screen)
     points.to_board(screen, player)
     player_list.draw(screen)
