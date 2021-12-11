@@ -86,11 +86,13 @@ class Points:
         for i in range(25):
             for j in range(24):
                 if(plr.rect.collidepoint(Win.MARGIN_LEFT + Win.GRID_SIZE * i + int(Win.GRID_SIZE/2), Win.MARGIN_TOP + Win.GRID_SIZE * j + int(Win.GRID_SIZE/2)) == True):
-                    self.map[j][i] = 0
-                    pygame.mixer.music.load("../lib/waka.mp3")
-                    pygame.mixer.music.play(0)
+                    if (self.map[j][i]==1):
+                        self.map[j][i] = 0
+                        pygame.mixer.music.load("../lib/waka.mp3")
+                        pygame.mixer.music.play(0)
 
-                    Score.score += 10
+                        Score.score += 10
+                        #print(Score.score)
                 if(self.map[j][i] == 1):
                     screen.blit(img, (Win.MARGIN_LEFT + Win.GRID_SIZE * i + Win.GRID_SIZE/2 - POINT_WIDTH/2, Win.MARGIN_TOP + Win.GRID_SIZE * j + Win.GRID_SIZE/2 - POINT_HEIGHT/2))
 
