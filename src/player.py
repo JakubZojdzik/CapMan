@@ -1,8 +1,8 @@
 import pygame
 from win import Win
 
-SPRITE_WIDTH = 50
-SPRITE_HEIGHT = 50
+SPRITE_WIDTH = Win.GRID_SIZE-8
+SPRITE_HEIGHT = Win.GRID_SIZE-8
 
 img_u = pygame.transform.scale(pygame.image.load("../lib/Player_up.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 img_r = pygame.transform.scale(pygame.image.load("../lib/Player_right.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
@@ -10,18 +10,22 @@ img_d = pygame.transform.scale(pygame.image.load("../lib/Player_down.png"), [SPR
 img_l = pygame.transform.scale(pygame.image.load("../lib/Player_left.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, pos_x, pos_y):
         pygame.sprite.Sprite.__init__(self)
         self.image = img_r
         self.rect = self.image.get_rect()
-        self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT + ((Win.WIDTH / 2 + Win.MARGIN_LEFT + (Win.GRID_SIZE/2)) % Win.GRID_SIZE), Win.HEIGHT / 2 + Win.MARGIN_TOP + ((Win.HEIGHT / 2 + Win.MARGIN_TOP + (Win.GRID_SIZE/2)) % Win.GRID_SIZE))
+        self.rect.center = (pos_x, pos_y)
+        #self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT + ((Win.WIDTH / 2 + Win.MARGIN_LEFT + (Win.GRID_SIZE/2)) % Win.GRID_SIZE), Win.HEIGHT / 2 + Win.MARGIN_TOP + ((Win.HEIGHT / 2 + Win.MARGIN_TOP + (Win.GRID_SIZE/2)) % Win.GRID_SIZE))
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames
-        self.step = 10
+        self.step = 5
     
     def turn(self, dir):
         self.trn = dir
+
+    def get_coords(self):
+        return (round((self.rect.center[0] - Win.MARGIN_LEFT) / Win.GRID_SIZE), round((self.rect.center[1] - Win.MARGIN_TOP) / Win.GRID_SIZE))
 
     def update(self, map):
         if(self.trn == 1 or self.trn == 3):
@@ -89,22 +93,32 @@ class Player(pygame.sprite.Sprite):
             
 
         if(self.direction == 1):
-            if(self.rect.y - self.step >= Win.MARGIN_TOP and not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - self.step - Win.MARGIN_TOP) / Win.GRID_SIZE))):
+            if(not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - self.step - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.y -= self.step
             self.image = img_u
 
         if(self.direction == 2):
-            if(self.rect.x + self.step + SPRITE_WIDTH <= Win.WIDTH + Win.MARGIN_LEFT and not map.is_blocked(int((self.rect.x + self.step + SPRITE_WIDTH - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
+            if(not map.is_blocked(int((self.rect.x + self.step + SPRITE_WIDTH - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.x += self.step
             self.image = img_r
 
         if(self.direction == 3):
-            if(self.rect.y + self.step + SPRITE_HEIGHT <= Win.HEIGHT + Win.MARGIN_TOP and not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y + self.step + SPRITE_HEIGHT - Win.MARGIN_TOP) / Win.GRID_SIZE))):
+            if(not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y + self.step + SPRITE_HEIGHT - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.y += self.step
             self.image = img_d
             
         if(self.direction == 4):
-            if(self.rect.x - self.step >= Win.MARGIN_LEFT and not map.is_blocked(int((self.rect.x - self.step - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
+            if(not map.is_blocked(int((self.rect.x - self.step - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.x -= self.step
             self.image = img_l
+        
+        if(self.rect.y < Win.MARGIN_TOP - SPRITE_HEIGHT):
+            self.rect.y = Win.HEIGHT + Win.MARGIN_TOP
+        if(self.rect.y > Win.MARGIN_TOP + Win.HEIGHT):
+            self.rect.y = Win.MARGIN_TOP
+
+        if(self.rect.x < Win.MARGIN_LEFT - SPRITE_WIDTH):
+            self.rect.x = Win.WIDTH + Win.MARGIN_LEFT
+        if(self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
+            self.rect.x = Win.MARGIN_LEFT
         
