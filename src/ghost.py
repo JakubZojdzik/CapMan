@@ -14,7 +14,9 @@ class Ghost(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, mode, color):
         pygame.sprite.Sprite.__init__(self)
         self.pos_x = pos_x
+        self.start_pos_x = pos_x
         self.pos_y = pos_y
+        self.start_pos_y = pos_y
         self.color = color
         self.step = 25/6
         self.mode = mode
@@ -30,6 +32,9 @@ class Ghost(pygame.sprite.Sprite):
         LVL_HEIGHT = len(level_grid)-1
         LVL_WIDTH = len(level_grid[0])-1
 
+    def resetPos(self):
+        self.pos_x = self.start_pos_x
+        self.pos_y = self.start_pos_y
 
     @staticmethod
     def BFS(cells):

@@ -78,6 +78,12 @@ def death():
 
 def menu_loop():
     run = True
+    lvl.reset()
+    points.reset_points(lvl)
+    player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
+    for ghost in ghost_tab:
+        ghost.resetPos()
+
     Score.score = 0
     Score.lives = 3
     current=menu
