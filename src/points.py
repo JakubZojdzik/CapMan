@@ -51,10 +51,6 @@ class Points:
                     self.map[i][j] = 1
 
     def is_all(self):
-        print(self.map)
-        print()
-        print()
-        print()
         clean = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -90,9 +86,7 @@ class Points:
                         self.map[j][i] = 0
                         pygame.mixer.music.load("../lib/waka.mp3")
                         pygame.mixer.music.play(0)
-
                         Score.score += 10
-                        #print(Score.score)
                 if(self.map[j][i] == 1):
                     screen.blit(img, (Win.MARGIN_LEFT + Win.GRID_SIZE * i + Win.GRID_SIZE/2 - POINT_WIDTH/2, Win.MARGIN_TOP + Win.GRID_SIZE * j + Win.GRID_SIZE/2 - POINT_HEIGHT/2))
 
