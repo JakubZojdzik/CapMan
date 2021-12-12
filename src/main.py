@@ -41,6 +41,8 @@ lvl = Level()
 
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
 
+start_time = time.time()
+
 points = Points()
 points.reset_points(lvl)
 
@@ -54,15 +56,15 @@ def next_lvl():
     inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "blue")
     clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "orange")
 
-def draw_score():
-    score_img = font.render("Score: " + str(Score.score) + "        lives: " + str(Score.lives), True, (0, 255, 255))
+def draw_score(start_time):
+    score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(time.time() - start_time)), True, (0, 255, 255))
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, Win.MARGIN_TOP + Win.HEIGHT + 50))
     screen.blit(score_img, score_rect)
-
 
 def death():
     Score.lives -= 1
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
+    global start_time
     for ghost in ghost_tab:
         ghost.resetPos()
     screen.fill(Win.BGCOLOR)
@@ -71,11 +73,12 @@ def death():
     points.to_board(screen, player)
     player_list.draw(screen)
     ghost_list.draw(screen)
-    draw_score()
+    draw_score(start_time)
     pygame.display.flip()
     if(Score.lives <= 0):
         return
     time.sleep(3)
+    start_time += 3
 
 
 def menu_loop():
@@ -114,14 +117,17 @@ def menu_loop():
 
 def main_loop():
     main = True
+    global start_time
+    start_time = time.time()
     screen.fill(Win.BGCOLOR)
     lvl.to_board(screen)
     points.to_board(screen, player)
     player_list.draw(screen)
     ghost_list.draw(screen)
-    draw_score()
+    draw_score(start_time)
     pygame.display.flip()
     time.sleep(2)
+    start_time += 2
     temp = 0
     while main:
         temp += 1
@@ -162,7 +168,7 @@ def main_loop():
         points.to_board(screen, player)
         player_list.draw(screen)
         ghost_list.draw(screen)
-        draw_score()
+        draw_score(start_time)
         pygame.display.flip()
         clock.tick(Win.FPS)
 
