@@ -32,14 +32,15 @@ while run:
         if event.type == pygame.KEYDOWN: #przejście do gry
             if event.key == ord(' ') or event.key==ord("p"):
                 run = False
-        if event.type == pygame.KEYDOWN: #przejście do settings
             if event.key == ord('c'):
                 current=credits
                 current_width=Win.SETTINSGWIDTH
-        if event.type == pygame.KEYDOWN:  #powró do menu
             if event.key == pygame.K_LEFT:
                 current=menu
                 current_width = Win.MENUWIDTH
+            if event.key == ord('c'):
+                pygame.quit()
+                run = False
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
