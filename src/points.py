@@ -47,7 +47,7 @@ class Points:
             for j in range(25):
                 if(n[i][j] == 1):
                     self.map[i][j] = 0
-                else:
+                elif(not (i >= 10 and i <= 13 and j >= 10 and j <= 14)):
                     self.map[i][j] = 1
 
     def is_all(self):

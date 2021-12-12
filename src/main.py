@@ -86,6 +86,9 @@ while main:
                 player.turn(1)
             if event.key == pygame.K_DOWN or event.key == ord('s'):
                 player.turn(3)
+            if event.key == ord('q'):
+                pygame.quit()
+                main = False
 
     ghost_list.update(lvl)
     if(temp % 15 == 0):
