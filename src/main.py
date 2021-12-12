@@ -20,29 +20,6 @@ pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 menu = pygame.image.load('../lib/capmenu.png')
 credits=pygame.image.load('../lib/credits01.png')
-run = True
-current=menu
-current_width=Win.MENUWIDTH
-while run:
-    screen.fill(Win.BGCOLOR)
-    screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT: #zakończenie
-            pygame.quit()
-            run = False
-        if event.type == pygame.KEYDOWN: #przejście do gry
-            if event.key == ord(' ') or event.key==ord("p"):
-                run = False
-            if event.key == ord('c'):
-                current=credits
-                current_width=Win.SETTINSGWIDTH
-            if event.key == pygame.K_LEFT:
-                current=menu
-                current_width = Win.MENUWIDTH
-            if event.key == ord('q'):
-                pygame.quit()
-                run = False
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
@@ -85,48 +62,87 @@ def death():
     player_list.draw(screen)
     ghost_list.draw(screen)
     pygame.display.flip()
+    if(Score.lives <= 0):
+        return
     time.sleep(3)
 
-main = True
-temp = 0
-while main:
-    temp += 1
-    if(points.is_all()):
-        next_lvl()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            main = False
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT or event.key == ord('a'):
-                player.turn(4)
-            if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                player.turn(2)
-            if event.key == pygame.K_UP or event.key == ord('w'):
-                player.turn(1)
-            if event.key == pygame.K_DOWN or event.key == ord('s'):
-                player.turn(3)
-            if event.key == ord('q'):
+def menu_loop():
+    run = True
+    Score.score = 0
+    Score.lives = 3
+    current=menu
+    current_width=Win.MENUWIDTH
+    while run:
+        screen.fill(Win.BGCOLOR)
+        screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT: #zakończenie
+                pygame.quit()
+                run = False
+            if event.type == pygame.KEYDOWN: #przejście do gry
+                if event.key == ord(' ') or event.key==ord("p"):
+                    run = False
+                if event.key == ord('c'):
+                    current=credits
+                    current_width=Win.SETTINSGWIDTH
+                if event.key == pygame.K_LEFT:
+                    current=menu
+                    current_width = Win.MENUWIDTH
+                if event.key == ord('q'):
+                    pygame.quit()
+                    run = False
+
+
+def main_loop():
+    main = True
+    temp = 0
+    while main:
+        temp += 1
+        if(Score.lives <= 0):
+            main = False
+        if(points.is_all()):
+            next_lvl()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 main = False
 
-    ghost_list.update(lvl)
-    for ghost in ghost_tab:
-        if(ghost.got_capman(player)):
-            death()
-    if(temp % 15 == 0):
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT or event.key == ord('a'):
+                    player.turn(4)
+                if event.key == pygame.K_RIGHT or event.key == ord('d'):
+                    player.turn(2)
+                if event.key == pygame.K_UP or event.key == ord('w'):
+                    player.turn(1)
+                if event.key == pygame.K_DOWN or event.key == ord('s'):
+                    player.turn(3)
+                if event.key == ord('q'):
+                    pygame.quit()
+                    main = False
+
+        ghost_list.update(lvl)
         for ghost in ghost_tab:
-            ghost.trn = randint(1, 4)
+            if(ghost.got_capman(player)):
+                death()
+        if(temp % 15 == 0):
+            for ghost in ghost_tab:
+                ghost.trn = randint(1, 4)
 
-    player.update(lvl)
-    screen.fill(Win.BGCOLOR)
-    #drawGrid()
-    lvl.to_board(screen)
-    points.to_board(screen, player)
-    player_list.draw(screen)
-    ghost_list.draw(screen)
-    pygame.display.flip()
-    clock.tick(Win.FPS)
+        player.update(lvl)
+        screen.fill(Win.BGCOLOR)
+        #drawGrid()
+        lvl.to_board(screen)
+        points.to_board(screen, player)
+        player_list.draw(screen)
+        ghost_list.draw(screen)
+        pygame.display.flip()
+        clock.tick(Win.FPS)
 
-pygame.quit()
+    # pygame.quit()
+
+
+while(True):
+    menu_loop()
+    main_loop()
