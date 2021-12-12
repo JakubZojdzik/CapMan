@@ -63,6 +63,8 @@ def draw_score():
 def death():
     Score.lives -= 1
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
+    for ghost in ghost_tab:
+        ghost.resetPos()
     screen.fill(Win.BGCOLOR)
     #drawGrid()
     lvl.to_board(screen)
@@ -112,6 +114,14 @@ def menu_loop():
 
 def main_loop():
     main = True
+    screen.fill(Win.BGCOLOR)
+    lvl.to_board(screen)
+    points.to_board(screen, player)
+    player_list.draw(screen)
+    ghost_list.draw(screen)
+    draw_score()
+    pygame.display.flip()
+    time.sleep(2)
     temp = 0
     while main:
         temp += 1
