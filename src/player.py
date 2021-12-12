@@ -10,11 +10,12 @@ img_d = pygame.transform.scale(pygame.image.load("../lib/Player_down.png"), [SPR
 img_l = pygame.transform.scale(pygame.image.load("../lib/Player_left.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, pos_x, pos_y):
         pygame.sprite.Sprite.__init__(self)
         self.image = img_r
         self.rect = self.image.get_rect()
-        self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT + ((Win.WIDTH / 2 + Win.MARGIN_LEFT + (Win.GRID_SIZE/2)) % Win.GRID_SIZE), Win.HEIGHT / 2 + Win.MARGIN_TOP + ((Win.HEIGHT / 2 + Win.MARGIN_TOP + (Win.GRID_SIZE/2)) % Win.GRID_SIZE))
+        self.rect.center = (pos_x, pos_y)
+        #self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT + ((Win.WIDTH / 2 + Win.MARGIN_LEFT + (Win.GRID_SIZE/2)) % Win.GRID_SIZE), Win.HEIGHT / 2 + Win.MARGIN_TOP + ((Win.HEIGHT / 2 + Win.MARGIN_TOP + (Win.GRID_SIZE/2)) % Win.GRID_SIZE))
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames

@@ -4,6 +4,7 @@ from win import Win
 from player import Player
 from level import Level
 from points import Points
+from ghost import Ghost
 
 pygame.init()
 screen_info = pygame.display.Info()
@@ -39,9 +40,20 @@ while run:
                 current=menu
                 current_width = Win.MENUWIDTH
 
-player = Player()
+player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
 player_list.add(player)
+
+blinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*10.5, "red")
+pinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*11.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "pink")
+inky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "blue")
+clyde = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*13.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "orange")
+
+ghost_list = pygame.sprite.Group()
+ghost_list.add(blinky)
+ghost_list.add(pinky)
+ghost_list.add(inky)
+ghost_list.add(clyde)
 
 lvl = Level()
 
@@ -51,6 +63,7 @@ points.reset_points(lvl)
 def next_lvl():
     lvl.lvl += 1
     points.reset_points(lvl)
+    player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 
 main = True
 while main:
@@ -76,6 +89,7 @@ while main:
     lvl.to_board(screen)
     points.to_board(screen, player)
     player_list.draw(screen)
+    ghost_list.draw(screen)
     pygame.display.flip()
     clock.tick(Win.FPS)
 

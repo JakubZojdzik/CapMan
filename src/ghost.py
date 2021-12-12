@@ -1,13 +1,25 @@
 from win import Win
+import pygame
 
 level_grid = []
 LVL_WIDTH = 25
 LVL_HEIGHT = 24
 
-class Ghost:
-    def __init__(self, pos_x, pos_y):
+SPRITE_WIDTH = Win.GRID_SIZE-8
+SPRITE_HEIGHT = Win.GRID_SIZE-8
+
+img_pink = pygame.transform.scale(pygame.image.load("../lib/pink.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+
+class Ghost(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, color):
+        pygame.sprite.Sprite.__init__(self)
         self.pos_x = pos_x
         self.pos_y = pos_y
+        self.color = color
+        self.step = 25/6
+        self.image = img_pink
+        self.rect = self.image.get_rect()
+        self.rect.center = (pos_x, pos_y)
 
     @staticmethod
     def loadLevelGrid(grid):
