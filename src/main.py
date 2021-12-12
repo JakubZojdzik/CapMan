@@ -39,6 +39,8 @@ ghost_tab = [blinky, pinky, inky, clyde]
 
 lvl = Level()
 
+font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
+
 points = Points()
 points.reset_points(lvl)
 
@@ -52,6 +54,12 @@ def next_lvl():
     inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "blue")
     clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "orange")
 
+def draw_score():
+    score_img = font.render("Score: " + str(Score.score) + "        lives: " + str(Score.lives), True, (0, 255, 255))
+    score_rect = score_img.get_rect(center=(screen_info.current_w / 2, Win.MARGIN_TOP + Win.HEIGHT + 50))
+    screen.blit(score_img, score_rect)
+
+
 def death():
     Score.lives -= 1
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
@@ -61,6 +69,7 @@ def death():
     points.to_board(screen, player)
     player_list.draw(screen)
     ghost_list.draw(screen)
+    draw_score()
     pygame.display.flip()
     if(Score.lives <= 0):
         return
@@ -137,6 +146,7 @@ def main_loop():
         points.to_board(screen, player)
         player_list.draw(screen)
         ghost_list.draw(screen)
+        draw_score()
         pygame.display.flip()
         clock.tick(Win.FPS)
 
