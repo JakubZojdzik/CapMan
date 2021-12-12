@@ -1,10 +1,11 @@
 import pygame
-from colors import Colors
 from win import Win
 from player import Player
 from level import Level
 from points import Points
 from ghost import Ghost
+
+from random import randint
 
 pygame.init()
 screen_info = pygame.display.Info()
@@ -66,7 +67,9 @@ def next_lvl():
     player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 
 main = True
+temp = 0
 while main:
+    temp += 1
     if(points.is_all()):
         next_lvl()
     for event in pygame.event.get():
@@ -83,6 +86,14 @@ while main:
                 player.turn(1)
             if event.key == pygame.K_DOWN or event.key == ord('s'):
                 player.turn(3)
+
+    ghost_list.update(lvl)
+    if(temp % 15 == 0):
+        blinky.trn = randint(1, 4)
+        inky.trn = randint(1, 4)
+        pinky.trn = randint(1, 4)
+        clyde.trn = randint(1, 4)
+
     player.update(lvl)
     screen.fill(Win.BGCOLOR)
     #drawGrid()
