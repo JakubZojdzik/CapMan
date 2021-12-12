@@ -150,7 +150,6 @@ def main_loop():
                 if event.key == pygame.K_DOWN or event.key == ord('s'):
                     player.turn(3)
                 if event.key == ord('q'):
-                    pygame.quit()
                     main = False
 
         ghost_list.update(lvl)
