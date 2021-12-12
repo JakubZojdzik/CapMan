@@ -13,7 +13,7 @@ Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
 Win.MARGIN_LEFT = Win.GRID_SIZE * round(Win.MARGIN_LEFT / Win.GRID_SIZE)
 Win.MARGIN_TOP = int((screen_info.current_h - Win.HEIGHT) / 2)
 Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRID_SIZE
-screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h))
+screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 menu = pygame.image.load('../lib/capmenu.png')
@@ -38,7 +38,7 @@ while run:
             if event.key == pygame.K_LEFT:
                 current=menu
                 current_width = Win.MENUWIDTH
-            if event.key == ord('c'):
+            if event.key == ord('q'):
                 pygame.quit()
                 run = False
 

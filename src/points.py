@@ -85,6 +85,7 @@ class Points:
                     if (self.map[j][i]==1):
                         self.map[j][i] = 0
                         pygame.mixer.music.load("../lib/waka.mp3")
+                        pygame.mixer.music.set_volume(0.1)
                         pygame.mixer.music.play(0)
                         Score.score += 10
                 if(self.map[j][i] == 1):
