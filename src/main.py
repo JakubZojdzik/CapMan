@@ -4,6 +4,8 @@ from player import Player
 from level import Level
 from points import Points
 from ghost import Ghost
+from score import Score
+import time
 
 from random import randint
 
@@ -56,6 +58,7 @@ ghost_list.add(blinky)
 ghost_list.add(pinky)
 ghost_list.add(inky)
 ghost_list.add(clyde)
+ghost_tab = [blinky, pinky, inky, clyde]
 
 lvl = Level()
 
@@ -66,6 +69,18 @@ def next_lvl():
     lvl.lvl += 1
     points.reset_points(lvl)
     player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
+
+def death():
+    Score.lives -= 1
+    player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
+    screen.fill(Win.BGCOLOR)
+    #drawGrid()
+    lvl.to_board(screen)
+    points.to_board(screen, player)
+    player_list.draw(screen)
+    ghost_list.draw(screen)
+    pygame.display.flip()
+    time.sleep(3)
 
 main = True
 temp = 0
@@ -92,11 +107,12 @@ while main:
                 main = False
 
     ghost_list.update(lvl)
+    for ghost in ghost_tab:
+        if(ghost.got_capman(player)):
+            death()
     if(temp % 15 == 0):
-        blinky.trn = randint(1, 4)
-        inky.trn = randint(1, 4)
-        pinky.trn = randint(1, 4)
-        clyde.trn = randint(1, 4)
+        for ghost in ghost_tab:
+            ghost.trn = randint(1, 4)
 
     player.update(lvl)
     screen.fill(Win.BGCOLOR)

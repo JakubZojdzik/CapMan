@@ -86,7 +86,8 @@ class Ghost(pygame.sprite.Sprite):
                 result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
 
 
-
+    def got_capman(self, capman):
+        return self.rect.colliderect(capman.rect)
 
     def update(self, map):
         if(self.trn == 1 or self.trn == 3):
