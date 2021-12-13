@@ -118,7 +118,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.y = Win.MARGIN_TOP
 
         if(self.rect.x < Win.MARGIN_LEFT - SPRITE_WIDTH):
-            self.rect.x = Win.WIDTH + Win.MARGIN_LEFT
+            self.rect.x = Win.WIDTH + Win.MARGIN_LEFT - 1
         if(self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
             self.rect.x = Win.MARGIN_LEFT
         
