@@ -130,28 +130,44 @@ class Ghost(pygame.sprite.Sprite):
     def got_capman(self, capman):
         return self.rect.colliderect(capman.rect)
 
-    def find_next_move(self, map):
-        #for i in
-        pass
-
     @staticmethod
     def possible_moves(pos, map):
         gridPos = Win.pixelPos_to_gridPos(pos)
-        result = []
+        result = [] # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         if len(gridPos) == 1:
             if map.is_blocked(gridPos[0][0], gridPos[0][1]-1) == 0:
-                result.append([gridPos[0][0], gridPos[0][1]-1, Win.GRID_SIZE])
+                result.append([gridPos[0][0], gridPos[0][1]-1, Win.GRID_SIZE, 1])
             if map.is_blocked(gridPos[0][0]+1, gridPos[0][1]) == 0:
-                result.append([gridPos[0][0]+1, gridPos[0][1], Win.GRID_SIZE])
+                result.append([gridPos[0][0]+1, gridPos[0][1], Win.GRID_SIZE, 2])
             if map.is_blocked(gridPos[0][0], gridPos[0][1]+1) == 0:
-                result.append([gridPos[0][0], gridPos[0][1]+1, Win.GRID_SIZE])
+                result.append([gridPos[0][0], gridPos[0][1]+1, Win.GRID_SIZE, 3])
             if map.is_blocked(gridPos[0][0]-1, gridPos[0][1]) == 0:
-                result.append([gridPos[0][0]-1, gridPos[0][1], Win.GRID_SIZE])
+                result.append([gridPos[0][0]-1, gridPos[0][1], Win.GRID_SIZE, 4])
             return result
         else:
+            if gridPos[0][0] == gridPos[1][0]:
+                gridPos[0].append(1)
+                gridPos[1].append(3)
+            else:
+                gridPos[0].append(4)
+                gridPos[1].append(2)
             return gridPos
 
+
+    def find_next_move(self, pos, map):
+        posibble_moves = Ghost.possible_moves(self.rect.center, map)
+        BFSed_map = Ghost.BFS(pos, map)
+        min_length = 1000.0
+        curr_direction = 1
+        for i in posibble_moves:
+            if BFSed_map[i[1]][i[0]] < min_length:
+                curr_direction = i[3]
+                min_length = BFSed_map[i[1]][i[0]]
+
+        return curr_direction
+
     def update(self, map):
+        self.direction = self.find_next_move(self.rect.center, map)
         if(self.trn == 1 or self.trn == 3):
             x = int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
             y = self.rect.center[1]
