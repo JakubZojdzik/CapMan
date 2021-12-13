@@ -8,10 +8,34 @@ LVL_HEIGHT = 24
 SPRITE_WIDTH = Win.GRID_SIZE-8
 SPRITE_HEIGHT = Win.GRID_SIZE-8
 
-img_pink = pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_blue = pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_orange = pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_red = pygame.transform.scale(pygame.image.load("../lib/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_pink = [
+    pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+]
+img_blue = [
+    pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+]
+img_orange = [
+    pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+]
+img_red = [
+    pygame.transform.scale(pygame.image.load("../lib/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/redghost/redghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/redghost/redghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../lib/redghost/redghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+]
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, mode, color):
@@ -21,14 +45,19 @@ class Ghost(pygame.sprite.Sprite):
         self.color = color
         self.step = 25/6
         self.mode = mode
+        self.img_rot = []
         if(color == "pink"):
-            self.image = img_pink
+            self.img_rot = img_pink
+            self.image = img_pink[0]
         elif(color == "blue"):
-            self.image = img_blue
+            self.img_rot = img_blue
+            self.image = img_blue[0]
         elif(color == "orange"):
-            self.image = img_orange
+            self.img_rot = img_orange
+            self.image = img_orange[0]
         elif(color == "red"):
-            self.image = img_red
+            self.img_rot = img_red
+            self.image = img_red[0]
         self.rect = self.image.get_rect()
         self.rect.center = (pos_x, pos_y)
         self.trn = 0
@@ -108,6 +137,7 @@ class Ghost(pygame.sprite.Sprite):
             y = self.rect.center[1]
             if(self.direction == 1 or self.direction == 3):
                 self.direction = self.trn
+                self.image = self.img_rot[self.trn]
                 self.trn = 0
             if(self.direction == 2 or self.direction == 0):
                 if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
@@ -115,11 +145,13 @@ class Ghost(pygame.sprite.Sprite):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE - 1)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
                     if(self.trn == 3):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE + 1)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
 
             if(self.direction == 4 or self.direction == 0):
@@ -128,11 +160,13 @@ class Ghost(pygame.sprite.Sprite):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE) - 1) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
                     if(self.trn == 3):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE + 1)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
             
         if(self.trn == 2 or self.trn == 4):
@@ -140,6 +174,7 @@ class Ghost(pygame.sprite.Sprite):
             y = int(self.rect.center[1] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
             if(self.direction == 4 or self.direction == 2):
                 self.direction = self.trn
+                self.image = self.img_rot[self.trn]
                 self.trn = 0
             if(self.direction == 1 or self.direction == 0):
                 if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
@@ -147,11 +182,13 @@ class Ghost(pygame.sprite.Sprite):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) + 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
                     if(self.trn == 4):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) - 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
             if(self.direction == 3 or self.direction == 0):
                 if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
@@ -159,11 +196,13 @@ class Ghost(pygame.sprite.Sprite):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) + 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
                     if(self.trn == 4):
                         if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) - 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
                             self.rect.center = (x, y)
                             self.direction = self.trn
+                            self.image = self.img_rot[self.trn]
                             self.trn = 0
             
 
