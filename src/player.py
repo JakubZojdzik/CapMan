@@ -113,7 +113,7 @@ class Player(pygame.sprite.Sprite):
             self.image = img_l
         
         if(self.rect.y < Win.MARGIN_TOP - SPRITE_HEIGHT):
-            self.rect.y = Win.HEIGHT + Win.MARGIN_TOP
+            self.rect.y = Win.HEIGHT + Win.MARGIN_TOP - 1
         if(self.rect.y > Win.MARGIN_TOP + Win.HEIGHT):
             self.rect.y = Win.MARGIN_TOP
 
