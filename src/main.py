@@ -175,5 +175,9 @@ def main_loop():
 
 
 while(True):
+    pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")
+    pygame.mixer.music.set_volume(0.1)
+    pygame.mixer.music.play(0)
     menu_loop()
+
     main_loop()
