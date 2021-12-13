@@ -20,6 +20,7 @@ pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 menu = pygame.image.load('../lib/capmenu.png')
 game_over = pygame.image.load('../lib/game_over.png')
+newlevel = pygame.image.load('../lib/ekranstartowyzapasowy.png')
 credits=pygame.image.load('../lib/credits01.png')
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
@@ -146,6 +147,12 @@ def main_loop():
         if(Score.lives <= 0):
             main = False
         if(points.is_all()):
+            current=newlevel
+            current_width=Win.NEWLEVELWIDTH
+            screen.fill(Win.BGCOLOR)
+            screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
+            pygame.display.update()
+            time.sleep(5)
             next_lvl()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
