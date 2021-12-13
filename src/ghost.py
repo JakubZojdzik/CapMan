@@ -1,9 +1,10 @@
 from win import Win
 import pygame
+import copy
 
 level_grid = []
-LVL_WIDTH = 25
-LVL_HEIGHT = 24
+LVL_WIDTH = Win.WIDTH // Win.GRID_SIZE
+LVL_HEIGHT = Win.HEIGHT // Win.GRID_SIZE
 
 SPRITE_WIDTH = Win.GRID_SIZE-8
 SPRITE_HEIGHT = Win.GRID_SIZE-8
@@ -63,36 +64,33 @@ class Ghost(pygame.sprite.Sprite):
         self.trn = 0
         self.direction = 1
 
-    @staticmethod
-    def loadLevelGrid(grid):
-        level_grid = grid.copy()
-        LVL_HEIGHT = len(level_grid)-1
-        LVL_WIDTH = len(level_grid[0])-1
-
     def resetPos(self):
         self.rect.center = (self.start_pos_x, self.start_pos_y)
 
     @staticmethod
-    def BFS(cells):
-        visited = level_grid.copy()
-        result = level_grid.copy()
-
+    def BFS(pos, map):
+        cells = Win.pixelPos_to_gridPos(pos)
+        #level_grid = map.show_board().copy()
+        visited = copy.deepcopy(map.show_board())
+        result = copy.deepcopy(map.show_board())
         queue = []
 
+        it = 10
         for i in cells:
             queue.append([i[0], i[1]])
-            if len(i) == 2:
-                i.append(0)
-            result[i[1]][i[0]] = i[2]
+            result[i[1]][i[0]] = float(i[2])
+            visited[i[1]][i[0]] = it
+            it += 1
 
         while len(queue) > 0:
+            it += 1
             prev_cell = queue.pop(0)
             curr_x = prev_cell[0] - 1
             curr_y = prev_cell[1]
             if curr_x == -1:
                 curr_x = LVL_WIDTH - 1
 
-            if visited[curr_y][curr_x] == 0:
+            if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
                 result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
@@ -102,7 +100,7 @@ class Ghost(pygame.sprite.Sprite):
             if curr_y == -1:
                 curr_y = LVL_HEIGHT - 1
 
-            if visited[curr_y][curr_x] == 0:
+            if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
                 result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
@@ -112,7 +110,7 @@ class Ghost(pygame.sprite.Sprite):
             if curr_x == LVL_WIDTH:
                 curr_x = 0
 
-            if visited[curr_y][curr_x] == 0:
+            if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
                 result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
@@ -122,14 +120,37 @@ class Ghost(pygame.sprite.Sprite):
             if curr_y == LVL_HEIGHT:
                 curr_y = 0
 
-            if visited[curr_y][curr_x] == 0:
+            if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
                 result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
 
+        return result
+
 
     def got_capman(self, capman):
         return self.rect.colliderect(capman.rect)
+
+    def find_next_move(self, map):
+        #for i in
+        pass
+
+    @staticmethod
+    def possible_moves(pos, map):
+        gridPos = Win.pixelPos_to_gridPos(pos)
+        result = []
+        if len(gridPos) == 1:
+            if map.is_blocked(gridPos[0][0], gridPos[0][1]-1) == 0:
+                result.append([gridPos[0][0], gridPos[0][1]-1, Win.GRID_SIZE])
+            if map.is_blocked(gridPos[0][0]+1, gridPos[0][1]) == 0:
+                result.append([gridPos[0][0]+1, gridPos[0][1], Win.GRID_SIZE])
+            if map.is_blocked(gridPos[0][0], gridPos[0][1]+1) == 0:
+                result.append([gridPos[0][0], gridPos[0][1]+1, Win.GRID_SIZE])
+            if map.is_blocked(gridPos[0][0]-1, gridPos[0][1]) == 0:
+                result.append([gridPos[0][0]-1, gridPos[0][1], Win.GRID_SIZE])
+            return result
+        else:
+            return gridPos
 
     def update(self, map):
         if(self.trn == 1 or self.trn == 3):

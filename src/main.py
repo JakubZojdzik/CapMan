@@ -56,11 +56,11 @@ def next_lvl():
     lvl.lvl += 1
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
-    player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
-    blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12.5, Win.MARGIN_TOP + Win.GRID_SIZE * 10.5, "chase", "red")
-    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "pink")
-    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "blue")
-    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13.5, Win.MARGIN_TOP + Win.GRID_SIZE * 12.5, "closed", "orange")
+    player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
+    blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red")
+    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "pink")
+    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue")
+    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "orange")
 
 def draw_score(start_time):
     score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(time.time() - start_time)), True, (0, 255, 255))
@@ -127,7 +127,7 @@ def menu_loop():
                     pygame.quit()
                     run = False
 
-
+#print(Win.pixelPos_to_gridPos(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2))
 def main_loop():
     main = True
     global start_time
@@ -140,6 +140,7 @@ def main_loop():
     draw_score(start_time)
     pygame.display.flip()
     time.sleep(2)
+    #print(lvl.show_board())
     start_time += 2
     state = -1
     temp = 0
