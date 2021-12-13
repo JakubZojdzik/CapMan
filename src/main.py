@@ -42,6 +42,10 @@ lvl = Level()
 
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
 
+pygame.mixer.init()
+death_sound = pygame.mixer.Sound('../lib/pacmandeath.mp3')
+death_sound.set_volume(0.3)
+
 start_time = time.time()
 
 points = Points()
@@ -84,7 +88,8 @@ def death():
         pygame.display.update()
         time.sleep(5)
         return
-    time.sleep(3)
+    death_sound.play()
+    time.sleep(1.8)
     start_time += 3
 
 
