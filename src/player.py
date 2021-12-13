@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         return (round((self.rect.center[0] - Win.MARGIN_LEFT) / Win.GRID_SIZE), round((self.rect.center[1] - Win.MARGIN_TOP) / Win.GRID_SIZE))
 
     def update(self, map, state):
+        stand = True
         if(self.trn == 1 or self.trn == 3):
             x = int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
             y = self.rect.center[1]
@@ -96,33 +97,41 @@ class Player(pygame.sprite.Sprite):
         if(self.direction == 1):
             if(not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - self.step - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.y -= self.step
+                stand = False
             self.image = img_u
 
         if(self.direction == 2):
             if(not map.is_blocked(int((self.rect.x + self.step + SPRITE_WIDTH - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.x += self.step
+                stand = False
             self.image = img_r
 
         if(self.direction == 3):
             if(not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y + self.step + SPRITE_HEIGHT - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.y += self.step
+                stand = False
             self.image = img_d
             
         if(self.direction == 4):
             if(not map.is_blocked(int((self.rect.x - self.step - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
                 self.rect.x -= self.step
+                stand = False
             self.image = img_l
         
         if(self.rect.y < Win.MARGIN_TOP - SPRITE_HEIGHT):
             self.rect.y = Win.HEIGHT + Win.MARGIN_TOP - 1
+            stand = False
         if(self.rect.y > Win.MARGIN_TOP + Win.HEIGHT):
             self.rect.y = Win.MARGIN_TOP
+            stand = False
 
         if(self.rect.x < Win.MARGIN_LEFT - SPRITE_WIDTH):
             self.rect.x = Win.WIDTH + Win.MARGIN_LEFT - 1
+            stand = False
         if(self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
             self.rect.x = Win.MARGIN_LEFT
+            stand = False
 
-        if state == -1:
+        if state == -1 and not stand:
             self.image = img
         

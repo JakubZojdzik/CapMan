@@ -181,7 +181,7 @@ def main_loop():
                 ghost.trn = randint(1, 4)
 
         player.update(lvl, state)
-        if temp % 5 == 0:
+        if temp % 8 == 0:
             state *= -1
         screen.fill(Win.BGCOLOR)
         #drawGrid()
