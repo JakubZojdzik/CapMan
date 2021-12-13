@@ -140,6 +140,7 @@ def main_loop():
     pygame.display.flip()
     time.sleep(2)
     start_time += 2
+    state = -1
     temp = 0
     while main:
         temp += 1
@@ -172,7 +173,9 @@ def main_loop():
             for ghost in ghost_tab:
                 ghost.trn = randint(1, 4)
 
-        player.update(lvl)
+        player.update(lvl, state)
+        if temp % 5 == 0:
+            state *= -1
         screen.fill(Win.BGCOLOR)
         #drawGrid()
         lvl.to_board(screen)

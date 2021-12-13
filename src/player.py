@@ -4,6 +4,7 @@ from win import Win
 SPRITE_WIDTH = Win.GRID_SIZE-8
 SPRITE_HEIGHT = Win.GRID_SIZE-8
 
+img = pygame.transform.scale(pygame.image.load("../lib/player/Player.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 img_u = pygame.transform.scale(pygame.image.load("../lib/player/Player_up.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 img_r = pygame.transform.scale(pygame.image.load("../lib/player/Player_right.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 img_d = pygame.transform.scale(pygame.image.load("../lib/player/Player_down.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
@@ -27,7 +28,7 @@ class Player(pygame.sprite.Sprite):
     def get_coords(self):
         return (round((self.rect.center[0] - Win.MARGIN_LEFT) / Win.GRID_SIZE), round((self.rect.center[1] - Win.MARGIN_TOP) / Win.GRID_SIZE))
 
-    def update(self, map):
+    def update(self, map, state):
         if(self.trn == 1 or self.trn == 3):
             x = int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
             y = self.rect.center[1]
@@ -121,4 +122,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = Win.WIDTH + Win.MARGIN_LEFT - 1
         if(self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
             self.rect.x = Win.MARGIN_LEFT
+
+        if state == -1:
+            self.image = img
         
