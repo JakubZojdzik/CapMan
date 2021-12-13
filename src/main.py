@@ -177,7 +177,7 @@ def main_loop():
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 death()
-        if(temp % 15 == 0):
+        if(temp % 6 == 0):
             for ghost in ghost_tab:
                 ghost.trn = randint(1, 4)
 
@@ -195,7 +195,6 @@ def main_loop():
         clock.tick(Win.FPS)
 
     # pygame.quit()
-
 
 while(True):
     pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")

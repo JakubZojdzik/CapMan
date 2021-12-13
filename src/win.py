@@ -42,3 +42,4 @@ class Win:
             if x1 < 0:
                 x1 += Win.WIDTH//Win.GRID_SIZE
             return [[x1, y, length], [x2, y, Win.GRID_SIZE-length]]
+

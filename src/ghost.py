@@ -127,7 +127,6 @@ class Ghost(pygame.sprite.Sprite):
 
         return result
 
-
     def got_capman(self, capman):
         return self.rect.colliderect(capman.rect)
 
