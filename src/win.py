@@ -2,6 +2,7 @@ from colors import Colors
 
 class Win:
     MENUWIDTH=794
+    GAMEOVERWIDTH=794
     SETTINSGWIDTH=1195 #sorry Kuba, że wciskam swoje tu ale mam nadzieję że się nie popsuje, a będzie czyściej
     WIDTH = 625
     HEIGHT = 600

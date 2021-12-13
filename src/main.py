@@ -19,6 +19,7 @@ screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h),
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 menu = pygame.image.load('../lib/capmenu.png')
+game_over = pygame.image.load('../lib/game_over.png')
 credits=pygame.image.load('../lib/credits01.png')
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
@@ -76,6 +77,12 @@ def death():
     draw_score(start_time)
     pygame.display.flip()
     if(Score.lives <= 0):
+        current=game_over
+        current_width=Win.GAMEOVERWIDTH
+        screen.fill(Win.BGCOLOR)
+        screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
+        pygame.display.update()
+        time.sleep(5)
         return
     time.sleep(3)
     start_time += 3
