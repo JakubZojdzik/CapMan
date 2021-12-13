@@ -45,10 +45,10 @@ class Points:
         n = mp.show_board()
         for i in range(24):
             for j in range(25):
-                if(n[i][j] == 1):
-                    self.map[i][j] = 0
-                elif(not (i >= 10 and i <= 13 and j >= 10 and j <= 14)):
+                if(n[i][j] == 0):
                     self.map[i][j] = 1
+                else:
+                    self.map[i][j] = 0
 
     def is_all(self):
         clean = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],

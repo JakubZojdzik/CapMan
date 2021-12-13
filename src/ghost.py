@@ -8,7 +8,10 @@ LVL_HEIGHT = 24
 SPRITE_WIDTH = Win.GRID_SIZE-8
 SPRITE_HEIGHT = Win.GRID_SIZE-8
 
-img_pink = pygame.transform.scale(pygame.image.load("../lib/pink.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_pink = pygame.transform.scale(pygame.image.load("../lib/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_blue = pygame.transform.scale(pygame.image.load("../lib/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_orange = pygame.transform.scale(pygame.image.load("../lib/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_red = pygame.transform.scale(pygame.image.load("../lib/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, mode, color):
@@ -18,7 +21,14 @@ class Ghost(pygame.sprite.Sprite):
         self.color = color
         self.step = 25/6
         self.mode = mode
-        self.image = img_pink
+        if(color == "pink"):
+            self.image = img_pink
+        elif(color == "blue"):
+            self.image = img_blue
+        elif(color == "orange"):
+            self.image = img_orange
+        elif(color == "red"):
+            self.image = img_red
         self.rect = self.image.get_rect()
         self.rect.center = (pos_x, pos_y)
         self.trn = 0
