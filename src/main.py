@@ -127,6 +127,7 @@ def menu_loop():
 
 def main_loop():
     main = True
+    scared = False
     global scary_time_off
     global start_time
     start_time = time.time()
@@ -158,6 +159,7 @@ def main_loop():
             for ghost in ghost_list:
                 ghost.mode = "chase"
             scary_time_off = -1
+            scared = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -179,7 +181,11 @@ def main_loop():
         ghost_list.update(player.rect.center, lvl)
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
-                death()
+                if(ghost.mode == "scared"):
+                    Score.score += 250
+                    ghost.mode = "return"
+                elif(not ghost.mode == "return"):
+                    death()
 
         player.update(lvl, state)
         if temp % 8 == 0:
@@ -190,6 +196,7 @@ def main_loop():
             for ghost in ghost_list:
                 ghost.mode = "scared"
             scary_time_off = time.time() + 8
+            scared = True
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)

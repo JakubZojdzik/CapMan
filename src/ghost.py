@@ -166,6 +166,7 @@ class Ghost(pygame.sprite.Sprite):
 
     def update(self, player_pos, map):
         self.direction = self.find_next_move(player_pos, map)
+        self.image = self.img_rot[self.direction]
         if self.direction == 1:
             self.rect.y -= self.step
         if self.direction == 2:
