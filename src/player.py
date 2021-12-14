@@ -1,4 +1,5 @@
 import pygame
+import math
 from win import Win
 
 SPRITE_WIDTH = Win.GRID_SIZE-8
@@ -95,7 +96,7 @@ class Player(pygame.sprite.Sprite):
             
 
         if(self.direction == 1):
-            if(not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - self.step - Win.MARGIN_TOP) / Win.GRID_SIZE))):
+            if(not map.is_blocked(((self.rect.x - Win.MARGIN_LEFT) // Win.GRID_SIZE), int((self.rect.y - self.step - Win.MARGIN_TOP - 1) / Win.GRID_SIZE))):
                 self.rect.y -= self.step
                 stand = False
             self.image = img_u
@@ -113,7 +114,7 @@ class Player(pygame.sprite.Sprite):
             self.image = img_d
             
         if(self.direction == 4):
-            if(not map.is_blocked(((self.rect.x - self.step - Win.MARGIN_LEFT) // Win.GRID_SIZE), ((self.rect.y - Win.MARGIN_TOP) // Win.GRID_SIZE))):
+            if(not map.is_blocked(((self.rect.x - self.step - Win.MARGIN_LEFT - 1) // Win.GRID_SIZE), ((self.rect.y - Win.MARGIN_TOP) // Win.GRID_SIZE))):
                 self.rect.x -= self.step
                 stand = False
             self.image = img_l
