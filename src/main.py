@@ -173,13 +173,10 @@ def main_loop():
                 if event.key == ord('q'):
                     main = False
 
-        ghost_list.update(lvl)
+        ghost_list.update(player.rect.center, lvl)
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 death()
-        if(temp % 6 == 0):
-            for ghost in ghost_tab:
-                ghost.trn = randint(1, 4)
 
         player.update(lvl, state)
         if temp % 8 == 0:

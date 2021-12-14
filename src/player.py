@@ -118,18 +118,18 @@ class Player(pygame.sprite.Sprite):
                 stand = False
             self.image = img_l
         
-        if(self.rect.y < Win.MARGIN_TOP - SPRITE_HEIGHT):
-            self.rect.y = Win.HEIGHT + Win.MARGIN_TOP - 1
+        if(self.rect.y < Win.MARGIN_TOP):
+            self.rect.y += Win.HEIGHT
             stand = False
         if(self.rect.y > Win.MARGIN_TOP + Win.HEIGHT):
-            self.rect.y = Win.MARGIN_TOP
+            self.rect.y -= Win.HEIGHT
             stand = False
 
-        if(self.rect.x < Win.MARGIN_LEFT - SPRITE_WIDTH):
-            self.rect.x = Win.WIDTH + Win.MARGIN_LEFT - 1
+        if(self.rect.x < Win.MARGIN_LEFT):
+            self.rect.x += Win.WIDTH
             stand = False
         if(self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
-            self.rect.x = Win.MARGIN_LEFT
+            self.rect.x -= Win.WIDTH
             stand = False
 
         if state == -1 and not stand:

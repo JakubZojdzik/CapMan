@@ -44,7 +44,7 @@ class Ghost(pygame.sprite.Sprite):
         self.start_pos_x = pos_x
         self.start_pos_y = pos_y
         self.color = color
-        self.step = 25/6
+        self.step = 5
         self.mode = mode
         self.img_rot = []
         if(color == "pink"):
@@ -83,7 +83,6 @@ class Ghost(pygame.sprite.Sprite):
             it += 1
 
         while len(queue) > 0:
-            it += 1
             prev_cell = queue.pop(0)
             curr_x = prev_cell[0] - 1
             curr_y = prev_cell[1]
@@ -135,14 +134,14 @@ class Ghost(pygame.sprite.Sprite):
         gridPos = Win.pixelPos_to_gridPos(pos)
         result = [] # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         if len(gridPos) == 1:
-            if map.is_blocked(gridPos[0][0], gridPos[0][1]-1) == 0:
-                result.append([gridPos[0][0], gridPos[0][1]-1, Win.GRID_SIZE, 1])
-            if map.is_blocked(gridPos[0][0]+1, gridPos[0][1]) == 0:
-                result.append([gridPos[0][0]+1, gridPos[0][1], Win.GRID_SIZE, 2])
-            if map.is_blocked(gridPos[0][0], gridPos[0][1]+1) == 0:
-                result.append([gridPos[0][0], gridPos[0][1]+1, Win.GRID_SIZE, 3])
-            if map.is_blocked(gridPos[0][0]-1, gridPos[0][1]) == 0:
-                result.append([gridPos[0][0]-1, gridPos[0][1], Win.GRID_SIZE, 4])
+            if map.is_blocked(gridPos[0][0], (gridPos[0][1]-1)%LVL_HEIGHT) != 1:
+                result.append([gridPos[0][0], (gridPos[0][1]-1)%LVL_HEIGHT, Win.GRID_SIZE, 1])
+            if map.is_blocked((gridPos[0][0]+1)%LVL_WIDTH, gridPos[0][1]) != 1:
+                result.append([(gridPos[0][0]+1)%LVL_WIDTH, gridPos[0][1], Win.GRID_SIZE, 2])
+            if map.is_blocked(gridPos[0][0], (gridPos[0][1]+1)%LVL_HEIGHT) != 1:
+                result.append([gridPos[0][0], (gridPos[0][1]+1)%LVL_HEIGHT, Win.GRID_SIZE, 3])
+            if map.is_blocked((gridPos[0][0]-1)%LVL_WIDTH, gridPos[0][1]) != 1:
+                result.append([(gridPos[0][0]-1)%LVL_WIDTH, gridPos[0][1], Win.GRID_SIZE, 4])
             return result
         else:
             if gridPos[0][0] == gridPos[1][0]:
@@ -157,133 +156,36 @@ class Ghost(pygame.sprite.Sprite):
     def find_next_move(self, pos, map):
         posibble_moves = Ghost.possible_moves(self.rect.center, map)
         BFSed_map = Ghost.BFS(pos, map)
-        min_length = 1000.0
+        min_length = 10000.0
         curr_direction = 1
         for i in posibble_moves:
+            print(i, BFSed_map[i[1]][i[0]])
             if BFSed_map[i[1]][i[0]] < min_length:
                 curr_direction = i[3]
                 min_length = BFSed_map[i[1]][i[0]]
 
+        print(curr_direction)
+
         return curr_direction
 
-    def update(self, map):
-        self.direction = self.find_next_move(self.rect.center, map)
-        if(self.trn == 1 or self.trn == 3):
-            x = int(self.rect.center[0] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
-            y = self.rect.center[1]
-            if(self.direction == 1 or self.direction == 3):
-                self.direction = self.trn
-                self.image = self.img_rot[self.trn]
-                self.trn = 0
-            if(self.direction == 2 or self.direction == 0):
-                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
-                    if(self.trn == 1):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE - 1)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-                    if(self.trn == 3):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE + 1)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
+    def update(self, player_pos, map):
+        self.direction = self.find_next_move(player_pos, map)
+        if self.direction == 1:
+            self.rect.y -= self.step
+        if self.direction == 2:
+            self.rect.x += self.step
+        if self.direction == 3:
+            self.rect.y += self.step
+        if self.direction == 4:
+            self.rect.x -= self.step
 
-            if(self.direction == 4 or self.direction == 0):
-                if((self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[0] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
-                    if(self.trn == 1):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE) - 1) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-                    if(self.trn == 3):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((y - Win.MARGIN_TOP) / Win.GRID_SIZE + 1)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-            
-        if(self.trn == 2 or self.trn == 4):
-            x = self.rect.center[0]
-            y = int(self.rect.center[1] / Win.GRID_SIZE) * Win.GRID_SIZE + int(Win.GRID_SIZE / 2)
-            if(self.direction == 4 or self.direction == 2):
-                self.direction = self.trn
-                self.image = self.img_rot[self.trn]
-                self.trn = 0
-            if(self.direction == 1 or self.direction == 0):
-                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
-                    if(self.trn == 2):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) + 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-                    if(self.trn == 4):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) - 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-            if(self.direction == 3 or self.direction == 0):
-                if((self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) >= 0 and (self.rect.center[1] % Win.GRID_SIZE) - int(Win.GRID_SIZE / 2) <= int(self.step / 2)):
-                    if(self.trn == 2):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) + 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-                    if(self.trn == 4):
-                        if(map.is_blocked(int((x - Win.MARGIN_LEFT) / Win.GRID_SIZE) - 1, int((y - Win.MARGIN_TOP) / Win.GRID_SIZE)) == 0):
-                            self.rect.center = (x, y)
-                            self.direction = self.trn
-                            self.image = self.img_rot[self.trn]
-                            self.trn = 0
-            
-
-        if(self.direction == 1):
-            #if(self.rect.y - self.step >= Win.MARGIN_TOP and not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - self.step - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                #self.rect.y -= self.step
-
-            if (not map.is_blocked(
-                    int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE),
-                    int((self.rect.y - self.step - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                self.rect.y -= self.step
-
-        if(self.direction == 2):
-            #if(self.rect.x + self.step + SPRITE_WIDTH <= Win.WIDTH + Win.MARGIN_LEFT and not map.is_blocked(int((self.rect.x + self.step + SPRITE_WIDTH - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                #self.rect.x += self.step
-
-            if (not map.is_blocked(
-                    int((self.rect.x + self.step + SPRITE_WIDTH - Win.MARGIN_LEFT) / Win.GRID_SIZE),
-                    int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                self.rect.x += self.step
-
-        if(self.direction == 3):
-            #if(self.rect.y + self.step + SPRITE_HEIGHT <= Win.HEIGHT + Win.MARGIN_TOP and not map.is_blocked(int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y + self.step + SPRITE_HEIGHT - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                #self.rect.y += self.step
-            if (not map.is_blocked(
-                    int((self.rect.x - Win.MARGIN_LEFT) / Win.GRID_SIZE),
-                    int((self.rect.y + self.step + SPRITE_HEIGHT - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                self.rect.y += self.step
-
-            
-        if(self.direction == 4):
-            #if(self.rect.x - self.step >= Win.MARGIN_LEFT and not map.is_blocked(int((self.rect.x - self.step - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                #self.rect.x -= self.step
-            if (not map.is_blocked(
-                    int((self.rect.x - self.step - Win.MARGIN_LEFT) / Win.GRID_SIZE),
-                    int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
-                self.rect.x -= self.step
-
-        if (self.rect.y < Win.MARGIN_TOP - SPRITE_HEIGHT):
-            self.rect.y = Win.HEIGHT + Win.MARGIN_TOP
+        if (self.rect.y < Win.MARGIN_TOP):
+            self.rect.y += Win.HEIGHT
         if (self.rect.y > Win.MARGIN_TOP + Win.HEIGHT):
-            self.rect.y = Win.MARGIN_TOP
+            self.rect.y -= Win.HEIGHT
 
-        if (self.rect.x < Win.MARGIN_LEFT - SPRITE_WIDTH):
-            self.rect.x = Win.WIDTH + Win.MARGIN_LEFT
+        if (self.rect.x < Win.MARGIN_LEFT):
+            self.rect.x += Win.WIDTH
         if (self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
-            self.rect.x = Win.MARGIN_LEFT
+            self.rect.x -= Win.WIDTH
 

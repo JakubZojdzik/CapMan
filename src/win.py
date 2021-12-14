@@ -16,8 +16,8 @@ class Win:
 
     @staticmethod
     def pixelPos_to_gridPos(pos):
-        x = pos[0]
-        y = pos[1]
+        x = round(pos[0])
+        y = round(pos[1])
         x -= Win.MARGIN_LEFT - (Win.GRID_SIZE+1)//2
         y -= Win.MARGIN_TOP - (Win.GRID_SIZE+1)//2
         if x%Win.GRID_SIZE == 0 and y%Win.GRID_SIZE == 0:
@@ -27,7 +27,7 @@ class Win:
             y1 = y//Win.GRID_SIZE - 1
             y2 = y1 + 1
             length = y % Win.GRID_SIZE
-            if y2 > Win.HEIGHT//Win.GRID_SIZE:
+            if y2 >= Win.HEIGHT//Win.GRID_SIZE:
                 y2 -= Win.HEIGHT//Win.GRID_SIZE
             if y1 < 0:
                 y1 += Win.HEIGHT//Win.GRID_SIZE
@@ -37,7 +37,7 @@ class Win:
             x1 = x//Win.GRID_SIZE-1
             x2 = x1 + 1
             length = x % Win.GRID_SIZE
-            if x2 > Win.WIDTH//Win.GRID_SIZE:
+            if x2 >= Win.WIDTH//Win.GRID_SIZE:
                 x2 -= Win.WIDTH//Win.GRID_SIZE
             if x1 < 0:
                 x1 += Win.WIDTH//Win.GRID_SIZE
