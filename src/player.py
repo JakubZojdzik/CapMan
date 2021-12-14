@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames
-        self.step = 5
+        self.step = 4
     
     def turn(self, dir):
         self.trn = dir
@@ -113,7 +113,7 @@ class Player(pygame.sprite.Sprite):
             self.image = img_d
             
         if(self.direction == 4):
-            if(not map.is_blocked(int((self.rect.x - self.step - Win.MARGIN_LEFT) / Win.GRID_SIZE), int((self.rect.y - Win.MARGIN_TOP) / Win.GRID_SIZE))):
+            if(not map.is_blocked(((self.rect.x - self.step - Win.MARGIN_LEFT) // Win.GRID_SIZE), ((self.rect.y - Win.MARGIN_TOP) // Win.GRID_SIZE))):
                 self.rect.x -= self.step
                 stand = False
             self.image = img_l

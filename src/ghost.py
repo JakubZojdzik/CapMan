@@ -44,7 +44,7 @@ class Ghost(pygame.sprite.Sprite):
         self.start_pos_x = pos_x
         self.start_pos_y = pos_y
         self.color = color
-        self.step = 5
+        self.step = 3
         self.mode = mode
         self.img_rot = []
         if(color == "pink"):
