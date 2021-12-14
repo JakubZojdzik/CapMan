@@ -7,8 +7,6 @@ from ghost import Ghost
 from score import Score
 import time
 
-from random import randint
-
 pygame.init()
 screen_info = pygame.display.Info()
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
@@ -31,7 +29,7 @@ blinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*
 pinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*11.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "pink")
 inky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "blue")
 clyde = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*13.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "orange")
-
+scary_time_off = -1
 ghost_list = pygame.sprite.Group()
 ghost_list.add(blinky)
 ghost_list.add(pinky)
@@ -127,9 +125,9 @@ def menu_loop():
                     pygame.quit()
                     run = False
 
-#print(Win.pixelPos_to_gridPos(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2))
 def main_loop():
     main = True
+    global scary_time_off
     global start_time
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
@@ -140,7 +138,6 @@ def main_loop():
     draw_score(start_time)
     pygame.display.flip()
     time.sleep(2)
-    #print(lvl.show_board())
     start_time += 2
     state = -1
     temp = 0
@@ -156,6 +153,12 @@ def main_loop():
             pygame.display.update()
             time.sleep(5)
             next_lvl()
+        
+        if(time.time() - scary_time_off >= 0 and time.time() - scary_time_off < 60 / Win.FPS):
+            for ghost in ghost_list:
+                ghost.mode = "chase"
+            scary_time_off = -1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -182,16 +185,16 @@ def main_loop():
         if temp % 8 == 0:
             state *= -1
         screen.fill(Win.BGCOLOR)
-        #drawGrid()
         lvl.to_board(screen)
-        points.to_board(screen, player)
+        if(points.to_board(screen, player)):
+            for ghost in ghost_list:
+                ghost.mode = "scared"
+            scary_time_off = time.time() + 8
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)
         pygame.display.flip()
         clock.tick(Win.FPS)
-
-    # pygame.quit()
 
 while(True):
     pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")

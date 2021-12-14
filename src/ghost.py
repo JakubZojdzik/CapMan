@@ -159,13 +159,9 @@ class Ghost(pygame.sprite.Sprite):
         min_length = 10000.0
         curr_direction = 1
         for i in posibble_moves:
-            print(i, BFSed_map[i[1]][i[0]])
             if BFSed_map[i[1]][i[0]] < min_length:
                 curr_direction = i[3]
                 min_length = BFSed_map[i[1]][i[0]]
-
-        print(curr_direction)
-
         return curr_direction
 
     def update(self, player_pos, map):
