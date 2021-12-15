@@ -26,9 +26,10 @@ player_list = pygame.sprite.Group()
 player_list.add(player)
 
 blinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*10.5, "chase", "red")
-pinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*11.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "pink")
+pinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*11.5, Win.MARGIN_TOP+Win.GRID_SIZE*11.5, "closed", "pink")
 inky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "blue")
-clyde = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*13.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "orange")
+inky.auxiliary_variable = 3
+clyde = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*13.5, Win.MARGIN_TOP+Win.GRID_SIZE*11.5, "closed", "orange")
 scary_time_off = -1
 ghost_list = pygame.sprite.Group()
 ghost_list.add(blinky)
@@ -56,9 +57,10 @@ def next_lvl():
     points.reset_points(lvl)
     player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
     blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red")
-    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "pink")
+    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink")
     inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue")
-    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "orange")
+    inky.auxiliary_variable = 3
+    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange")
 
 def draw_score(start_time):
     score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(time.time() - start_time)), True, (0, 255, 255))
@@ -132,6 +134,8 @@ def main_loop():
     global start_time
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
+    lvl.lvl -= 1
+    next_lvl()
     lvl.to_board(screen)
     points.to_board(screen, player)
     player_list.draw(screen)
@@ -155,11 +159,19 @@ def main_loop():
             time.sleep(5)
             next_lvl()
         
-        if(time.time() - scary_time_off >= 0 and time.time() - scary_time_off < 60 / Win.FPS):
+        '''if(time.time() - scary_time_off >= 0 and time.time() - scary_time_off < 60 / Win.FPS):
             for ghost in ghost_list:
                 ghost.mode = "chase"
             scary_time_off = -1
-            scared = False
+            scared = False'''
+        if int((time.time() - start_time)*Win.FPS) % 10 == 0:
+            #inky, pinky, clyde
+            if int(time.time() - start_time) == 10:
+                inky.mode = "chase"
+            if int(time.time() - start_time) == 20:
+                pinky.mode = "chase"
+            if int(time.time() - start_time) == 30:
+                clyde.mode = "chase"
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -194,9 +206,11 @@ def main_loop():
         lvl.to_board(screen)
         if(points.to_board(screen, player)):
             for ghost in ghost_list:
-                ghost.mode = "scared"
-            scary_time_off = time.time() + 8
-            scared = True
+                if ghost.mode != "closed":
+                    ghost.mode = "scared"
+                    ghost.auxiliary_variable = 8.0
+            #scary_time_off = time.time() + 8
+            #scared = True
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)

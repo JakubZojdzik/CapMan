@@ -61,14 +61,28 @@ class Ghost(pygame.sprite.Sprite):
             self.image = img_red[0]
         self.rect = self.image.get_rect()
         self.rect.center = (pos_x, pos_y)
-        self.trn = 0
-        self.direction = 1
+        self.direction = 0
+        self.prev_mode = "chase"
+        self.auxiliary_variable = 1 # closed -> start_direction , scared -> time_left
 
     def resetPos(self):
         self.rect.center = (self.start_pos_x, self.start_pos_y)
+        self.direction = 0
+
+    def is_mode_changed(self):
+        if self.mode != self.prev_mode and len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
+            self.prev_mode = self.mode
+            if self.mode == "chase":
+                self.step = 3
+            elif self.mode == "return":
+                self.step = 8
+            elif self.mode == "scared":
+                self.step = 2
+            else:
+                self.step = 1
 
     @staticmethod
-    def BFS(pos, map):
+    def BFS(pos, map, step):
         cells = Win.pixelPos_to_gridPos(pos)
         #level_grid = map.show_board().copy()
         visited = copy.deepcopy(map.show_board())
@@ -78,7 +92,7 @@ class Ghost(pygame.sprite.Sprite):
         it = 10
         for i in cells:
             queue.append([i[0], i[1]])
-            result[i[1]][i[0]] = float(i[2])
+            result[i[1]][i[0]] = i[2] * Win.GRID_SIZE // step
             visited[i[1]][i[0]] = it
             it += 1
 
@@ -92,7 +106,7 @@ class Ghost(pygame.sprite.Sprite):
             if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
-                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
+                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE * Win.GRID_SIZE // step
 
             curr_x = prev_cell[0]
             curr_y = prev_cell[1] - 1
@@ -102,7 +116,7 @@ class Ghost(pygame.sprite.Sprite):
             if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
-                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
+                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE * Win.GRID_SIZE // step
 
             curr_x = prev_cell[0] + 1
             curr_y = prev_cell[1]
@@ -112,7 +126,7 @@ class Ghost(pygame.sprite.Sprite):
             if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
-                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
+                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE * Win.GRID_SIZE // step
 
             curr_x = prev_cell[0]
             curr_y = prev_cell[1] + 1
@@ -122,7 +136,7 @@ class Ghost(pygame.sprite.Sprite):
             if visited[curr_y][curr_x] == 0 or visited[curr_y][curr_x] == 2:
                 queue.append([curr_x, curr_y])
                 visited[curr_y][curr_x] = visited[prev_cell[1]][prev_cell[0]]
-                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE
+                result[curr_y][curr_x] = result[prev_cell[1]][prev_cell[0]] + Win.GRID_SIZE / step
 
         return result
 
@@ -153,18 +167,53 @@ class Ghost(pygame.sprite.Sprite):
             return gridPos
 
 
+
     def find_next_move(self, pos, map):
         posibble_moves = Ghost.possible_moves(self.rect.center, map)
-        BFSed_map = Ghost.BFS(pos, map)
-        min_length = 10000.0
-        curr_direction = 1
-        for i in posibble_moves:
-            if BFSed_map[i[1]][i[0]] < min_length:
-                curr_direction = i[3]
-                min_length = BFSed_map[i[1]][i[0]]
-        return curr_direction
+        BFSed_map = Ghost.BFS(pos, map, 4)
+        if self.mode == "closed":
+            if self.direction == 0:
+                self.direction = self.auxiliary_variable
+            if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
+                self.direction = 4 - self.direction
+            return self.direction
+        elif self.mode == "chase":
+            min_length = 10000.0
+            curr_direction = 1
+            for i in posibble_moves:
+                if BFSed_map[i[1]][i[0]] < min_length:
+                    curr_direction = i[3]
+                    min_length = BFSed_map[i[1]][i[0]]
+            return curr_direction
+        elif self.mode == "scared":
+            if self.auxiliary_variable <= 0.0:
+                self.mode = "chase"
+                self.is_mode_changed()
+                return self.find_next_move(pos, map)
+            self.auxiliary_variable -= 1/Win.FPS
+            max_length = 0.0
+            curr_direction = 1
+            for i in posibble_moves:
+                if BFSed_map[i[1]][i[0]] > max_length:
+                    curr_direction = i[3]
+                    max_length = BFSed_map[i[1]][i[0]]
+            return curr_direction
+        else:
+            if Win.pixelPos_to_gridPos(self.rect.center)[0] == [12, 12, 0]:
+                self.mode = "chase"
+                self.is_mode_changed()
+                return self.find_next_move(pos, map)
+            BFSed_map = Ghost.BFS([Win.MARGIN_LEFT+Win.GRID_SIZE*12+Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*12+Win.GRID_SIZE//2], map, self.step)
+            min_length = 10000.0
+            curr_direction = 1
+            for i in posibble_moves:
+                if BFSed_map[i[1]][i[0]] < min_length:
+                    curr_direction = i[3]
+                    min_length = BFSed_map[i[1]][i[0]]
+            return curr_direction
 
     def update(self, player_pos, map):
+        self.is_mode_changed()
         self.direction = self.find_next_move(player_pos, map)
         self.image = self.img_rot[self.direction]
         if self.direction == 1:
