@@ -77,6 +77,16 @@ def decode(value):
     value = base64.b64decode(value)
     return str(value)[2:-1]
 
+def load_highscore():
+    f = open('../lib/ExtreamlyNormalFile.png', "r")
+    return(decode(str(f.read())))
+
+def save_highscore(score):
+    file = open('../lib/ExtreamlyNormalFile.png', 'w')
+    file.truncate()
+    file.write(encode(score))
+    file.close()
+
 def next_lvl():
     global start_time
     start_time = time.time()
@@ -95,16 +105,20 @@ def draw_score(start_time):
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, Win.MARGIN_TOP + Win.HEIGHT + 50))
     screen.blit(score_img, score_rect)
 
+def calculate_score():
+    s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
+    if(s < load_highscore()):
+        save_highscore(s)
+    return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
+
 def death():
     Score.lives -= 1
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
     global start_time
     global finalscore
-    # finalscore = 
     for ghost in ghost_tab:
         ghost.resetPos()
     screen.fill(Win.BGCOLOR)
-    #drawGrid()
     lvl.to_board(screen)
     points.to_board(screen, player)
     player_list.draw(screen)
@@ -112,6 +126,7 @@ def death():
     draw_score(start_time)
     pygame.display.flip()
     if(Score.lives <= 0):
+        finalscore = calculate_score()
         current=game_over
         current_width=Win.GAMEOVERWIDTH
         screen.fill(Win.BGCOLOR)
@@ -162,6 +177,7 @@ def main_loop():
     scared = False
     global scary_time_off
     global start_time
+    global finalscore
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
     lvl.lvl -= 1
@@ -181,6 +197,7 @@ def main_loop():
         if(Score.lives <= 0):
             main = False
         if(points.is_all()):
+            final_score = calculate_score()
             current=newlevel
             current_width=Win.NEWLEVELWIDTH
             screen.fill(Win.BGCOLOR)
@@ -189,11 +206,6 @@ def main_loop():
             time.sleep(5)
             next_lvl()
         
-        '''if(time.time() - scary_time_off >= 0 and time.time() - scary_time_off < 60 / Win.FPS):
-            for ghost in ghost_list:
-                ghost.mode = "chase"
-            scary_time_off = -1
-            scared = False'''
         if int((time.time() - start_time)*Win.FPS) % 10 == 0:
             #inky, pinky, clyde
             if int(time.time() - start_time) == 10:
@@ -239,8 +251,6 @@ def main_loop():
                 if ghost.mode != "closed":
                     ghost.mode = "scared"
                     ghost.auxiliary_variable = 8.0
-            #scary_time_off = time.time() + 8
-            #scared = True
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)
