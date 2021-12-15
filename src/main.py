@@ -52,7 +52,7 @@ start_time = time.time()
 
 points = Points()
 points.reset_points(lvl)
-
+"""
 def encode():
     value = b"148"
     value = base64.standard_b64encode(value).decode("utf-8", "ignore")
@@ -77,7 +77,7 @@ def decode(value):
 
 print(decode(encode()))
 exit()
-
+"""
 def next_lvl():
     global start_time
     start_time = time.time()
@@ -143,16 +143,16 @@ def menu_loop():
             if event.type==pygame.QUIT: #zakończenie
                 pygame.quit()
                 run = False
-            if event.type == pygame.KEYDOWN: #przejście do gry
-                if event.key == ord(' ') or event.key==ord("p"):
+            if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
+                if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
                     run = False
-                if event.key == ord('c'):
+                if event.key == ord('c'):#przechodzi do twórców
                     current=credits
                     current_width=Win.SETTINSGWIDTH
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu
                     current_width = Win.MENUWIDTH
-                if event.key == ord('q'):
+                if event.key == ord('q'): #wychodzi z gry
                     pygame.quit()
                     run = False
 
@@ -249,7 +249,7 @@ def main_loop():
 while(True):
     pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")
     pygame.mixer.music.set_volume(0.1)
-    pygame.mixer.music.play(0)
+    pygame.mixer.music.play(-1)
     menu_loop()
 
     main_loop()
