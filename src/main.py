@@ -55,25 +55,10 @@ start_time = time.time()
 points = Points()
 points.reset_points(lvl)
 
-def xor_str(a,b):
-    xored = []
-    for i in range(max(len(a), len(b))):
-        xored_value = ord(a[i%len(a)]) ^ ord(b[i%len(b)])
-        xored.append(hex(xored_value)[2:])
-    return ''.join(xored)
-
-def encode(value):
-    value = base64.b64encode(bytes(value, "utf-8"))
-    value = str(value)[2:-1]
-    value = codecs.encode(value, 'rot_13')
-    value = base64.b64encode(bytes(value, "utf-8"))
-    value = str(value)[2:-1]
-    value = base64.b64encode(bytes(value, "utf-8"))
-    value = str(value)[2:-1]
-    value = base64.b64encode(bytes(value, "utf-8"))
-    value = str(value)[2:-1]
-    value = base64.b64encode(bytes(value, "utf-8"))
-    value = str(value)[2:-1]
+def encode():
+    value = b"148"
+    value = base64.standard_b64encode(value).decode("utf-8", "ignore")
+    value = str(value)
     value = codecs.encode(value, 'rot_13')
     return value
 
@@ -91,17 +76,6 @@ def decode(value):
     value = str(value)
     value = base64.b64decode(value)
     return str(value)[2:-1]
-
-def load_highscore():
-    f = open('../lib/ExtreamlyNormalFile.png', "r")
-    return(decode(str(f.read())))
-        
-
-def save_highscore(score):
-    file = open('../lib/ExtreamlyNormalFile.png', 'w')
-    file.truncate()
-    file.write(encode(score))
-    file.close()
 
 def next_lvl():
     global start_time
@@ -170,16 +144,16 @@ def menu_loop():
             if event.type==pygame.QUIT: #zakończenie
                 pygame.quit()
                 run = False
-            if event.type == pygame.KEYDOWN: #przejście do gry
-                if event.key == ord(' ') or event.key==ord("p"):
+            if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
+                if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
                     run = False
-                if event.key == ord('c'):
+                if event.key == ord('c'):#przechodzi do twórców
                     current=credits
                     current_width=Win.SETTINSGWIDTH
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu
                     current_width = Win.MENUWIDTH
-                if event.key == ord('q'):
+                if event.key == ord('q'): #wychodzi z gry
                     pygame.quit()
                     run = False
 
@@ -276,7 +250,7 @@ def main_loop():
 while(True):
     pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")
     pygame.mixer.music.set_volume(0.1)
-    pygame.mixer.music.play(0)
+    pygame.mixer.music.play(-1)
     menu_loop()
 
     main_loop()
