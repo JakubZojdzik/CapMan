@@ -27,6 +27,8 @@ player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE
 player_list = pygame.sprite.Group()
 player_list.add(player)
 
+finalscore = 0
+
 blinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*10.5, "chase", "red")
 pinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*11.5, Win.MARGIN_TOP+Win.GRID_SIZE*11.5, "closed", "pink")
 inky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "blue")
@@ -53,30 +55,53 @@ start_time = time.time()
 points = Points()
 points.reset_points(lvl)
 
-def encode():
-    value = b"148"
-    value = base64.standard_b64encode(value).decode("utf-8", "ignore")
-    value = str(value)
+def xor_str(a,b):
+    xored = []
+    for i in range(max(len(a), len(b))):
+        xored_value = ord(a[i%len(a)]) ^ ord(b[i%len(b)])
+        xored.append(hex(xored_value)[2:])
+    return ''.join(xored)
+
+def encode(value):
+    value = base64.b64encode(bytes(value, "utf-8"))
+    value = str(value)[2:-1]
     value = codecs.encode(value, 'rot_13')
-    value = bytes(value, 'utf-8')
-    value = base64.standard_b64encode(value).decode("utf-8", "ignore")
-    value = str(value)
-    value = "".join([chr(ord(a) ^ ord(b)) for a,b in zip(value, "lxb")])
-    value = str(value)
+    value = base64.b64encode(bytes(value, "utf-8"))
+    value = str(value)[2:-1]
+    value = base64.b64encode(bytes(value, "utf-8"))
+    value = str(value)[2:-1]
+    value = base64.b64encode(bytes(value, "utf-8"))
+    value = str(value)[2:-1]
+    value = base64.b64encode(bytes(value, "utf-8"))
+    value = str(value)[2:-1]
+    value = codecs.encode(value, 'rot_13')
     return value
 
 def decode(value):
-    value = "".join([chr(ord(a) ^ ord(b)) for a,b in zip(value, "lxb")])
-    value = bytes(value, 'utf-8').decode("utf-8", "ignore")
-    value = base64.standard_b64decode(value).decode("utf-8", "ignore")
-    value = str(value)
     value = codecs.encode(value, 'rot_13')
-    value = bytes(value, 'utf-8').decode("utf-8", "ignore")
-    value = base64.standard_b64decode(value)
-    return value
+    value = base64.b64decode(value)
+    value = str(value)[2:-1]
+    value = base64.b64decode(value)
+    value = str(value)[2:-1]
+    value = base64.b64decode(value)
+    value = str(value)[2:-1]
+    value = base64.b64decode(value)
+    value = str(value)[2:-1]
+    value = codecs.encode(value, 'rot_13')
+    value = str(value)
+    value = base64.b64decode(value)
+    return str(value)[2:-1]
 
-print(decode(encode()))
-exit()
+def load_highscore():
+    f = open('../lib/ExtreamlyNormalFile.png', "r")
+    return(decode(str(f.read())))
+        
+
+def save_highscore(score):
+    file = open('../lib/ExtreamlyNormalFile.png', 'w')
+    file.truncate()
+    file.write(encode(score))
+    file.close()
 
 def next_lvl():
     global start_time
@@ -100,6 +125,8 @@ def death():
     Score.lives -= 1
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
     global start_time
+    global finalscore
+    # finalscore = 
     for ghost in ghost_tab:
         ghost.resetPos()
     screen.fill(Win.BGCOLOR)
@@ -131,7 +158,7 @@ def menu_loop():
     for ghost in ghost_tab:
         ghost.resetPos()
 
-    Score.score = -10
+    Score.score = -5
     Score.lives = 3
     current=menu
     current_width=Win.MENUWIDTH
