@@ -1,11 +1,13 @@
 import pygame
+import codecs
+import base64
+import time
 from win import Win
 from player import Player
 from level import Level
 from points import Points
 from ghost import Ghost
 from score import Score
-import time
 
 pygame.init()
 screen_info = pygame.display.Info()
@@ -51,7 +53,34 @@ start_time = time.time()
 points = Points()
 points.reset_points(lvl)
 
+def encode():
+    value = b"148"
+    value = base64.standard_b64encode(value).decode("utf-8", "ignore")
+    value = str(value)
+    value = codecs.encode(value, 'rot_13')
+    value = bytes(value, 'utf-8')
+    value = base64.standard_b64encode(value).decode("utf-8", "ignore")
+    value = str(value)
+    value = "".join([chr(ord(a) ^ ord(b)) for a,b in zip(value, "lxb")])
+    value = str(value)
+    return value
+
+def decode(value):
+    value = "".join([chr(ord(a) ^ ord(b)) for a,b in zip(value, "lxb")])
+    value = bytes(value, 'utf-8').decode("utf-8", "ignore")
+    value = base64.standard_b64decode(value).decode("utf-8", "ignore")
+    value = str(value)
+    value = codecs.encode(value, 'rot_13')
+    value = bytes(value, 'utf-8').decode("utf-8", "ignore")
+    value = base64.standard_b64decode(value)
+    return value
+
+print(decode(encode()))
+exit()
+
 def next_lvl():
+    global start_time
+    start_time = time.time()
     lvl.lvl += 1
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
@@ -102,7 +131,7 @@ def menu_loop():
     for ghost in ghost_tab:
         ghost.resetPos()
 
-    Score.score = 0
+    Score.score = -10
     Score.lives = 3
     current=menu
     current_width=Win.MENUWIDTH
