@@ -8,7 +8,7 @@ from level import Level
 from points import Points
 from ghost import Ghost
 from score import Score
-
+from maps import Bigmap
 pygame.init()
 screen_info = pygame.display.Info()
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
@@ -43,7 +43,7 @@ ghost_list.add(clyde)
 ghost_tab = [blinky, pinky, inky, clyde]
 
 lvl = Level()
-
+options=Bigmap()###########ja
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
@@ -87,10 +87,10 @@ def save_highscore(score):
     file.write(encode(score))
     file.close()
 
-def next_lvl():
+def new_lvl(number):
     global start_time
     start_time = time.time()
-    lvl.lvl += 1
+    lvl.lvl =number
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
     player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
@@ -161,7 +161,10 @@ def menu_loop():
                 run = False
             if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
                 if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
-                    run = False
+                    lvl_number=options.drawmaps()
+                    print(type(lvl_number))
+                    return(lvl_number)
+                    run=False
                 if event.key == ord('c'):#przechodzi do twórców
                     current=credits
                     current_width=Win.SETTINSGWIDTH
@@ -172,7 +175,7 @@ def menu_loop():
                     pygame.quit()
                     run = False
 
-def main_loop():
+def main_loop(start_lvl):
     main = True
     scared = False
     global scary_time_off
@@ -180,8 +183,8 @@ def main_loop():
     global finalscore
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
-    lvl.lvl -= 1
-    next_lvl()
+    #lvl.lvl =start_lvl
+    new_lvl(start_lvl)
     lvl.to_board(screen)
     points.to_board(screen, player)
     player_list.draw(screen)
@@ -261,6 +264,6 @@ while(True):
     pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
-    menu_loop()
+    start=menu_loop()
 
-    main_loop()
+    main_loop(start)
