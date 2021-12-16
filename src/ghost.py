@@ -66,6 +66,7 @@ class Ghost(pygame.sprite.Sprite):
         self.direction = 0
         self.prev_mode = "chase"
         self.auxiliary_variable = auxiliary_variable # closed -> start_direction , scared -> time_left
+        self.img_scared = pygame.transform.scale(pygame.image.load("../lib/whiteghost.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
         self.upgrade_ghost_poses()
 
     def ghost_number(self):
@@ -246,6 +247,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.mode = "chase"
                 self.is_mode_changed()
                 return self.find_next_move(pos, map)
+            
             self.auxiliary_variable -= 1/Win.FPS
             '''
             max_length = 0.0
@@ -311,6 +313,15 @@ class Ghost(pygame.sprite.Sprite):
             self.rect.x += Win.WIDTH
         if (self.rect.x > Win.MARGIN_LEFT + Win.WIDTH):
             self.rect.x -= Win.WIDTH
+
+        if self.mode == "scared":
+            if self.auxiliary_variable <= 3.5:
+                if int(self.auxiliary_variable * 10) % 10 <= 4:
+                    self.image = self.img_rot[self.direction]
+                else:
+                    self.image = self.img_scared
+            else:
+                self.image = self.img_scared
 
         self.upgrade_ghost_poses()
 
