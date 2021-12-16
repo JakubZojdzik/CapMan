@@ -147,15 +147,18 @@ def death():
     pygame.display.flip()
     if(Score.lives <= 0):
         finalscore = calculate_score(False)
-        end_lvl()
+        end_lvl(0)
     else:
         time.sleep(1.8)
         start_time += 3
 
-def end_lvl():
+def end_lvl(is_win):
     global finalscore
     run = True
-    end_img = pygame.image.load("../lib/game_over.png")
+    if is_win==1:
+        end_img = pygame.image.load("../lib/win.png")
+    else:
+        end_img = pygame.image.load("../lib/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
     highscore_img = font.render("Highscore: " + str(load_highscore(lvl.lvl)), True, Colors.WHITE)
@@ -232,7 +235,7 @@ def main_loop(start_lvl):
             main = False
         if(points.is_all()):
             finalscore = calculate_score(True)
-            end_lvl()
+            end_lvl(1)
             main = False
         
         if int((time.time() - start_time)*Win.FPS) % 10 == 0:
