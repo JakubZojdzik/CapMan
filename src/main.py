@@ -196,7 +196,6 @@ def menu_loop():
             if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
                 if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
                     lvl_number=options.drawmaps()
-                    print(type(lvl_number))
                     return(lvl_number)
                 if event.key == ord('c'):#przechodzi do twórców
                     current=credits

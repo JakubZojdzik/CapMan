@@ -16,15 +16,6 @@ class Bigmap:
 
         self.locked = False
 
-
-    def choice(self):
-        ev = pygame.event.get()
-        # proceed events
-        for event in pygame.event.get():
-            # handle MOUSEBUTTONUP
-            if event.type == pygame.MOUSEBUTTONUP:
-                pos = pygame.mouse.get_pos()
-                print(pos)
     def drawmaps(self):
         run = True
         x = 225
@@ -44,16 +35,19 @@ class Bigmap:
                 if event.type == pygame.QUIT:  # zakończenie
                     pygame.quit()
                     run = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == ord('q'):
+                        run = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
                     if (pos[0]>=d and pos[0]<=d+225) and (pos[1]>=e and pos[1]<=e+220):
-                        return int(1)
+                        return 1
                     if (pos[0]>=2*d+225 and pos[0]<=2*d+450) and (pos[1]>=e and pos[1]<=e+220):
-                        return int(2)
+                        return 2
                     if (pos[0]>=3*d+450 and pos[0]<=3*d+675) and (pos[1]>=e and pos[1]<=e+220):
-                        return int(3)
+                        return 3
                     if (pos[0]>=4*d+675 and pos[0]<=4*d+900) and (pos[1]>=e and pos[1]<=e+220):
-                        return int(4)
+                        return 4
 
 
 
