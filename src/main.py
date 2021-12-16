@@ -152,6 +152,27 @@ def death():
         time.sleep(1.8)
         start_time += 3
 
+def end_lvl():
+    global finalscore
+    run = True
+    end_img = pygame.image.load("../lib/game_over.png")
+    score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
+    score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
+    highscore_img = font.render("Highscore: " + str(load_highscore(lvl.lvl)), True, Colors.WHITE)
+    highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
+    while run:
+        screen.fill(Win.BGCOLOR)
+        screen.blit(end_img, (((screen_info.current_w - Win.MENUWIDTH) // 2),0))
+        screen.blit(score_img, score_rect)
+        screen.blit(highscore_img, highscore_rect)
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # zakończenie
+                pygame.quit()
+                run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):
+                    run = False
 
 def menu_loop():
     run = True
@@ -187,21 +208,6 @@ def menu_loop():
                     pygame.quit()
                     run = False
 
-def end_lvl():
-    run = True
-    end_img = pygame.image.load("../lib/game_over.png")
-    while run:
-        screen.fill(Win.BGCOLOR)
-        screen.blit(end_img, (((screen_info.current_w - Win.MENUWIDTH) // 2),0))
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:  # zakończenie
-                pygame.quit()
-                run = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == ord('q'):
-                    run = False
-
 def main_loop(start_lvl):
     main = True
     global scary_time_off
@@ -226,7 +232,7 @@ def main_loop(start_lvl):
         if(Score.lives <= 0):
             main = False
         if(points.is_all()):
-            final_score = calculate_score(True)
+            finalscore = calculate_score(True)
             end_lvl()
             main = False
         
