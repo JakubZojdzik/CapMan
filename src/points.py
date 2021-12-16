@@ -5,8 +5,11 @@ from score import Score
 
 POINT_WIDTH = int(Win.GRID_SIZE/2)
 POINT_HEIGHT = int(Win.GRID_SIZE/2)
+BIG_POINT_WIDTH = int(Win.GRID_SIZE * 1.2)
+BIG_POINT_HEIGHT = int(Win.GRID_SIZE * 1.2)
 
 img = pygame.transform.scale(pygame.image.load("../lib/point.png"), [POINT_WIDTH, POINT_HEIGHT])
+img_big = pygame.transform.scale(pygame.image.load("../lib/point.png"), [BIG_POINT_WIDTH, BIG_POINT_HEIGHT])
 
 class Points:
     def __init__(self):
@@ -47,6 +50,8 @@ class Points:
             for j in range(25):
                 if(n[i][j] == 0):
                     self.map[i][j] = 1
+                elif(n[i][j] == 3):
+                    self.map[i][j] = 3
                 else:
                     self.map[i][j] = 0
 
@@ -79,10 +84,18 @@ class Points:
         return self.map == clean
     
     def to_board(self, screen, plr):
+        scary = False
         for i in range(25):
             for j in range(24):
                 if(plr.rect.collidepoint(Win.MARGIN_LEFT + Win.GRID_SIZE * i + int(Win.GRID_SIZE/2), Win.MARGIN_TOP + Win.GRID_SIZE * j + int(Win.GRID_SIZE/2)) == True):
-                    if (self.map[j][i]==1):
+                    if (self.map[j][i] == 1):
+                        self.map[j][i] = 0
+                        pygame.mixer.music.load("../lib/waka.mp3")
+                        pygame.mixer.music.set_volume(0.1)
+                        pygame.mixer.music.play(0)
+                        Score.score += 5
+                    if(self.map[j][i] == 3):
+                        scary = True
                         self.map[j][i] = 0
                         pygame.mixer.music.load("../lib/waka.mp3")
                         pygame.mixer.music.set_volume(0.1)
@@ -90,5 +103,8 @@ class Points:
                         Score.score += 10
                 if(self.map[j][i] == 1):
                     screen.blit(img, (Win.MARGIN_LEFT + Win.GRID_SIZE * i + Win.GRID_SIZE/2 - POINT_WIDTH/2, Win.MARGIN_TOP + Win.GRID_SIZE * j + Win.GRID_SIZE/2 - POINT_HEIGHT/2))
+                elif(self.map[j][i] == 3):
+                    screen.blit(img_big, (Win.MARGIN_LEFT + Win.GRID_SIZE * i + Win.GRID_SIZE/2 - BIG_POINT_WIDTH/2, Win.MARGIN_TOP + Win.GRID_SIZE * j + Win.GRID_SIZE/2 - BIG_POINT_HEIGHT/2))
+        return scary
 
-        
+
