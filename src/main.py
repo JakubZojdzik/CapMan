@@ -126,7 +126,7 @@ def death():
     draw_score(start_time)
     pygame.display.flip()
     if(Score.lives <= 0):
-        finalscore = calculate_score()
+        #finalscore = calculate_score()
         current=game_over
         current_width=Win.GAMEOVERWIDTH
         screen.fill(Win.BGCOLOR)

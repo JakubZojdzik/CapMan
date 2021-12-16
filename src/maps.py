@@ -5,12 +5,17 @@ class Bigmap:
         self.map1=pygame.image.load("../lib/maps/map1.png")
         self.map1= pygame.transform.rotozoom(self.map1, 0, 0.3)
 
-        self.map2=map1=pygame.image.load("../lib/maps/map2.png")
+        self.map2=pygame.image.load("../lib/maps/map2.png")
         self.map2 = pygame.transform.rotozoom(self.map2, 0, 0.3)
-        self.map3=map1=pygame.image.load("../lib/maps/map3.png")
+        self.map3=pygame.image.load("../lib/maps/map3.png")
         self.map3 = pygame.transform.rotozoom(self.map3, 0, 0.3)
-        self.map4=map1=pygame.image.load("../lib/maps/map4.png")
+        self.map4=pygame.image.load("../lib/maps/map4.png")
         self.map4 = pygame.transform.rotozoom(self.map4, 0, 0.3)
+
+
+        self.title=pygame.image.load("../lib/capmantitle.png")
+        self.title=pygame.transform.rotozoom(self.title, 0, 0.5)
+
 
     def choice(self):
         ev = pygame.event.get()
@@ -31,6 +36,7 @@ class Bigmap:
             screen_info = pygame.display.Info()
             d=int((screen_info.current_w - 4*225) / 5)
             e=int((screen_info.current_h - 220) / 2)
+            screen.blit(self.title, (int((screen_info.current_w - 522) / 2),0))
             screen.blit(self.map1, (d, e))
             screen.blit(self.map2, (2*d+225, e))
             screen.blit(self.map3, (3*d+450, e))
