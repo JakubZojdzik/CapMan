@@ -55,11 +55,24 @@ start_time = time.time()
 points = Points()
 points.reset_points(lvl)
 
-def encode():
-    value = b"148"
-    value = base64.standard_b64encode(value).decode("utf-8", "ignore")
-    value = str(value)
-    value = codecs.encode(value, 'rot_13')
+def encode(value):
+    value = bytearray(value, "utf8")
+    value = base64.b64encode(value)
+    value = str(value)[2:-1]
+    value = codecs.decode(value, 'rot_13')
+    value = bytearray(value, "utf8")
+    value = base64.b64encode(value)
+    value = str(value)[2:-1]
+    value = bytearray(value, "utf8")
+    value = base64.b64encode(value)
+    value = str(value)[2:-1]
+    value = bytearray(value, "utf8")
+    value = base64.b64encode(value)
+    value = str(value)[2:-1]
+    value = bytearray(value, "utf8")
+    value = base64.b64encode(value)
+    value = str(value)[2:-1]
+    value = codecs.decode(value, 'rot_13')
     return value
 
 def decode(value):
@@ -79,7 +92,7 @@ def decode(value):
 
 def load_highscore():
     f = open('../lib/ExtreamlyNormalFile.png', "r")
-    return(decode(str(f.read())))
+    return(int(decode(str(f.read()))))
 
 def save_highscore(score):
     file = open('../lib/ExtreamlyNormalFile.png', 'w')
@@ -146,7 +159,7 @@ def menu_loop():
     player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
     for ghost in ghost_tab:
         ghost.resetPos()
-
+    print("highscore = ", load_highscore())
     Score.score = -5
     Score.lives = 3
     current=menu
@@ -207,7 +220,7 @@ def main_loop(start_lvl):
             screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
             pygame.display.update()
             time.sleep(5)
-            next_lvl()
+            # next_lvl()
         
         if int((time.time() - start_time)*Win.FPS) % 10 == 0:
             #inky, pinky, clyde

@@ -16,6 +16,8 @@ class Bigmap:
         self.title=pygame.image.load("../lib/capmantitle.png")
         self.title=pygame.transform.rotozoom(self.title, 0, 0.5)
 
+        self.locked = False
+
 
     def choice(self):
         ev = pygame.event.get()
