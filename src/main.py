@@ -2,6 +2,9 @@ import pygame
 import codecs
 import base64
 import time
+
+from pygame import rect
+from colors import Colors
 from win import Win
 from player import Player
 from level import Level
@@ -121,14 +124,15 @@ def draw_score(start_time):
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, Win.MARGIN_TOP + Win.HEIGHT + 50))
     screen.blit(score_img, score_rect)
 
-def calculate_score():
+def calculate_score(done):
     s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
-    if(s > int(load_highscore(lvl.lvl))):
+    if(s > int(load_highscore(lvl.lvl)) and done):
         save_highscore(str(s), lvl.lvl)
     return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
 
 def death():
     Score.lives -= 1
+    death_sound.play()
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
     global start_time
     global finalscore
@@ -142,17 +146,11 @@ def death():
     draw_score(start_time)
     pygame.display.flip()
     if(Score.lives <= 0):
-        #finalscore = calculate_score()
-        current=game_over
-        current_width=Win.GAMEOVERWIDTH
-        screen.fill(Win.BGCOLOR)
-        screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
-        pygame.display.update()
-        time.sleep(5)
-        return
-    death_sound.play()
-    time.sleep(1.8)
-    start_time += 3
+        finalscore = calculate_score(False)
+        end_lvl()
+    else:
+        time.sleep(1.8)
+        start_time += 3
 
 
 def menu_loop():
@@ -168,7 +166,7 @@ def menu_loop():
     current_width=Win.MENUWIDTH
     while run:
         screen.fill(Win.BGCOLOR)
-        screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
+        screen.blit(current, (((screen_info.current_w - current_width) // 2),0))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type==pygame.QUIT: #zakończenie
@@ -189,9 +187,23 @@ def menu_loop():
                     pygame.quit()
                     run = False
 
+def end_lvl():
+    run = True
+    end_img = pygame.image.load("../lib/game_over.png")
+    while run:
+        screen.fill(Win.BGCOLOR)
+        screen.blit(end_img, (((screen_info.current_w - Win.MENUWIDTH) // 2),0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # zakończenie
+                pygame.quit()
+                run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == ord('q'):
+                    run = False
+
 def main_loop(start_lvl):
     main = True
-    scared = False
     global scary_time_off
     global start_time
     global finalscore
@@ -214,14 +226,9 @@ def main_loop(start_lvl):
         if(Score.lives <= 0):
             main = False
         if(points.is_all()):
-            final_score = calculate_score()
-            current=newlevel
-            current_width=Win.NEWLEVELWIDTH
-            screen.fill(Win.BGCOLOR)
-            screen.blit(current, (int((screen_info.current_w - current_width) / 2),0))
-            pygame.display.update()
-            time.sleep(5)
-            # next_lvl()
+            final_score = calculate_score(True)
+            end_lvl()
+            main = False
         
         if int((time.time() - start_time)*Win.FPS) % 10 == 0:
             #inky, pinky, clyde

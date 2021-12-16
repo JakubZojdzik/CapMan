@@ -4,14 +4,12 @@ class Bigmap:
     def __init__(self):
         self.map1=pygame.image.load("../lib/maps/map1.png")
         self.map1= pygame.transform.rotozoom(self.map1, 0, 0.3)
-
         self.map2=pygame.image.load("../lib/maps/map2.png")
         self.map2 = pygame.transform.rotozoom(self.map2, 0, 0.3)
         self.map3=pygame.image.load("../lib/maps/map3.png")
         self.map3 = pygame.transform.rotozoom(self.map3, 0, 0.3)
         self.map4=pygame.image.load("../lib/maps/map4.png")
         self.map4 = pygame.transform.rotozoom(self.map4, 0, 0.3)
-
 
         self.title=pygame.image.load("../lib/capmantitle.png")
         self.title=pygame.transform.rotozoom(self.title, 0, 0.5)
@@ -21,18 +19,16 @@ class Bigmap:
 
     def choice(self):
         ev = pygame.event.get()
-
         # proceed events
         for event in pygame.event.get():
-
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 print(pos)
     def drawmaps(self):
-        run=True
-        x=225
-        y=220
+        run = True
+        x = 225
+        y = 220
         while run:
             screen.fill(Win.BGCOLOR)
             screen_info = pygame.display.Info()
