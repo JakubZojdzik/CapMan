@@ -92,13 +92,15 @@ def decode(value):
 
 def load_highscore():
     f = open('../lib/ExtreamlyNormalFile.png', "r")
-    return(int(decode(str(f.read()))))
+    return(decode(str(f.read())))
 
 def save_highscore(score):
     file = open('../lib/ExtreamlyNormalFile.png', 'w')
     file.truncate()
     file.write(encode(score))
     file.close()
+
+save_highscore("0")
 
 def new_lvl(number):
     global start_time
@@ -120,8 +122,8 @@ def draw_score(start_time):
 
 def calculate_score():
     s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
-    if(s < load_highscore()):
-        save_highscore(s)
+    if(s > int(load_highscore())):
+        save_highscore(str(s))
     return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
 
 def death():
