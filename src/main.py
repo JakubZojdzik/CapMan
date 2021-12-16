@@ -90,17 +90,18 @@ def decode(value):
     value = base64.b64decode(value)
     return str(value)[2:-1]
 
-def load_highscore():
-    f = open('../lib/ExtreamlyNormalFile.png', "r")
-    return(decode(str(f.read())))
+def load_highscore(lvl):
+    with open('../lib/ExtreamlyNormalFile.png', "r") as f:
+        w = f.readlines()
+    return(decode(str(w[lvl])))
 
-def save_highscore(score):
-    file = open('../lib/ExtreamlyNormalFile.png', 'w')
-    file.truncate()
-    file.write(encode(score))
-    file.close()
+def save_highscore(score, lvl):
+    with open('../lib/ExtreamlyNormalFile.png', "r") as f:
+        w = f.readlines()
+    w[lvl] = encode(score) + '\n'
+    with open('../lib/ExtreamlyNormalFile.png', "w") as f:
+        f.writelines(w)
 
-save_highscore("0")
 
 def new_lvl(number):
     global start_time
@@ -122,8 +123,8 @@ def draw_score(start_time):
 
 def calculate_score():
     s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
-    if(s > int(load_highscore())):
-        save_highscore(str(s))
+    if(s > int(load_highscore(lvl.lvl))):
+        save_highscore(str(s), lvl.lvl)
     return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
 
 def death():
@@ -161,7 +162,6 @@ def menu_loop():
     player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
     for ghost in ghost_tab:
         ghost.resetPos()
-    print("highscore = ", load_highscore())
     Score.score = -5
     Score.lives = 3
     current=menu
@@ -179,7 +179,6 @@ def menu_loop():
                     lvl_number=options.drawmaps()
                     print(type(lvl_number))
                     return(lvl_number)
-                    run=False
                 if event.key == ord('c'):#przechodzi do twórców
                     current=credits
                     current_width=Win.SETTINSGWIDTH
