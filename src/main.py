@@ -43,7 +43,7 @@ ghost_list.add(clyde)
 ghost_tab = [blinky, pinky, inky, clyde]
 
 lvl = Level()
-options=Bigmap()###########ja
+options=Bigmap()
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
