@@ -43,16 +43,16 @@ class Bigmap:
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)
 
-            e += screen_info.current_h - (ICON_SIZE + 60) - screen_info.current_h // 3.2
+            e2 = e + screen_info.current_h - (ICON_SIZE + 60) - screen_info.current_h // 3.2
             for i in range(4):
                 score_img = font.render("Lvl: " + str(i+5), True, (0, 255, 255))
-                score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e - 30))
+                score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 - 30))
                 screen.blit(score_img, score_rect)
-                screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e))
+                screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e2))
                 score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+5)), True, (0, 255, 255))
                 if(str(Highscore.load_highscore(i+5)) == '-1'):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
-                score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
+                score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)
 
             pygame.display.update()
@@ -65,11 +65,20 @@ class Bigmap:
                         run = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
-                    if (pos[0]>=d and pos[0]<=d+225) and (pos[1]>=e and pos[1]<=e+220):
-                        return 1
-                    if (pos[0]>=2*d+225 and pos[0]<=2*d+450) and (pos[1]>=e and pos[1]<=e+220):
-                        return 2
-                    if (pos[0]>=3*d+450 and pos[0]<=3*d+675) and (pos[1]>=e and pos[1]<=e+220):
-                        return 3
-                    if (pos[0]>=4*d+675 and pos[0]<=4*d+900) and (pos[1]>=e and pos[1]<=e+220):
-                        return 4
+                    for i in range(4):
+                        if((pos[0] >= (i+1) * d + ICON_SIZE * i - 10 and pos[0] <= (i+1) * d + ICON_SIZE * (i + 1) + 10) and (pos[1] >= e - 10 and pos[1] <= e+10+ICON_SIZE)):
+                            return i+1
+
+                    for i in range(4):
+                        if((pos[0] >= (i+1) * d + ICON_SIZE * i - 10 and pos[0] <= (i+1) * d + ICON_SIZE * (i + 1) + 10) and (pos[1] >= e2 - 10 and pos[1] <= e2+10+ICON_SIZE)):
+                            return i+5
+
+
+                    # if (pos[0]>=d and pos[0]<=d+225) and (pos[1]>=e and pos[1]<=e+220):
+                    #     return 1
+                    # if (pos[0]>=2*d+225 and pos[0]<=2*d+450) and (pos[1]>=e and pos[1]<=e+220):
+                    #     return 2
+                    # if (pos[0]>=3*d+450 and pos[0]<=3*d+675) and (pos[1]>=e and pos[1]<=e+220):
+                    #     return 3
+                    # if (pos[0]>=4*d+675 and pos[0]<=4*d+900) and (pos[1]>=e and pos[1]<=e+220):
+                    #     return 4
