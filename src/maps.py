@@ -37,8 +37,8 @@ class Bigmap:
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e - 30))
                 screen.blit(score_img, score_rect)
                 screen.blit(self.maps[i], ((i+1) * d + ICON_SIZE * i, e))
-                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i)), True, (0, 255, 255))
-                if(Highscore.load_highscore(i) == "-1"):
+                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+1)), True, (0, 255, 255))
+                if(Highscore.load_highscore(i+1) == "-1"):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)
@@ -49,8 +49,8 @@ class Bigmap:
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e - 30))
                 screen.blit(score_img, score_rect)
                 screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e))
-                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+4)), True, (0, 255, 255))
-                if(str(Highscore.load_highscore(i)) == '-1'):
+                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+5)), True, (0, 255, 255))
+                if(str(Highscore.load_highscore(i+5)) == '-1'):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)
