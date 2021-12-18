@@ -12,10 +12,10 @@ class Bigmap:
         self.map2 = pygame.transform.scale(pygame.image.load("../lib/maps/map2.png"), [ICON_SIZE, ICON_SIZE])
         self.map3 = pygame.transform.scale(pygame.image.load("../lib/maps/map3.png"), [ICON_SIZE, ICON_SIZE])
         self.map4 = pygame.transform.scale(pygame.image.load("../lib/maps/map4.png"), [ICON_SIZE, ICON_SIZE])
-        self.map5 = pygame.transform.scale(pygame.image.load("../lib/maps/map1.png"), [ICON_SIZE, ICON_SIZE])
-        self.map6 = pygame.transform.scale(pygame.image.load("../lib/maps/map2.png"), [ICON_SIZE, ICON_SIZE])
-        self.map7 = pygame.transform.scale(pygame.image.load("../lib/maps/map3.png"), [ICON_SIZE, ICON_SIZE])
-        self.map8 = pygame.transform.scale(pygame.image.load("../lib/maps/map4.png"), [ICON_SIZE, ICON_SIZE])
+        self.map5 = pygame.transform.scale(pygame.image.load("../lib/maps/map5.png"), [ICON_SIZE, ICON_SIZE])
+        self.map6 = pygame.transform.scale(pygame.image.load("../lib/maps/map6.png"), [ICON_SIZE, ICON_SIZE])
+        self.map7 = pygame.transform.scale(pygame.image.load("../lib/maps/map7.png"), [ICON_SIZE, ICON_SIZE])
+        self.map8 = pygame.transform.scale(pygame.image.load("../lib/maps/map8.png"), [ICON_SIZE, ICON_SIZE])
         self.maps = [self.map1, self.map2, self.map3, self.map4, self.map5, self.map6, self.map7, self.map8]
 
         self.title = pygame.image.load("../lib/capmantitle.png")
@@ -73,12 +73,3 @@ class Bigmap:
                         if((pos[0] >= (i+1) * d + ICON_SIZE * i - 10 and pos[0] <= (i+1) * d + ICON_SIZE * (i + 1) + 10) and (pos[1] >= e2 - 10 and pos[1] <= e2+10+ICON_SIZE)):
                             return i+5
 
-
-                    # if (pos[0]>=d and pos[0]<=d+225) and (pos[1]>=e and pos[1]<=e+220):
-                    #     return 1
-                    # if (pos[0]>=2*d+225 and pos[0]<=2*d+450) and (pos[1]>=e and pos[1]<=e+220):
-                    #     return 2
-                    # if (pos[0]>=3*d+450 and pos[0]<=3*d+675) and (pos[1]>=e and pos[1]<=e+220):
-                    #     return 3
-                    # if (pos[0]>=4*d+675 and pos[0]<=4*d+900) and (pos[1]>=e and pos[1]<=e+220):
-                    #     return 4
