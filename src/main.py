@@ -294,5 +294,9 @@ while(True):
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
     start=menu_loop()
-
+    #pygame.mixer.music.load("../lib/ouou.mp3")
+    #pygame.mixer.music.set_volume(0.1)
+    #pygame.mixer.music.play(-1)
     main_loop(start)
+
+
