@@ -3,7 +3,6 @@ import codecs
 import base64
 import time
 
-from pygame import rect
 from colors import Colors
 from win import Win
 from player import Player
@@ -12,6 +11,8 @@ from points import Points
 from ghost import Ghost
 from score import Score
 from maps import Bigmap
+from highscore import Highscore
+
 pygame.init()
 screen_info = pygame.display.Info()
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
@@ -58,58 +59,10 @@ start_time = time.time()
 points = Points()
 points.reset_points(lvl)
 
-def encode(value):
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = codecs.decode(value, 'rot_13')
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = codecs.decode(value, 'rot_13')
-    return value
-
-def decode(value):
-    value = codecs.encode(value, 'rot_13')
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = codecs.encode(value, 'rot_13')
-    value = str(value)
-    value = base64.b64decode(value)
-    return str(value)[2:-1]
-
-def load_highscore(lvl):
-    with open('../lib/ExtreamlyNormalFile.png', "r") as f:
-        w = f.readlines()
-    return(decode(str(w[lvl])))
-
-def save_highscore(score, lvl):
-    with open('../lib/ExtreamlyNormalFile.png', "r") as f:
-        w = f.readlines()
-    w[lvl] = encode(score) + '\n'
-    with open('../lib/ExtreamlyNormalFile.png', "w") as f:
-        f.writelines(w)
-
-
 def new_lvl(number):
     global start_time
     start_time = time.time()
-    lvl.lvl =number
+    lvl.lvl = number
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
     player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
@@ -126,8 +79,8 @@ def draw_score(start_time):
 
 def calculate_score(done):
     s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
-    if(s > int(load_highscore(lvl.lvl)) and done):
-        save_highscore(str(s), lvl.lvl)
+    if(s > int(Highscore.load_highscore(lvl.lvl)) and done):
+        Highscore.save_highscore(str(s), lvl.lvl)
     return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
 
 def death():
@@ -161,7 +114,7 @@ def end_lvl(is_win):
         end_img = pygame.image.load("../lib/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
-    highscore_img = font.render("Highscore: " + str(load_highscore(lvl.lvl)), True, Colors.WHITE)
+    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl)), True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:
         screen.fill(Win.BGCOLOR)
@@ -198,7 +151,7 @@ def menu_loop():
                 run = False
             if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
                 if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
-                    lvl_number=options.drawmaps()
+                    lvl_number=options.drawmaps(screen)
                     return(lvl_number)
                 if event.key == ord('c'):#przechodzi do twórców
                     current=credits
