@@ -50,6 +50,7 @@ ghost_tab = [blinky, pinky, inky, clyde]
 loudness=0
 lvl = Level()
 options=Bigmap()
+set=Settings()
 
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
 
@@ -160,8 +161,8 @@ def menu_loop():
                     current=credits
                     current_width=Win.SETTINSGWIDTH
                 if event.key == ord('s'):
-                    settings=Settings()
-                    pygame.mixer.music.set_volume(settings.sound())
+
+                    pygame.mixer.music.set_volume(set.sound())
 
                 if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu

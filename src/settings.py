@@ -3,8 +3,9 @@ from pygame.locals import *
 from win import Win
 # set window size
 class Settings:
-   def init(self):
+   def __init__(self):
       self.title=pygame.image.load("../lib/capmantitle.png")
+      self.position=0.1
 
    def sound(self):
       width = 640
@@ -18,14 +19,14 @@ class Settings:
 
       margin_top = 200
 
-      Win.MARGIN_TOP = int((screen_info.current_h - height) / 2)
+
 
       screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
       blackColor = pygame.Color(0, 0, 0)
       yellowColor = pygame.Color(255, 255, 0)
       screen.fill(Win.BGCOLOR)
       # starting position
-      x = middle
+      x = margin_left+width*self.position
       pygame.draw.rect(screen, yellowColor, Rect(margin_left, margin_top, width, height))
       pygame.draw.rect(screen, blackColor, Rect(x, margin_top + 5, 10, 90))
 
@@ -57,4 +58,5 @@ class Settings:
                sys.exit()
             if event.type == pygame.KEYDOWN:
                if event.key == pygame.K_LEFT:  # wraca do menu głównego
+                  self.position=(a - margin_left) / 630
                   return (a - margin_left) / 630
