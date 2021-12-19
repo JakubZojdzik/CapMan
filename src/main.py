@@ -2,7 +2,7 @@ import pygame
 import codecs
 import base64
 import time
-
+from settings import Settings
 from colors import Colors
 from win import Win
 from player import Player
@@ -12,6 +12,7 @@ from ghost import Ghost
 from score import Score
 from maps import Bigmap
 from highscore import Highscore
+
 
 pygame.init()
 screen_info = pygame.display.Info()
@@ -46,8 +47,10 @@ ghost_list.add(inky)
 ghost_list.add(clyde)
 ghost_tab = [blinky, pinky, inky, clyde]
 
+loudness=0
 lvl = Level()
 options=Bigmap()
+
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
@@ -156,6 +159,10 @@ def menu_loop():
                 if event.key == ord('c'):#przechodzi do twórców
                     current=credits
                     current_width=Win.SETTINSGWIDTH
+                if event.key == ord('s'):
+                    settings=Settings()
+                    pygame.mixer.music.set_volume(settings.sound())
+
                 if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu
                     current_width = Win.MENUWIDTH
@@ -243,10 +250,12 @@ def main_loop(start_lvl):
         clock.tick(Win.FPS)
 
 while(True):
+
     pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
     start=menu_loop()
+
     #pygame.mixer.music.load("../lib/ouou.mp3")
     #pygame.mixer.music.set_volume(0.1)
     #pygame.mixer.music.play(-1)
