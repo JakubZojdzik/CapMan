@@ -28,7 +28,7 @@ class Bigmap:
         run = True
         for i in range(1, 8):
             if(Highscore.load_highscore(i) != '-1'):
-                self.locked[i+1] = False
+                self.locked[i] = False
             else:
                 break
 
