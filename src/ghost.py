@@ -205,6 +205,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.direction = 4 - self.direction
             return self.direction
         elif self.mode == "chase":
+
             min_length = 10000.0
             curr_direction = 1
             for i in posibble_moves:
@@ -221,9 +222,10 @@ class Ghost(pygame.sprite.Sprite):
                         ghost_grid_poses.append(j)
 
             ghost_grid_poses.append(None)
-            #if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
-            if True:
-                max_number = -1
+            if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
+            #if True:
+                map = copy.deepcopy(map)
+                min_number = 10000
                 best_optn = 0
                 for optn in range(len(posibble_moves)):
                     ghost_grid_poses[-1] = posibble_moves[optn].copy()
@@ -231,11 +233,21 @@ class Ghost(pygame.sprite.Sprite):
                     num_of_cells = 0
                     for i in range(LVL_HEIGHT):
                         for j in range(LVL_WIDTH):
-                            if BFSed_map[i][j] > BFSed_map2[i][j]:
-                                num_of_cells += 1
-                    if num_of_cells > max_number:
+                            if BFSed_map[i][j] >= BFSed_map2[i][j]:
+                                map.set_cell_value(i, j, 1)
+                    BFSed_map = Ghost.BFS(pos, map, 4)
+                    for i in range(LVL_HEIGHT):
+                        for j in range(LVL_WIDTH):
+                            if BFSed_map[i][j] >= BFSed_map2[i][j] and not map.is_blocked(i, j) == 1:
+                                map.set_cell_value(i, j, 1)
+                    BFSed_map = Ghost.BFS(pos, map, 4, True, False)
+                    for i in range(LVL_HEIGHT):
+                        for j in range(LVL_WIDTH):
+                            if BFSed_map[i][j] >= 10:
+                                min_number += 1
+                    if num_of_cells < min_number:
                         best_optn = optn
-                        max_number = num_of_cells
+                        min_number = num_of_cells
                     print(ghost_poses, ghost_grid_poses, num_of_cells)
 
                 return posibble_moves[best_optn][3]
