@@ -46,7 +46,7 @@ ghost_list.add(pinky)
 ghost_list.add(inky)
 ghost_list.add(clyde)
 ghost_tab = [blinky, pinky, inky, clyde]
-
+global loudness
 loudness=0
 lvl = Level()
 options=Bigmap()
@@ -161,8 +161,8 @@ def menu_loop():
                     current=credits
                     current_width=Win.SETTINSGWIDTH
                 if event.key == ord('s'):
-
-                    pygame.mixer.music.set_volume(set.sound())
+                    loudness=set.sound()
+                    pygame.mixer.music.set_volume(loudness)
 
                 if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu
@@ -256,6 +256,7 @@ while(True):
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
     start=menu_loop()
+    print(loudness)
 
     #pygame.mixer.music.load("../lib/ouou.mp3")
     #pygame.mixer.music.set_volume(0.1)
