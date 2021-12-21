@@ -294,9 +294,6 @@ class Level:
     
     def show_board(self):
         return self.maps[self.lvl].copy()
-
-    def set_cell_value(self, x, y, value):
-        self.maps[self.lvl][x][y] = value
     
     def to_board(self, screen):
         for i in range(25):

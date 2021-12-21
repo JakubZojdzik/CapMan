@@ -19,7 +19,7 @@ class Settings:
 
       margin_top = screen_info.current_h/3
       margin_left = int((screen_info.current_w - width) / 2)
-      self.title= pygame.transform.scale(self.title, [(margin_top-20)*2.4, margin_top-20])
+      self.title= pygame.transform.scale(self.title, [int((margin_top-20)*2.4), int(margin_top-20)])
       blackColor = pygame.Color(0, 0, 0)
       yellowColor = pygame.Color(255, 255, 0)
       screen.fill(Win.BGCOLOR)
