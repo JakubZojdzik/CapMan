@@ -1,6 +1,7 @@
 import pygame
 from win import Win
 from highscore import Highscore
+from settings import Settings
 
 pygame.init()
 font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
@@ -27,7 +28,7 @@ class Bigmap:
     def drawmaps(self, screen):
         run = True
         for i in range(1, 8):
-            if(Highscore.load_highscore(i) != '-1'):
+            if(Highscore.load_highscore(i, Settings.difficulty) != '-1'):
                 self.locked[i] = False
             else:
                 break
@@ -46,8 +47,8 @@ class Bigmap:
                 screen.blit(self.maps[i], ((i+1) * d + ICON_SIZE * i, e))
                 if(self.locked[i]):
                     screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e))
-                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+1)), True, (0, 255, 255))
-                if(Highscore.load_highscore(i+1) == "-1"):
+                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+1, Settings.difficulty)), True, (0, 255, 255))
+                if(Highscore.load_highscore(i+1, Settings.difficulty) == "-1"):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)
@@ -60,8 +61,8 @@ class Bigmap:
                 screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e2))
                 if(self.locked[i+4]):
                     screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e2))
-                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+5)), True, (0, 255, 255))
-                if(str(Highscore.load_highscore(i+5)) == '-1'):
+                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+5, Settings.difficulty)), True, (0, 255, 255))
+                if(str(Highscore.load_highscore(i+5, Settings.difficulty)) == '-1'):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)

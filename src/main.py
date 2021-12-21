@@ -20,6 +20,8 @@ Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
 Win.MARGIN_LEFT = Win.GRID_SIZE * round(Win.MARGIN_LEFT / Win.GRID_SIZE)
 Win.MARGIN_TOP = int((screen_info.current_h - Win.HEIGHT) / 2)
 Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRID_SIZE
+Settings.difficulty = 1
+
 screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
@@ -85,9 +87,10 @@ def calculate_score(done):
     if(done == False):
         s = max(0, Score.score - 700)
 
-    if(s > int(Highscore.load_highscore(lvl.lvl)) and done):
-        Highscore.save_highscore(str(s), lvl.lvl)
+    if(s > int(Highscore.load_highscore(lvl.lvl, Settings.difficulty)) and done):
+        Highscore.save_highscore(str(s), lvl.lvl, Settings.difficulty)
     return s
+
 
 def death():
     Score.lives -= 1
@@ -120,8 +123,8 @@ def end_lvl(is_win):
         end_img = pygame.image.load("../lib/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
-    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl)), True, Colors.WHITE)
-    if(str(Highscore.load_highscore(lvl.lvl)) == '-1'):
+    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl), Settings.difficulty), True, Colors.WHITE)
+    if(str(Highscore.load_highscore(lvl.lvl, Settings.difficulty)) == '-1'):
         highscore_img = font.render("Highscore: ?", True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:

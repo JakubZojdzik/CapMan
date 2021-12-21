@@ -38,16 +38,21 @@ def decode(value):
 
 class Highscore:
     @staticmethod
-    def load_highscore(lvl):
+    def load_highscore(lvl, difficulty):
         with open('../lib/ExtreamlyNormalFile.png', "r") as f:
             w = f.readlines()
-        return(decode(str(w[lvl])))
+        return(decode(str(w[lvl + 9 * difficulty])))
 
     @staticmethod
-    def save_highscore(score, lvl):
+    def save_highscore(score, lvl, difficulty):
         with open('../lib/ExtreamlyNormalFile.png', "r") as f:
             w = f.readlines()
-        w[lvl] = encode(score) + '\n'
+        w[lvl + 9 * difficulty] = encode(score) + '\n'
         with open('../lib/ExtreamlyNormalFile.png', "w") as f:
             f.writelines(w)
+
+    @staticmethod
+    def reset_highscore():
+        for i in range(9):
+            Highscore.save_highscore('0', i)
         
