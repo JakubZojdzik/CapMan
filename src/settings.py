@@ -9,6 +9,8 @@ class Settings:
     def __init__(self):
         self.title = pygame.image.load("../lib/capmantitle.png")
         self.position = 0.1
+        self.mutepicture=pygame.image.load("../lib/mutepac.png")
+        self.loudpicture=pygame.image.load("../lib/soundpac.png")
 
     def sound(self):
         pygame.init()
@@ -20,19 +22,19 @@ class Settings:
 
         margin_top = screen_info.current_h/3
         margin_left = int((screen_info.current_w - width) / 2)
-        self.title = pygame.transform.scale(
-            self.title, [int((margin_top-20)*2.4), int(margin_top-20)])
+        self.title = pygame.transform.scale(self.title, [int((margin_top-20)*2.4), int(margin_top-20)])
+        self.mutepicture= pygame.transform.scale(self.mutepicture,[height ,height] )
+        self.loudpicture= pygame.transform.scale(self.loudpicture,[height ,height])
         blackColor = pygame.Color(0, 0, 0)
         yellowColor = pygame.Color(255, 255, 0)
         screen.fill(Win.BGCOLOR)
-        screen.blit(
-            self.title, (((screen_info.current_w - ((margin_top-20)*2.4)) / 2), 0))
+        screen.blit(self.title, (((screen_info.current_w - ((margin_top-20)*2.4)) / 2), 0))
+        screen.blit(self.mutepicture, (margin_left-height+1, margin_top))
+        screen.blit(self.loudpicture, (margin_left+width, margin_top))
         # starting position
         x = margin_left+width*self.position
-        pygame.draw.rect(screen, yellowColor, Rect(
-            margin_left, margin_top, width, height))
-        pygame.draw.rect(screen, blackColor, Rect(
-            x, margin_top + 5, width/40, height-10))
+        pygame.draw.rect(screen, yellowColor, Rect(margin_left, margin_top, width, height))
+        pygame.draw.rect(screen, blackColor, Rect(x, margin_top + 5, width/40, height-10))
 
         pygame.display.update()
 
