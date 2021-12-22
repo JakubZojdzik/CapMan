@@ -290,7 +290,7 @@ def main_loop(start_lvl):
                 if event.key == ord('q'):
                     main = False
 
-        ghost_list.update(player.rect.center, lvl)
+        ghost_list.update(player.rect.center, lvl, time.time() - start_time)
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 if(ghost.mode == "scared"):
