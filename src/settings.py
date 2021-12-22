@@ -10,10 +10,8 @@ class Settings:
         self.position = 0.1
         self.mutepicture=pygame.image.load("../lib/menu/mutepac.png")
         self.loudpicture=pygame.image.load("../lib/menu/soundpac.png")
-
         self.hardcolor=pygame.image.load("../lib/menu/hardcolor.png")
         self.hardfaded=pygame.image.load("../lib/menu/hardfaded.png")
-
         self.essacolor=pygame.image.load("../lib/menu/essacolor.png")
         self.essafaded=pygame.image.load("../lib/menu/fadedessa.png")
 
@@ -43,6 +41,7 @@ class Settings:
         screen.blit(self.title, (((screen_info.current_w - ((margin_top-20)*2.4)) / 2), 0))
         screen.blit(self.mutepicture, (margin_left-height+1, margin_top))
         screen.blit(self.loudpicture, (margin_left+width, margin_top))
+
         # starting position
         x = margin_left+width*self.position
         pygame.draw.rect(screen, yellowColor, Rect(margin_left, margin_top, width, height))
@@ -56,7 +55,6 @@ class Settings:
             screen.blit(self.essafaded, (margin_left-height+1, margin_down))
 
         pygame.display.update()
-
         a = x
         while True:
             button = pygame.mouse.get_pressed()
@@ -64,17 +62,14 @@ class Settings:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
-
                 if y>margin_top and y<margin_top+height:
                     a = x - 5
-
                     if a < margin_left:
                         a = margin_left
                     if a > margin_left + width - width / 40:
                         a = margin_left + width - width / 40
                     pygame.draw.rect(screen, yellowColor, Rect(
                         margin_left, margin_top, width, height))
-                    # pygame.display.update(pygame.Rect(0,0,width,height))
                     pygame.draw.rect(screen, blackColor, Rect(
                         a, margin_top + 5, width / 40, height - 10))
                     pygame.display.update()
@@ -90,12 +85,8 @@ class Settings:
                     screen.blit(self.essafaded, (margin_left - height + 1, margin_down))
                     pygame.display.update()
 
-
-
-            # check for ESC key pressed, or pygame window closed, to quit
             for event in pygame.event.get():
                 if event.type == QUIT:
-
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
