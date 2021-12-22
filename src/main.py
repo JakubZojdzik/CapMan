@@ -164,6 +164,8 @@ def menu_loop():
                 if event.key == ord('s'):
                     loudness=set.sound()
                     pygame.mixer.music.set_volume(loudness[0])
+                    death_sound.set_volume(loudness[0])
+                    points.volume=loudness[0]
 
                 if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu

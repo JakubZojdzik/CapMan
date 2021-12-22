@@ -13,6 +13,7 @@ img_big = pygame.transform.scale(pygame.image.load("../lib/point.png"), [BIG_POI
 
 class Points:
     def __init__(self):
+        self.volume=0.1
         self.lvl = 0
         self.map = [
             [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
@@ -91,14 +92,14 @@ class Points:
                     if (self.map[j][i] == 1):
                         self.map[j][i] = 0
                         pygame.mixer.music.load("../lib/waka.mp3")
-                        pygame.mixer.music.set_volume(0.1)
+                        pygame.mixer.music.set_volume(self.volume)
                         pygame.mixer.music.play(0)
                         Score.score += 5
                     if(self.map[j][i] == 3):
                         scary = True
                         self.map[j][i] = 0
                         pygame.mixer.music.load("../lib/waka.mp3")
-                        pygame.mixer.music.set_volume(0.1)
+                        pygame.mixer.music.set_volume(self.volume)
                         pygame.mixer.music.play(0)
                         Score.score += 10
                 if(self.map[j][i] == 1):
