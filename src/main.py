@@ -82,8 +82,8 @@ def draw_score(start_time):
 
 def calculate_score(done):
     s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
-    if(s > int(Highscore.load_highscore(lvl.lvl)) and done):
-        Highscore.save_highscore(str(s), lvl.lvl)
+    if(s > int(Highscore.load_highscore(lvl.lvl, Settings.difficulty)) and done):
+        Highscore.save_highscore(str(s), lvl.lvl, Settings.difficulty)
     return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
 
 def death():
@@ -117,7 +117,7 @@ def end_lvl(is_win):
         end_img = pygame.image.load("../lib/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
-    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl)), True, Colors.WHITE)
+    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl, Settings.difficulty)), True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:
         screen.fill(Win.BGCOLOR)

@@ -4,11 +4,8 @@ from pygame.locals import *
 from win import Win
 
 class Settings:
-
-
+    difficulty = 1
     def __init__(self):
-        self.difficulty = 1
-
         self.title = pygame.image.load("../lib/capmantitle.png")
         self.position = 0.1
         self.mutepicture=pygame.image.load("../lib/mutepac.png")
@@ -26,7 +23,7 @@ class Settings:
         screen = pygame.display.set_mode(
             (screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
         width = screen_info.current_w//3
-        height = screen_info.current_h//6
+        height = screen_info.current_h//6        
 
         margin_top = screen_info.current_h/3
         margin_left = int((screen_info.current_w - width) / 2)
@@ -50,7 +47,8 @@ class Settings:
         x = margin_left+width*self.position
         pygame.draw.rect(screen, yellowColor, Rect(margin_left, margin_top, width, height))
         pygame.draw.rect(screen, blackColor, Rect(x, margin_top + 5, width/40, height-10))
-        if(self.difficulty==1):
+        
+        if(Settings.difficulty == 1):
             screen.blit(self.essacolor, (margin_left-height+1, margin_down))
             screen.blit(self.hardfaded, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
         else:
@@ -82,12 +80,12 @@ class Settings:
                     pygame.display.update()
 
                 if y>margin_down and (x>margin_left-height+1 and x<margin_left-height+1+LEVEL_ICON_SIZE):
-                    self.difficulty=1
+                    Settings.difficulty=1
                     screen.blit(self.essacolor, (margin_left - height + 1, margin_down))
                     screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
                     pygame.display.update()
                 if y>margin_down and (x>margin_left + width + height - LEVEL_ICON_SIZE and x<margin_left + width + height):
-                    self.difficulty=2
+                    Settings.difficulty=2
                     screen.blit(self.hardcolor, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
                     screen.blit(self.essafaded, (margin_left - height + 1, margin_down))
                     pygame.display.update()
