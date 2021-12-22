@@ -37,7 +37,6 @@ class Settings:
         LEVEL_ICON_SIZE=screen_info.current_h//3
         self.hardcolor = pygame.transform.scale(self.hardcolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
         self.hardfaded = pygame.transform.scale(self.hardfaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
-
         self.essacolor = pygame.transform.scale(self.essacolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
         self.essafaded= pygame.transform.scale(self.essafaded,[LEVEL_ICON_SIZE, LEVEL_ICON_SIZE] )
 
