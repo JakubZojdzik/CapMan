@@ -82,6 +82,8 @@ class Bigmap:
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
+                    if pos[0]<ICON_SIZE//2 and pos[1]<ICON_SIZE//2:
+                        return -1
                     for i in range(4):
                         if((not self.locked[i]) and (pos[0] >= (i+1) * d + ICON_SIZE * i - 10 and pos[0] <= (i+1) * d + ICON_SIZE * (i + 1) + 10) and (pos[1] >= e - 10 and pos[1] <= e+10+ICON_SIZE)):
                             return i+1
