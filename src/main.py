@@ -179,7 +179,6 @@ def main_loop(start_lvl):
     global finalscore
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
-    #lvl.lvl =start_lvl
     new_lvl(start_lvl)
     lvl.to_board(screen)
     points.to_board(screen, player)
