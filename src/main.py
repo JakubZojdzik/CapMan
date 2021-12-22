@@ -316,11 +316,11 @@ def main_loop(start_lvl):
         draw_score(start_time)
         pygame.display.flip()
         clock.tick(Win.FPS)
-
+pygame.mixer.music.set_volume(0.1)
 while(True):
 
     pygame.mixer.music.load("../lib/sounds/pacmansoundtrack.mp3")
-    pygame.mixer.music.set_volume(0.1)
+
     pygame.mixer.music.play(-1)
     start=menu_loop()
     #print(loudness)
