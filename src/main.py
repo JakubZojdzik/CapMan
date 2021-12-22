@@ -46,8 +46,7 @@ ghost_list.add(pinky)
 ghost_list.add(inky)
 ghost_list.add(clyde)
 ghost_tab = [blinky, pinky, inky, clyde]
-global loudness
-loudness=0
+
 lvl = Level()
 options=Bigmap()
 set=Settings()
@@ -135,6 +134,7 @@ def end_lvl(is_win):
                     run = False
 
 def menu_loop():
+    global loudness
     run = True
     lvl.reset()
     points.reset_points(lvl)
@@ -162,7 +162,7 @@ def menu_loop():
                     current_width=Win.SETTINSGWIDTH
                 if event.key == ord('s'):
                     loudness=set.sound()
-                    pygame.mixer.music.set_volume(loudness)
+                    pygame.mixer.music.set_volume(loudness[0])
 
                 if event.key == pygame.K_LEFT: #wraca do menu głównego
                     current=menu
@@ -256,7 +256,7 @@ while(True):
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
     start=menu_loop()
-    print(loudness)
+    #print(loudness)
 
     #pygame.mixer.music.load("../lib/ouou.mp3")
     #pygame.mixer.music.set_volume(0.1)
