@@ -25,8 +25,8 @@ class Settings:
         screen_info = pygame.display.Info()
         screen = pygame.display.set_mode(
             (screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
-        width = screen_info.current_w/3
-        height = screen_info.current_h/6
+        width = screen_info.current_w//3
+        height = screen_info.current_h//6
 
         margin_top = screen_info.current_h/3
         margin_left = int((screen_info.current_w - width) / 2)
@@ -34,7 +34,7 @@ class Settings:
         self.title = pygame.transform.scale(self.title, [int(((7/8) *margin_top)*2.4), int((7/8) *margin_top)])
         self.mutepicture= pygame.transform.scale(self.mutepicture,[height ,height] )
         self.loudpicture= pygame.transform.scale(self.loudpicture,[height ,height])
-        LEVEL_ICON_SIZE=screen_info.current_h/3
+        LEVEL_ICON_SIZE=screen_info.current_h//3
         self.hardcolor = pygame.transform.scale(self.hardcolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
         self.hardfaded = pygame.transform.scale(self.hardfaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
 
