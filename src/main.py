@@ -175,6 +175,28 @@ def menu_loop():
                 if event.key == ord('q'): #wychodzi z gry
                     pygame.quit()
                     run = False
+            button = pygame.mouse.get_pressed()
+            if button[0] != 0:
+                pos = pygame.mouse.get_pos()
+                x = pos[0]
+                y = pos[1]
+                if (x>screen_info.current_w//3 and x<(screen_info.current_w*2)//3):
+                    name_bar_h = (screen_info.current_h*2)//5
+                    remaining_h = screen_info.current_h - name_bar_h
+                    if (y > name_bar_h and y < name_bar_h+(remaining_h//3)):
+                        lvl_number=options.drawmaps(screen)
+                        if lvl_number!=-1:
+                            return(lvl_number)
+                    if (y > name_bar_h+(remaining_h//3) and y < name_bar_h+(remaining_h*2)//3):
+                        loudness=set.sound()
+                        pygame.mixer.music.set_volume(loudness[0])
+                        death_sound.set_volume(loudness[0])
+                        points.volume=loudness[0]
+                    if (y > name_bar_h+(remaining_h*2)//3 and y < name_bar_h+remaining_h):
+                        current=credits
+                        current_width=Win.SETTINSGWIDTH
+                
+                
 
 def main_loop(start_lvl):
     main = True
