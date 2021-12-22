@@ -4,23 +4,23 @@ from highscore import Highscore
 from settings import Settings
 
 pygame.init()
-font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
+font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
 screen_info = pygame.display.Info()
 ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
-lock_img = pygame.transform.scale(pygame.image.load("../lib/maps/lock.png"), [ICON_SIZE, ICON_SIZE])
-map1 = pygame.transform.scale(pygame.image.load("../lib/maps/map1.png"), [ICON_SIZE, ICON_SIZE])
-map2 = pygame.transform.scale(pygame.image.load("../lib/maps/map2.png"), [ICON_SIZE, ICON_SIZE])
-map3 = pygame.transform.scale(pygame.image.load("../lib/maps/map3.png"), [ICON_SIZE, ICON_SIZE])
-map4 = pygame.transform.scale(pygame.image.load("../lib/maps/map4.png"), [ICON_SIZE, ICON_SIZE])
-map5 = pygame.transform.scale(pygame.image.load("../lib/maps/map5.png"), [ICON_SIZE, ICON_SIZE])
-map6 = pygame.transform.scale(pygame.image.load("../lib/maps/map6.png"), [ICON_SIZE, ICON_SIZE])
-map7 = pygame.transform.scale(pygame.image.load("../lib/maps/map7.png"), [ICON_SIZE, ICON_SIZE])
-map8 = pygame.transform.scale(pygame.image.load("../lib/maps/map8.png"), [ICON_SIZE, ICON_SIZE])
+lock_img = pygame.transform.scale(pygame.image.load("../lib/menu/maps/lock.png"), [ICON_SIZE, ICON_SIZE])
+map1 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map1.png"), [ICON_SIZE, ICON_SIZE])
+map2 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map2.png"), [ICON_SIZE, ICON_SIZE])
+map3 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map3.png"), [ICON_SIZE, ICON_SIZE])
+map4 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map4.png"), [ICON_SIZE, ICON_SIZE])
+map5 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map5.png"), [ICON_SIZE, ICON_SIZE])
+map6 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map6.png"), [ICON_SIZE, ICON_SIZE])
+map7 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map7.png"), [ICON_SIZE, ICON_SIZE])
+map8 = pygame.transform.scale(pygame.image.load("../lib/menu/maps/map8.png"), [ICON_SIZE, ICON_SIZE])
 
 class Bigmap:
     def __init__(self):
         self.maps = [map1, map2, map3, map4, map5, map6, map7, map8]
-        self.title = pygame.image.load("../lib/capmantitle.png")
+        self.title = pygame.image.load("../lib/menu/capmantitle.png")
         self.title = pygame.transform.rotozoom(self.title, 0, 0.35)
 
         self.locked = [False, True, True, True, True, True, True, True, True]

@@ -5,11 +5,11 @@ from win import Win
 SPRITE_WIDTH = Win.GRID_SIZE-8
 SPRITE_HEIGHT = Win.GRID_SIZE-8
 
-img = pygame.transform.scale(pygame.image.load("../lib/player/Player.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_u = pygame.transform.scale(pygame.image.load("../lib/player/Player_up.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_r = pygame.transform.scale(pygame.image.load("../lib/player/Player_right.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_d = pygame.transform.scale(pygame.image.load("../lib/player/Player_down.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-img_l = pygame.transform.scale(pygame.image.load("../lib/player/Player_left.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/player/Player.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_u = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/player/Player_up.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_r = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/player/Player_right.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_d = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/player/Player_down.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+img_l = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/player/Player_left.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):

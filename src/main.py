@@ -23,10 +23,10 @@ Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRI
 screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
-menu = pygame.image.load('../lib/capmenu.png')
-game_over = pygame.image.load('../lib/game_over.png')
-newlevel = pygame.image.load('../lib/ekranstartowyzapasowy.png')
-credits=pygame.image.load('../lib/credits01.png')
+menu = pygame.image.load('../lib/menu/capmenu.png')
+game_over = pygame.image.load('../lib/menu/game_over.png')
+newlevel = pygame.image.load('../lib/menu/ekranstartowyzapasowy.png')
+credits=pygame.image.load('../lib/menu/credits01.png')
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
@@ -51,10 +51,10 @@ lvl = Level()
 options=Bigmap()
 set=Settings()
 
-font = pygame.font.Font("../lib/VT323/VT323-Regular.ttf", 48)
+font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
-death_sound = pygame.mixer.Sound('../lib/pacmandeath.mp3')
+death_sound = pygame.mixer.Sound('../lib/sounds/pacmandeath.mp3')
 death_sound.set_volume(0.3)
 
 start_time = time.time()
@@ -112,12 +112,14 @@ def end_lvl(is_win):
     global finalscore
     run = True
     if is_win==1:
-        end_img = pygame.image.load("../lib/win.png")
+        end_img = pygame.image.load("../lib/menu/win.png")
     else:
-        end_img = pygame.image.load("../lib/game_over.png")
+        end_img = pygame.image.load("../lib/menu/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
     highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl, Settings.difficulty)), True, Colors.WHITE)
+    if(str(Highscore.load_highscore(lvl.lvl, Settings.difficulty) == '-1')):
+        highscore_img = font.render("Highscore: ?", True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:
         screen.fill(Win.BGCOLOR)
@@ -254,7 +256,7 @@ def main_loop(start_lvl):
 
 while(True):
 
-    pygame.mixer.music.load("../lib/pacmansoundtrack.mp3")
+    pygame.mixer.music.load("../lib/sounds/pacmansoundtrack.mp3")
     pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
     start=menu_loop()

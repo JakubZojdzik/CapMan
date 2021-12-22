@@ -6,16 +6,16 @@ from win import Win
 class Settings:
     difficulty = 1
     def __init__(self):
-        self.title = pygame.image.load("../lib/capmantitle.png")
+        self.title = pygame.image.load("../lib/menu/capmantitle.png")
         self.position = 0.1
-        self.mutepicture=pygame.image.load("../lib/mutepac.png")
-        self.loudpicture=pygame.image.load("../lib/soundpac.png")
+        self.mutepicture=pygame.image.load("../lib/menu/mutepac.png")
+        self.loudpicture=pygame.image.load("../lib/menu/soundpac.png")
 
-        self.hardcolor=pygame.image.load("../lib/hardcolor.png")
-        self.hardfaded=pygame.image.load("../lib/hardfaded.png")
+        self.hardcolor=pygame.image.load("../lib/menu/hardcolor.png")
+        self.hardfaded=pygame.image.load("../lib/menu/hardfaded.png")
 
-        self.essacolor=pygame.image.load("../lib/essacolor.png")
-        self.essafaded=pygame.image.load("../lib/fadedessa.png")
+        self.essacolor=pygame.image.load("../lib/menu/essacolor.png")
+        self.essafaded=pygame.image.load("../lib/menu/fadedessa.png")
 
     def sound(self):
         pygame.init()

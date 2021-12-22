@@ -39,16 +39,16 @@ def decode(value):
 class Highscore:
     @staticmethod
     def load_highscore(lvl, difficulty):
-        with open('../lib/ExtreamlyNormalFile.png', "r") as f:
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
             w = f.readlines()
         return(decode(str(w[lvl + 9 * difficulty])))
 
     @staticmethod
     def save_highscore(score, lvl, difficulty):
-        with open('../lib/ExtreamlyNormalFile.png', "r") as f:
+        with open('../lib/map/ExtreamlyNormalFile.png', "r") as f:
             w = f.readlines()
         w[lvl + 9 * difficulty] = encode(score) + '\n'
-        with open('../lib/ExtreamlyNormalFile.png', "w") as f:
+        with open('../lib/map/ExtreamlyNormalFile.png', "w") as f:
             f.writelines(w)
 
     @staticmethod
