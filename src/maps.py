@@ -22,7 +22,8 @@ class Bigmap:
         self.maps = [map1, map2, map3, map4, map5, map6, map7, map8]
         self.title = pygame.image.load("../lib/menu/capmantitle.png")
         self.title = pygame.transform.rotozoom(self.title, 0, 0.35)
-
+        self.comeback=pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+        self.comeback = pygame.transform.scale(self.comeback, [ICON_SIZE//2,ICON_SIZE//2])
         self.locked = [False, True, True, True, True, True, True, True, True]
 
     def drawmaps(self, screen):
@@ -39,6 +40,7 @@ class Bigmap:
             d = int((screen_info.current_w - 4*ICON_SIZE) / 5)
             e = screen_info.current_h // 3 - 50
             screen.blit(self.title, (int((screen_info.current_w - 365) / 2),0))
+            screen.blit(self.comeback, (0, 0))
 
             for i in range(4):
                 score_img = font.render("Lvl: " + str(i+1), True, (0, 255, 255))
