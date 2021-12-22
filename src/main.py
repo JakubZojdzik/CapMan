@@ -57,6 +57,20 @@ pygame.mixer.init()
 death_sound = pygame.mixer.Sound('../lib/sounds/pacmandeath.mp3')
 death_sound.set_volume(0.3)
 
+ghostDeath = pygame.mixer.Sound('../lib/sounds/eatGhost.mp3')
+ghostDeath.set_volume(0)
+ouou = pygame.mixer.Sound('../lib/sounds/ouou.mp3')
+ouou.set_volume(0)
+ouou.play(-1)
+ghostBack = pygame.mixer.Sound('../lib/sounds/ghostBackToBase.mp3')
+ghostBack.set_volume(0)
+ghostBack.play(-1)
+ghostScared = pygame.mixer.Sound('../lib/sounds/scaredGhost.mp3')
+ghostScared.set_volume(0)
+ghostScared.play(-1)
+
+loudness = [0.1, 0]
+
 start_time = time.time()
 
 points = Points()
@@ -88,6 +102,9 @@ def calculate_score(done):
 
 def death():
     Score.lives -= 1
+    ouou.set_volume(0)
+    ghostBack.set_volume(0)
+    ghostScared.set_volume(0)
     death_sound.play()
     player.rect.center = Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5
     global start_time
@@ -110,6 +127,9 @@ def death():
 
 def end_lvl(is_win):
     global finalscore
+    ouou.set_volume(0)
+    ghostBack.set_volume(0)
+    ghostScared.set_volume(0)
     run = True
     if is_win==1:
         end_img = pygame.image.load("../lib/menu/win.png")
@@ -137,6 +157,9 @@ def end_lvl(is_win):
 
 def menu_loop():
     global loudness
+    ouou.set_volume(0)
+    ghostBack.set_volume(0)
+    ghostScared.set_volume(0)
     run = True
     lvl.reset()
     points.reset_points(lvl)
@@ -224,6 +247,23 @@ def main_loop(start_lvl):
             finalscore = calculate_score(True)
             end_lvl(1)
             main = False
+
+        r = False
+        for ghost in ghost_tab:
+            if(not r):
+                ouou.set_volume(loudness[0])
+                ghostBack.set_volume(0)
+                ghostScared.set_volume(0)
+            if(ghost.mode == "scared"):
+                ouou.set_volume(0)
+                ghostBack.set_volume(0)
+                ghostScared.set_volume(loudness[0])
+                r = True
+            if(ghost.mode == "return"):
+                ouou.set_volume(0)
+                ghostBack.set_volume(loudness[0])
+                ghostScared.set_volume(0)
+                break
         
         if int((time.time() - start_time)*Win.FPS) % 10 == 0:
             #inky, pinky, clyde
@@ -256,6 +296,7 @@ def main_loop(start_lvl):
             if(ghost.got_capman(player)):
                 if(ghost.mode == "scared"):
                     Score.score += 250
+                    ghostDeath.play()
                     ghost.mode = "return"
                 elif(not ghost.mode == "return"):
                     death()
