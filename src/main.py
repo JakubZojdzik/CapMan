@@ -219,7 +219,6 @@ def menu_loop():
                         current=credits
                         current_width=Win.SETTINSGWIDTH
                 
-                
 
 def main_loop(start_lvl):
     main = True
@@ -318,16 +317,7 @@ def main_loop(start_lvl):
         clock.tick(Win.FPS)
 pygame.mixer.music.set_volume(0.1)
 while(True):
-
     pygame.mixer.music.load("../lib/sounds/pacmansoundtrack.mp3")
-
     pygame.mixer.music.play(-1)
     start=menu_loop()
-    #print(loudness)
-
-    #pygame.mixer.music.load("../lib/ouou.mp3")
-    #pygame.mixer.music.set_volume(0.1)
-    #pygame.mixer.music.play(-1)
     main_loop(start)
-
-

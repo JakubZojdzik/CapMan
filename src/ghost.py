@@ -109,7 +109,6 @@ class Ghost(pygame.sprite.Sprite):
             cells = Win.pixelPos_to_gridPos(pos)
         else:
             cells = pos
-        #level_grid = map.show_board().copy()
         visited = copy.deepcopy(map)
         result = copy.deepcopy(map)
         for i in range(LVL_HEIGHT):
@@ -235,7 +234,6 @@ class Ghost(pygame.sprite.Sprite):
 
             ghost_grid_poses.append(None)
             if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
-            #if True:
                 min_length = 10000000
                 for i in ghost_grid_poses:
                     if i is None:

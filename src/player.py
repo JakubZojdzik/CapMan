@@ -17,7 +17,6 @@ class Player(pygame.sprite.Sprite):
         self.image = img_r
         self.rect = self.image.get_rect()
         self.rect.center = (pos_x, pos_y)
-        #self.rect.center = (Win.WIDTH / 2 + Win.MARGIN_LEFT + ((Win.WIDTH / 2 + Win.MARGIN_LEFT + (Win.GRID_SIZE/2)) % Win.GRID_SIZE), Win.HEIGHT / 2 + Win.MARGIN_TOP + ((Win.HEIGHT / 2 + Win.MARGIN_TOP + (Win.GRID_SIZE/2)) % Win.GRID_SIZE))
         self.direction = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0 # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0 # count frames
