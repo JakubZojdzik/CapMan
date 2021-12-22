@@ -156,7 +156,8 @@ def menu_loop():
             if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
                 if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
                     lvl_number=options.drawmaps(screen)
-                    return(lvl_number)
+                    if lvl_number!=-1:
+                        return(lvl_number)
                 if event.key == ord('c'):#przechodzi do twórców
                     current=credits
                     current_width=Win.SETTINSGWIDTH

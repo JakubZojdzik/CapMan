@@ -75,6 +75,9 @@ class Bigmap:
                 if event.type == pygame.KEYDOWN:
                     if event.key == ord('q'):
                         run = False
+                    if event.key == pygame.K_LEFT: #wraca do menu głównego
+                        return (-1)
+
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
                     for i in range(4):
