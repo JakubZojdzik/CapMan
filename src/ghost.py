@@ -43,7 +43,6 @@ ghost_poses = [None, None, None, None]
 scatter_poses = [[[9, 9, 0]], [[15, 9, 0]], [[15, 14, 0]], [[9 ,14, 0]]]
 
 class Ghost(pygame.sprite.Sprite):
-    time_for_scatter = 40
     def __init__(self, pos_x, pos_y, mode, color, auxiliary_variable=10):
         pygame.sprite.Sprite.__init__(self)
         self.start_pos_x = pos_x
@@ -203,18 +202,18 @@ class Ghost(pygame.sprite.Sprite):
             return gridPos
 
 
-    def find_next_move(self, pos, map, lvlCfg, time):
+    def find_next_move(self, pos, map, lvlCfg, time, capstep):
         max_communication_distance = lvlCfg[0][0]
         posibble_moves = Ghost.possible_moves(self.rect.center, map)
-        BFSed_map = Ghost.BFS(pos, map, 4)
+        BFSed_map = Ghost.BFS(pos, map, capstep)
         if self.mode == "closed":
             if self.auxiliary_variable <= time:
                 self.mode = "chase"
                 self.is_mode_changed(lvlCfg, time)
-                print("free")
-                return self.find_next_move(pos, map, lvlCfg, time)
+                #print("free")
+                return self.find_next_move(pos, map, lvlCfg, time, capstep)
 
-            print(self.auxiliary_variable)
+            #print(self.auxiliary_variable)
             if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1 or self.direction == 0:
                 if Win.pixelPos_to_gridPos(self.rect.center)[0][1] == 12:
                     return 1
@@ -245,7 +244,7 @@ class Ghost(pygame.sprite.Sprite):
                 return curr_direction
             '''
 
-            BFSed_map_self = Ghost.BFS(self.rect.center, map, 24)
+            BFSed_map_self = Ghost.BFS(self.rect.center, map, Win.GRID_SIZE)
             #for i in BFSed_map_self:
                 #print(i)
             ghost_grid_poses = []
@@ -253,7 +252,7 @@ class Ghost(pygame.sprite.Sprite):
                 if (not ghost_poses[i] is None) and (not i == self.ghost_number()):
                     gridPos = Win.pixelPos_to_gridPos(ghost_poses[i])
                     for j in gridPos:
-                        if BFSed_map_self[j[1]][j[0]] <= max_communication_distance*24:
+                        if BFSed_map_self[j[1]][j[0]] <= max_communication_distance*Win.GRID_SIZE:
                             ghost_grid_poses.append(j)
                         #else:
                             #print('!')
@@ -288,7 +287,7 @@ class Ghost(pygame.sprite.Sprite):
                             if BFSed_map[i][j] >= BFSed_map2[i][j]:
                                 map_copy[i][j] = 1
                     #BFSed_map3 = Ghost.BFS(pos, map_copy, 4, True, False)
-                    BFSed_map3 = Ghost.BFS(pos, map_copy, 24)
+                    BFSed_map3 = Ghost.BFS(pos, map_copy, Win.GRID_SIZE)
                     for i in range(LVL_HEIGHT):
                         for j in range(LVL_WIDTH):
                             if BFSed_map3[i][j] <= 360000:
@@ -334,10 +333,10 @@ class Ghost(pygame.sprite.Sprite):
             if self.auxiliary_variable <= time:
                 self.mode = "chase"
                 self.is_mode_changed(lvlCfg, time)
-                return self.find_next_move(pos, map, lvlCfg, time)
+                return self.find_next_move(pos, map, lvlCfg, time, capstep)
 
             if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
-                BFSed_map = Ghost.BFS(pos, map, 4, True, True)
+                BFSed_map = Ghost.BFS(pos, map, Win.GRID_SIZE, True, True)
                 BFSed_map2 = Ghost.BFS(posibble_moves, map, 2, False, True)
                 BFSed_map3 = Ghost.BFS(posibble_moves, map, 2, False, False)
                 num_of_cells = [0,0,0,0,0]
@@ -357,14 +356,12 @@ class Ghost(pygame.sprite.Sprite):
                 return self.direction
         elif self.mode == "scatter":
             if Win.pixelPos_to_gridPos(self.rect.center)[0][0] == scatter_poses[int(self.auxiliary_variable%4)][0][0] and Win.pixelPos_to_gridPos(self.rect.center)[0][1] == scatter_poses[int(self.auxiliary_variable%4)][0][1]:
-                print('a')
                 if self.auxiliary_variable == self.ghost_number() + 4:
                     self.mode = "chase"
                     self.is_mode_changed(lvlCfg, time)
-                    return self.find_next_move(pos, map, lvlCfg, time)
+                    return self.find_next_move(pos, map, lvlCfg, time, capstep)
                 else:
                     self.auxiliary_variable += 1
-                    print('b')
             BFSed_map = Ghost.BFS(scatter_poses[int(self.auxiliary_variable%4)], map, self.step, False, True)
             min_length = 10000.0
             curr_direction = 1
@@ -377,7 +374,7 @@ class Ghost(pygame.sprite.Sprite):
             if Win.pixelPos_to_gridPos(self.rect.center)[0] == [12, 12, 0]:
                 self.mode = "chase"
                 self.is_mode_changed(lvlCfg, time)
-                return self.find_next_move(pos, map, lvlCfg, time)
+                return self.find_next_move(pos, map, lvlCfg, time, capstep)
             BFSed_map = Ghost.BFS([Win.MARGIN_LEFT+Win.GRID_SIZE*12+Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*12+Win.GRID_SIZE//2], map, self.step)
             min_length = 10000.0
             curr_direction = 1
@@ -387,8 +384,8 @@ class Ghost(pygame.sprite.Sprite):
                     min_length = BFSed_map[i[1]][i[0]]
             return curr_direction
 
-    def update(self, player_pos, map, time, lvlCfg):
-        print(time, 't')
+    def update(self, player_pos, map, time, lvlCfg, capstep):
+        #print(time, 't')
         # [[ghosts IQ//10],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
         if int(time)%lvlCfg[2][1] == 0 and int(time) != 0 and self.mode == "chase":
             self.mode = "scatter"
@@ -396,7 +393,7 @@ class Ghost(pygame.sprite.Sprite):
 
         level_grid = copy.deepcopy(map.show_board())
         self.is_mode_changed(lvlCfg, time)
-        self.direction = self.find_next_move(player_pos, level_grid, lvlCfg, time)
+        self.direction = self.find_next_move(player_pos, level_grid, lvlCfg, time, capstep)
 
         self.image = self.img_rot[self.direction]
         if self.direction == 1:
