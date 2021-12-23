@@ -1,7 +1,7 @@
 from win import Win
 import pygame
 import copy
-import random
+from settings import Settings
 
 level_grid = []
 LVL_WIDTH = Win.WIDTH // Win.GRID_SIZE
@@ -43,7 +43,8 @@ ghost_poses = [None, None, None, None]
 scatter_poses = [[[9, 9, 0]], [[15, 9, 0]], [[15, 14, 0]], [[9 ,14, 0]]]
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, mode, color, auxiliary_variable=1):
+    time_for_scatter = 40
+    def __init__(self, pos_x, pos_y, mode, color, auxiliary_variable=10):
         pygame.sprite.Sprite.__init__(self)
         self.start_pos_x = pos_x
         self.start_pos_y = pos_y
@@ -67,7 +68,7 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.center = (pos_x, pos_y)
         self.direction = 0
         self.prev_mode = "chase"
-        self.auxiliary_variable = auxiliary_variable # closed -> start_direction , scared -> time_left
+        self.auxiliary_variable = float(auxiliary_variable) # closed -> start_direction , scared -> time_left
         self.img_scared = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/whiteghost.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
         self.upgrade_ghost_poses()
 
@@ -92,15 +93,18 @@ class Ghost(pygame.sprite.Sprite):
         self.direction = 0
         self.upgrade_ghost_poses()
 
-    def is_mode_changed(self):
+    def is_mode_changed(self, lvlCfg, time):
         if self.mode != self.prev_mode and len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
             self.prev_mode = self.mode
-            if self.mode == "chase" or self.mode == "scatter":
-                self.step = 3
+            if self.mode == "chase":
+                self.step = lvlCfg[1][0]
             elif self.mode == "return":
                 self.step = 8
             elif self.mode == "scared":
-                self.step = 2
+                self.step = lvlCfg[1][1]
+                self.auxiliary_variable = time + lvlCfg[2][0]
+            elif self.mode == "scatter":
+                self.step = lvlCfg[1][0]
             else:
                 self.step = 1
 
@@ -199,16 +203,30 @@ class Ghost(pygame.sprite.Sprite):
             return gridPos
 
 
-    def find_next_move(self, pos, map):
+    def find_next_move(self, pos, map, lvlCfg, time):
+        max_communication_distance = lvlCfg[0][0]
         posibble_moves = Ghost.possible_moves(self.rect.center, map)
         BFSed_map = Ghost.BFS(pos, map, 4)
         if self.mode == "closed":
-            if self.direction == 0:
+            if self.auxiliary_variable <= time:
+                self.mode = "chase"
+                self.is_mode_changed(lvlCfg, time)
+                print("free")
+                return self.find_next_move(pos, map, lvlCfg, time)
+
+            print(self.auxiliary_variable)
+            if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1 or self.direction == 0:
+                if Win.pixelPos_to_gridPos(self.rect.center)[0][1] == 12:
+                    return 1
+                else:
+                    return 3
+            else:
+                return self.direction
+            '''if self.direction == 0:
                 self.direction = self.auxiliary_variable
             if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
                 self.direction = 4 - self.direction
-            return self.direction
-        #if self.mode == "scatter"
+            return self.direction'''
         elif self.mode == "chase":
             '''
 
@@ -226,12 +244,19 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 return curr_direction
             '''
+
+            BFSed_map_self = Ghost.BFS(self.rect.center, map, 24)
+            #for i in BFSed_map_self:
+                #print(i)
             ghost_grid_poses = []
             for i in range(len(ghost_poses)):
                 if (not ghost_poses[i] is None) and (not i == self.ghost_number()):
                     gridPos = Win.pixelPos_to_gridPos(ghost_poses[i])
                     for j in gridPos:
-                        ghost_grid_poses.append(j)
+                        if BFSed_map_self[j[1]][j[0]] <= max_communication_distance*24:
+                            ghost_grid_poses.append(j)
+                        #else:
+                            #print('!')
 
 
             ghost_grid_poses.append(None)
@@ -306,12 +331,10 @@ class Ghost(pygame.sprite.Sprite):
             #'''
 
         elif self.mode == "scared":
-            if self.auxiliary_variable <= 0.0:
+            if self.auxiliary_variable <= time:
                 self.mode = "chase"
-                self.is_mode_changed()
-                return self.find_next_move(pos, map)
-            
-            self.auxiliary_variable -= 1/Win.FPS
+                self.is_mode_changed(lvlCfg, time)
+                return self.find_next_move(pos, map, lvlCfg, time)
 
             if len(Win.pixelPos_to_gridPos(self.rect.center)) == 1:
                 BFSed_map = Ghost.BFS(pos, map, 4, True, True)
@@ -333,16 +356,16 @@ class Ghost(pygame.sprite.Sprite):
             else:
                 return self.direction
         elif self.mode == "scatter":
-            if Win.pixelPos_to_gridPos(self.rect.center)[0][0] == scatter_poses[self.auxiliary_variable%4][0][0] and Win.pixelPos_to_gridPos(self.rect.center)[0][1] == scatter_poses[self.auxiliary_variable%4][0][1]:
+            if Win.pixelPos_to_gridPos(self.rect.center)[0][0] == scatter_poses[int(self.auxiliary_variable%4)][0][0] and Win.pixelPos_to_gridPos(self.rect.center)[0][1] == scatter_poses[int(self.auxiliary_variable%4)][0][1]:
                 print('a')
                 if self.auxiliary_variable == self.ghost_number() + 4:
                     self.mode = "chase"
-                    self.is_mode_changed()
-                    return self.find_next_move(pos, map)
+                    self.is_mode_changed(lvlCfg, time)
+                    return self.find_next_move(pos, map, lvlCfg, time)
                 else:
                     self.auxiliary_variable += 1
                     print('b')
-            BFSed_map = Ghost.BFS(scatter_poses[self.auxiliary_variable%4], map, self.step, False, True)
+            BFSed_map = Ghost.BFS(scatter_poses[int(self.auxiliary_variable%4)], map, self.step, False, True)
             min_length = 10000.0
             curr_direction = 1
             for i in posibble_moves:
@@ -353,8 +376,8 @@ class Ghost(pygame.sprite.Sprite):
         else:
             if Win.pixelPos_to_gridPos(self.rect.center)[0] == [12, 12, 0]:
                 self.mode = "chase"
-                self.is_mode_changed()
-                return self.find_next_move(pos, map)
+                self.is_mode_changed(lvlCfg, time)
+                return self.find_next_move(pos, map, lvlCfg, time)
             BFSed_map = Ghost.BFS([Win.MARGIN_LEFT+Win.GRID_SIZE*12+Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*12+Win.GRID_SIZE//2], map, self.step)
             min_length = 10000.0
             curr_direction = 1
@@ -364,14 +387,17 @@ class Ghost(pygame.sprite.Sprite):
                     min_length = BFSed_map[i[1]][i[0]]
             return curr_direction
 
-    def update(self, player_pos, map, time):
-        if int(time)%40 == 0 and int(time) != 0 and self.mode == "chase":
+    def update(self, player_pos, map, time, lvlCfg):
+        print(time, 't')
+        # [[ghosts IQ//10],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
+        if int(time)%lvlCfg[2][1] == 0 and int(time) != 0 and self.mode == "chase":
             self.mode = "scatter"
             self.auxiliary_variable = self.ghost_number()
 
         level_grid = copy.deepcopy(map.show_board())
-        self.is_mode_changed()
-        self.direction = self.find_next_move(player_pos, level_grid)
+        self.is_mode_changed(lvlCfg, time)
+        self.direction = self.find_next_move(player_pos, level_grid, lvlCfg, time)
+
         self.image = self.img_rot[self.direction]
         if self.direction == 1:
             self.rect.y -= self.step
@@ -393,8 +419,8 @@ class Ghost(pygame.sprite.Sprite):
             self.rect.x -= Win.WIDTH
 
         if self.mode == "scared":
-            if self.auxiliary_variable <= 3.5:
-                if int(self.auxiliary_variable * 10) % 10 <= 4:
+            if self.auxiliary_variable <= time+3.0:
+                if int(time*10) % 10 <= 4:
                     self.image = self.img_rot[self.direction]
                 else:
                     self.image = self.img_scared

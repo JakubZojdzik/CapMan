@@ -83,11 +83,12 @@ def new_lvl(number):
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
     player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
-    blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red")
-    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink")
-    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue")
-    inky.auxiliary_variable = 3
-    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange")
+    player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
+    blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red", 0)
+    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink", lvl.mapsCfg[Settings.difficulty][lvl.lvl][3][0])
+    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue", lvl.mapsCfg[Settings.difficulty][lvl.lvl][3][1])
+    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange", lvl.mapsCfg[Settings.difficulty][lvl.lvl][3][2])
+    player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
 
 def draw_score(start_time):
     score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(time.time() - start_time)), True, (0, 255, 255))
@@ -225,6 +226,8 @@ def main_loop(start_lvl):
     global scary_time_off
     global start_time
     global finalscore
+    # [[ghosts IQ//10],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
+    #pla
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
     new_lvl(start_lvl)
@@ -263,15 +266,7 @@ def main_loop(start_lvl):
                 ghostBack.set_volume(loudness[0])
                 ghostScared.set_volume(0)
                 break
-        
-        if int((time.time() - start_time)*Win.FPS) % 10 == 0:
-            #inky, pinky, clyde
-            if int(time.time() - start_time) == 10:
-                inky.mode = "chase"
-            if int(time.time() - start_time) == 20:
-                pinky.mode = "chase"
-            if int(time.time() - start_time) == 30:
-                clyde.mode = "chase"
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -290,7 +285,7 @@ def main_loop(start_lvl):
                 if event.key == ord('q'):
                     main = False
 
-        ghost_list.update(player.rect.center, lvl, time.time() - start_time)
+        ghost_list.update(player.rect.center, lvl, time.time() - start_time, lvl.mapsCfg[Settings.difficulty][lvl.lvl])
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 if(ghost.mode == "scared"):
@@ -309,7 +304,17 @@ def main_loop(start_lvl):
             for ghost in ghost_list:
                 if ghost.mode != "closed":
                     ghost.mode = "scared"
-                    ghost.auxiliary_variable = 8.0
+                    ghost.auxiliary_variable = 10000
+
+        if len(Win.pixelPos_to_gridPos(player.rect.center)) == 1:
+            b = False
+            for ghost in ghost_list:
+                if ghost.mode == "scared":
+                    b = True
+            if b:
+                player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][1]
+            else:
+                player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)
