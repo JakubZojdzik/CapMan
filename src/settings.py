@@ -16,6 +16,8 @@ class Settings:
         self.essafaded=pygame.image.load("../lib/menu/fadedessa.png")
         self.mediumcolor = pygame.image.load("../lib/menu/mediumcolor.png")
         self.mediumfaded = pygame.image.load("../lib/menu/mediumfaded.png")
+        self.comeback = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+
 
     def sound(self):
         pygame.init()
@@ -23,8 +25,9 @@ class Settings:
         screen = pygame.display.set_mode(
             (screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
         width = screen_info.current_w//3
-        height = screen_info.current_h//6        
-
+        height = screen_info.current_h//6
+        ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
+        self.comeback = pygame.transform.scale(self.comeback, [ICON_SIZE // 2, ICON_SIZE // 2])
         margin_top = screen_info.current_h/3
         margin_left = int((screen_info.current_w - width) / 2)
         margin_down = int((screen_info.current_h *(2/3))) #to działa tak jakby od góry stąd 2/3
@@ -62,7 +65,7 @@ class Settings:
             screen.blit(self.hardcolor, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
             screen.blit(self.essafaded, (margin_left-height+1, margin_down))
             screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
-
+        screen.blit(self.comeback, (0,0))
         pygame.display.update()
         a = x
         while True:
@@ -71,6 +74,7 @@ class Settings:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
+
                 if y>margin_top and y<margin_top+height:
                     a = x - 5
                     if a < margin_left:
@@ -107,6 +111,11 @@ class Settings:
 
 
             for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0]<ICON_SIZE and pos[1]<ICON_SIZE:
+                        self.position = (a - margin_left) / width
+                        return ((a - margin_left) / width, Settings.difficulty)
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
