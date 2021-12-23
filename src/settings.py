@@ -54,11 +54,11 @@ class Settings:
             screen.blit(self.essacolor, (margin_left - height + 1, margin_down))
             screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
             screen.blit(self.mediumfaded, (margin_left+(width-LEVEL_ICON_SIZE)//2, margin_down))
-        elif(Settings.difficulty == 1):
+        if(Settings.difficulty == 1):
             screen.blit(self.essafaded, (margin_left-height+1, margin_down))
             screen.blit(self.hardfaded, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
             screen.blit(self.mediumcolor, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
-        else:
+        if (Settings.difficulty == 2):
             screen.blit(self.hardcolor, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
             screen.blit(self.essafaded, (margin_left-height+1, margin_down))
             screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
@@ -85,18 +85,21 @@ class Settings:
 
                 if y>margin_down and (x>margin_left-height+1 and x<margin_left-height+1+LEVEL_ICON_SIZE):
                     Settings.difficulty=0
+                    print(Settings.difficulty)
                     screen.blit(self.essacolor, (margin_left - height + 1, margin_down))
                     screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
                     screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
                     pygame.display.update()
                 if y>margin_down and (x>margin_left + (width - LEVEL_ICON_SIZE) // 2 and x<margin_left + (width - LEVEL_ICON_SIZE) // 2+LEVEL_ICON_SIZE):
                     Settings.difficulty=1
+                    print(Settings.difficulty)
                     screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
                     screen.blit(self.essafaded, (margin_left - height + 1, margin_down))
                     screen.blit(self.mediumcolor, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
                     pygame.display.update()
                 if y>margin_down and (x>margin_left + width + height - LEVEL_ICON_SIZE and x<margin_left + width + height):
                     Settings.difficulty=2
+                    print(Settings.difficulty)
                     screen.blit(self.hardcolor, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
                     screen.blit(self.essafaded, (margin_left - height + 1, margin_down))
                     screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
@@ -110,4 +113,4 @@ class Settings:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):  # wraca do menu głównego
                         self.position = (a - margin_left) / width
-                        return ((a - margin_left) / width, self.difficulty)
+                        return ((a - margin_left) / width, Settings.difficulty)

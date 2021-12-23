@@ -3,6 +3,7 @@ from win import Win
 from highscore import Highscore
 from settings import Settings
 
+
 pygame.init()
 font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
 screen_info = pygame.display.Info()
@@ -36,7 +37,7 @@ class Bigmap:
 
         while run:
             screen.fill(Win.BGCOLOR)
-            
+
             d = int((screen_info.current_w - 4*ICON_SIZE) / 5)
             e = screen_info.current_h // 3 - 50
             screen.blit(self.title, (int((screen_info.current_w - 365) / 2),0))

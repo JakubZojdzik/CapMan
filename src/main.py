@@ -199,8 +199,9 @@ def menu_loop():
                 if event.key == ord('q'): #wychodzi z gry
                     pygame.quit()
                     run = False
-            button = pygame.mouse.get_pressed()
-            if button[0] != 0:
+
+            #button = pygame.mouse.get_pressed()
+            if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
@@ -219,7 +220,7 @@ def menu_loop():
                     if (y > name_bar_h+(remaining_h*2)//3 and y < name_bar_h+remaining_h):
                         current=credits
                         current_width=Win.SETTINSGWIDTH
-                
+
 
 def main_loop(start_lvl):
     main = True
