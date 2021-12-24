@@ -45,10 +45,10 @@ class Highscore:
 
     @staticmethod
     def save_highscore(score, lvl, difficulty):
-        with open('../lib/map/ExtreamlyNormalFile.png', "r") as f:
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
             w = f.readlines()
         w[lvl + 9 * difficulty] = encode(score) + '\n'
-        with open('../lib/map/ExtreamlyNormalFile.png', "w") as f:
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "w") as f:
             f.writelines(w)
 
     @staticmethod
