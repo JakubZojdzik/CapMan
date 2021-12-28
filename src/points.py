@@ -94,14 +94,14 @@ class Points:
                         pygame.mixer.music.load("../lib/sounds/waka.mp3")
                         pygame.mixer.music.set_volume(self.volume)
                         pygame.mixer.music.play(0)
-                        Score.score += 5
+                        Score.score += Score.SCORE_POINT
                     if(self.map[j][i] == 3):
                         scary = True
                         self.map[j][i] = 0
                         pygame.mixer.music.load("../lib/sounds/waka.mp3")
                         pygame.mixer.music.set_volume(self.volume)
                         pygame.mixer.music.play(0)
-                        Score.score += 10
+                        Score.score += 2 * Score.SCORE_POINT
                 if(self.map[j][i] == 1):
                     screen.blit(img, (Win.MARGIN_LEFT + Win.GRID_SIZE * i + Win.GRID_SIZE/2 - POINT_WIDTH/2, Win.MARGIN_TOP + Win.GRID_SIZE * j + Win.GRID_SIZE/2 - POINT_HEIGHT/2))
                 elif(self.map[j][i] == 3):

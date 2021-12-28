@@ -1,6 +1,4 @@
 import pygame
-import codecs
-import base64
 import time
 from settings import Settings
 from colors import Colors
@@ -77,6 +75,9 @@ points = Points()
 points.reset_points(lvl)
 
 def new_lvl(number):
+    Score.score = 0
+    Score.lives = 3
+    Score.bonus = 0
     global start_time
     start_time = time.time()
     lvl.lvl = number
@@ -96,10 +97,12 @@ def draw_score(start_time):
     screen.blit(score_img, score_rect)
 
 def calculate_score(done):
-    s = Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
-    if(s > int(Highscore.load_highscore(lvl.lvl, Settings.difficulty)) and done):
+    s = Score.score + Score.lives * Score.SCORE_LIFE
+    if done:
+        s += Score.bonus
+    if(s > int(Highscore.load_highscore(lvl.lvl, Settings.difficulty))):
         Highscore.save_highscore(str(s), lvl.lvl, Settings.difficulty)
-    return Score.score + (180 - round(time.time() - start_time)) * 50 + Score.lives * 1500
+    return s
 
 def death():
     Score.lives -= 1
@@ -167,7 +170,8 @@ def menu_loop():
     player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
     for ghost in ghost_tab:
         ghost.resetPos()
-    Score.score = -5
+    Score.score = 0
+    Score.bonus = 0
     Score.lives = 3
     current=menu
     current_width=Win.MENUWIDTH
@@ -232,14 +236,11 @@ def menu_loop():
                         current=credits
                         current_width=Win.SETTINSGWIDTH
 
-
 def main_loop(start_lvl):
     main = True
     global scary_time_off
     global start_time
     global finalscore
-    # [[ghosts IQ//10],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
-    #pla
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
     new_lvl(start_lvl)
@@ -258,6 +259,7 @@ def main_loop(start_lvl):
         if(Score.lives <= 0):
             main = False
         if(points.is_all()):
+            Score.bonus += (180 - round(time.time() - start_time)) * Score.SCORE_TIME
             finalscore = calculate_score(True)
             end_lvl(1)
             main = False
@@ -301,7 +303,8 @@ def main_loop(start_lvl):
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 if(ghost.mode == "scared"):
-                    Score.score += 250
+                    Score.score += Score.SCORE_GHOST[0]
+                    Score.bonus += Score.SCORE_GHOST[1]
                     ghostDeath.play()
                     ghost.mode = "return"
                 elif(not ghost.mode == "return"):
@@ -316,14 +319,14 @@ def main_loop(start_lvl):
             for ghost in ghost_list:
                 if ghost.mode != "closed":
                     ghost.mode = "scared"
-                    ghost.auxiliary_variable = 10000
+                    ghost.auxiliary_variable = ghost.auxiliary_variable = time.time() - start_time + lvl.mapsCfg[Settings.difficulty][lvl.lvl][2][0]
 
         if len(Win.pixelPos_to_gridPos(player.rect.center)) == 1:
-            b = False
+            is_any_ghost_scared = False
             for ghost in ghost_list:
                 if ghost.mode == "scared":
-                    b = True
-            if b:
+                    is_any_ghost_scared = True
+            if is_any_ghost_scared:
                 player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][1]
             else:
                 player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
