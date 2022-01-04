@@ -137,6 +137,7 @@ def end_lvl(is_win):
     run = True
     if is_win==1:
         end_img = pygame.image.load("../lib/menu/win.png")
+        Highscore.unlock(lvl.lvl+1, Settings.difficulty)
     else:
         end_img = pygame.image.load("../lib/menu/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)

@@ -52,7 +52,24 @@ class Highscore:
             f.writelines(w)
 
     @staticmethod
-    def reset_highscore():
-        for i in range(9):
-            Highscore.save_highscore('0', i)
+    def is_locked(lvl, difficulty):
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
+            w = f.readlines()
+        return(str(w[lvl + 100 + 9 * difficulty][0]))
+
+    @staticmethod
+    def lock(lvl, difficulty):
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
+            w = f.readlines()
+        w[lvl + 100 + 9 * difficulty] = "1\n"
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "w") as f:
+            f.writelines(w)
+
+    @staticmethod
+    def unlock(lvl, difficulty):
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
+            w = f.readlines()
+        w[lvl + 100 + 9 * difficulty] = "0\n"
+        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "w") as f:
+            f.writelines(w)
         

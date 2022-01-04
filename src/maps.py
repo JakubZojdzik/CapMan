@@ -1,3 +1,4 @@
+from typing import Set
 import pygame
 from win import Win
 from highscore import Highscore
@@ -29,15 +30,17 @@ class Bigmap:
 
     def drawmaps(self, screen):
         run = True
+        self.locked = [False, True, True, True, True, True, True, True, True]
         for i in range(1, 8):
-            if(Highscore.load_highscore(i, Settings.difficulty) != '-1'):
+            if(Highscore.is_locked(i, Settings.difficulty) == "0"):
                 self.locked[i] = False
+                print(i, "jest odblokowany")
             else:
-                break
+                print(i, "jest zablokowany :(")
 
         while run:
             screen.fill(Win.BGCOLOR)
-
+            
             d = int((screen_info.current_w - 4*ICON_SIZE) / 5)
             e = screen_info.current_h // 3 - 50
             screen.blit(self.title, (int((screen_info.current_w - 365) / 2),0))
