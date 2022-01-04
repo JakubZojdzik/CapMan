@@ -14,17 +14,21 @@ from highscore import Highscore
 
 pygame.init()
 screen_info = pygame.display.Info()
+
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
 Win.MARGIN_LEFT = Win.GRID_SIZE * round(Win.MARGIN_LEFT / Win.GRID_SIZE)
 Win.MARGIN_TOP = int((screen_info.current_h - Win.HEIGHT) / 2)
 Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRID_SIZE
+
 screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
+
 menu = pygame.image.load('../lib/menu/capmenu.png')
 game_over = pygame.image.load('../lib/menu/game_over.png')
 newlevel = pygame.image.load('../lib/menu/ekranstartowyzapasowy.png')
-credits=pygame.image.load('../lib/menu/credits01.png')
+credits = pygame.image.load('../lib/menu/credits01.png')
+paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
@@ -35,9 +39,11 @@ finalscore = 0
 blinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*10.5, "chase", "red")
 pinky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*11.5, Win.MARGIN_TOP+Win.GRID_SIZE*11.5, "closed", "pink")
 inky = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*12.5, "closed", "blue")
-inky.auxiliary_variable = 3
 clyde = Ghost(Win.MARGIN_LEFT+Win.GRID_SIZE*13.5, Win.MARGIN_TOP+Win.GRID_SIZE*11.5, "closed", "orange")
+
+inky.auxiliary_variable = 3
 scary_time_off = -1
+
 ghost_list = pygame.sprite.Group()
 ghost_list.add(blinky)
 ghost_list.add(pinky)
@@ -74,11 +80,6 @@ start_time = time.time()
 
 points = Points()
 points.reset_points(lvl)
-
-for i in range(3):
-    for j in range(8):
-        Highscore.save_highscore("-1", j, i)
-        Highscore.lock(j, i)
 
 def new_lvl(number):
     Score.score = 0
@@ -143,7 +144,7 @@ def end_lvl(is_win):
     run = True
     if is_win==1:
         end_img = pygame.image.load("../lib/menu/win.png")
-        Highscore.unlock(lvl.lvl+1, Settings.difficulty)
+        Highscore.unlock(lvl.lvl, Settings.difficulty)
     else:
         end_img = pygame.image.load("../lib/menu/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
@@ -265,6 +266,14 @@ def main_loop(start_lvl):
     while main:
         temp += 1
         while(pause):
+            screen.fill(Win.BGCOLOR)
+            lvl.to_board(screen)
+            player_list.draw(screen)
+            ghost_list.draw(screen)
+            points.to_board(screen, player)
+            draw_score(start_time)
+            screen.blit(paused_screen, (Win.MARGIN_LEFT, Win.MARGIN_TOP))
+            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -273,7 +282,10 @@ def main_loop(start_lvl):
                     if event.key == ord('p'):
                         pause = False
                     if event.key == ord('q'):
+                        pause = False
                         main = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    pause = False
 
         if(Score.lives <= 0):
             main = False
