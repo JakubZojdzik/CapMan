@@ -46,8 +46,9 @@ ghost_list.add(clyde)
 ghost_tab = [blinky, pinky, inky, clyde]
 
 lvl = Level()
-options=Bigmap()
-set=Settings()
+options = Bigmap()
+set = Settings()
+pause = False
 
 font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
 
@@ -247,6 +248,7 @@ def main_loop(start_lvl):
     global scary_time_off
     global start_time
     global finalscore
+    global pause
     start_time = time.time()
     screen.fill(Win.BGCOLOR)
     new_lvl(start_lvl)
@@ -262,6 +264,17 @@ def main_loop(start_lvl):
     temp = 0
     while main:
         temp += 1
+        while(pause):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    main = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == ord('p'):
+                        pause = False
+                    if event.key == ord('q'):
+                        main = False
+
         if(Score.lives <= 0):
             main = False
         if(points.is_all()):
@@ -302,6 +315,8 @@ def main_loop(start_lvl):
                     player.turn(1)
                 if event.key == pygame.K_DOWN or event.key == ord('s'):
                     player.turn(3)
+                if event.key == ord('p'):
+                    pause = True
                 if event.key == ord('q'):
                     main = False
 
