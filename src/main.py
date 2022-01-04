@@ -188,22 +188,21 @@ def menu_loop():
         screen.blit(current, (((screen_info.current_w - current_width) // 2),0))
         ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
         if current != menu:
-
             back = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
             back = pygame.transform.scale(back, [ICON_SIZE // 2, ICON_SIZE // 2])
             screen.blit(back, (0, 0))
 
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type==pygame.QUIT: #zakończenie
+            if event.type==pygame.QUIT:
                 pygame.quit()
                 run = False
-            if event.type == pygame.KEYDOWN: #podjęcie działan w zależności od komendy
-                if event.key == ord(' ') or event.key==ord("p"): #kończy menu, przechodzi do gry
+            if event.type == pygame.KEYDOWN:
+                if event.key == ord(' ') or event.key==ord("p"):
                     lvl_number=options.drawmaps(screen)
                     if lvl_number!=-1:
                         return(lvl_number)
-                if event.key == ord('c'):#przechodzi do twórców
+                if event.key == ord('c'):
                     current=credits
                     current_width=Win.SETTINSGWIDTH
 
@@ -220,29 +219,28 @@ def menu_loop():
                     pygame.quit()
                     run = False
 
-            #button = pygame.mouse.get_pressed()
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
-                if x<ICON_SIZE and y<ICON_SIZE:
+                if (x < ICON_SIZE and y < ICON_SIZE):
                     current = menu
                     current_width = Win.MENUWIDTH
-                if (x>screen_info.current_w//3 and x<(screen_info.current_w*2)//3):
-                    name_bar_h = (screen_info.current_h*2)//5
+                if (x > screen_info.current_w // 3 and x < (screen_info.current_w * 2) // 3):
+                    name_bar_h = (screen_info.current_h * 2) // 5
                     remaining_h = screen_info.current_h - name_bar_h
-                    if (y > name_bar_h and y < name_bar_h+(remaining_h//3)):
-                        lvl_number=options.drawmaps(screen)
-                        if lvl_number!=-1:
+                    if (y > name_bar_h and y < name_bar_h + (remaining_h // 3)):
+                        lvl_number = options.drawmaps(screen)
+                        if lvl_number != -1:
                             return(lvl_number)
-                    if (y > name_bar_h+(remaining_h//3) and y < name_bar_h+(remaining_h*2)//3):
-                        loudness=set.sound()
+                    if (y > name_bar_h + (remaining_h // 3) and y < name_bar_h + (remaining_h * 2) // 3):
+                        loudness = set.sound()
                         pygame.mixer.music.set_volume(loudness[0])
                         death_sound.set_volume(loudness[0])
-                        points.volume=loudness[0]
-                    if (y > name_bar_h+(remaining_h*2)//3 and y < name_bar_h+remaining_h):
-                        current=credits
-                        current_width=Win.SETTINSGWIDTH
+                        points.volume = loudness[0]
+                    if (y > name_bar_h + (remaining_h * 2) // 3 and y < name_bar_h + remaining_h):
+                        current = credits
+                        current_width = Win.SETTINSGWIDTH
 
 def main_loop(start_lvl):
     main = True
