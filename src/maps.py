@@ -34,9 +34,6 @@ class Bigmap:
         for i in range(1, 8):
             if(Highscore.is_locked(i, Settings.difficulty) == "0"):
                 self.locked[i] = False
-                print(i, "jest odblokowany")
-            else:
-                print(i, "jest zablokowany :(")
 
         while run:
             screen.fill(Win.BGCOLOR)
@@ -54,7 +51,7 @@ class Bigmap:
                 if(self.locked[i]):
                     screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e))
                 score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+1, Settings.difficulty)), True, (0, 255, 255))
-                if(Highscore.load_highscore(i+1, Settings.difficulty) == "-1"):
+                if(Highscore.load_highscore(i+1, Settings.difficulty)[0] == "-"):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)
@@ -68,7 +65,7 @@ class Bigmap:
                 if(self.locked[i+4]):
                     screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e2))
                 score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+5, Settings.difficulty)), True, (0, 255, 255))
-                if(str(Highscore.load_highscore(i+5, Settings.difficulty)) == '-1'):
+                if(str(Highscore.load_highscore(i+5, Settings.difficulty))[0] == '-'):
                     score_img = font.render("Highscore: ?", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 + ICON_SIZE + 25))
                 screen.blit(score_img, score_rect)

@@ -74,6 +74,11 @@ start_time = time.time()
 points = Points()
 points.reset_points(lvl)
 
+for i in range(3):
+    for j in range(8):
+        Highscore.save_highscore("-1", j, i)
+        Highscore.lock(j, i)
+
 def new_lvl(number):
     Score.score = 0
     Score.lives = 3
