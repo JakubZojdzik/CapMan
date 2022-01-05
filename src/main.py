@@ -34,6 +34,8 @@ credits = pygame.image.load('../lib/menu/credits01.png')
 paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
 pause_button = pygame.image.load("../lib/ingame_textures/map/pause.png")
 pause_button = pygame.transform.scale(pause_button, (80, 80))
+back_button = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+back_button = pygame.transform.scale(back_button, (80, 80))
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
@@ -199,9 +201,7 @@ def menu_loop():
             screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
         ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
         if current != menu:
-            back = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
-            back = pygame.transform.scale(back, [ICON_SIZE // 2, ICON_SIZE // 2])
-            screen.blit(back, (0, 0))
+            screen.blit(back_button, (15, 15))
 
         pygame.display.update()
         for event in pygame.event.get():
@@ -234,7 +234,7 @@ def menu_loop():
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
-                if (x < ICON_SIZE and y < ICON_SIZE):
+                if (x < 120 and y < 120):
                     current = menu
                 if (x > screen_info.current_w // 3 and x < (screen_info.current_w * 2) // 3):
                     name_bar_h = (screen_info.current_h * 2) // 5
@@ -284,6 +284,7 @@ def main_loop(start_lvl):
             points.to_board(screen, player)
             draw_score(start_time)
             screen.blit(paused_screen, (Win.MARGIN_LEFT, Win.MARGIN_TOP))
+            screen.blit(back_button, (15, 15))
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -296,7 +297,11 @@ def main_loop(start_lvl):
                         pause = False
                         main = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    pause = False
+                    if(pygame.mouse.get_pos()[0] <= 115 and pygame.mouse.get_pos()[1] <= 115):
+                        pause = False
+                        main = False
+                    else:
+                        pause = False
 
         if(Score.lives <= 0):
             main = False
