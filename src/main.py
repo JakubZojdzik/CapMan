@@ -171,6 +171,8 @@ def end_lvl(is_win):
             if event.type == pygame.KEYDOWN:
                 if event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):
                     run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                run = False
 
 def menu_loop():
     global loudness
