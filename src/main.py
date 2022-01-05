@@ -32,6 +32,8 @@ credits_button = pygame.image.load('../lib/menu/credits_button.png')
 newlevel = pygame.image.load('../lib/menu/ekranstartowyzapasowy.png')
 credits = pygame.image.load('../lib/menu/credits01.png')
 paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
+pause_button = pygame.image.load("../lib/ingame_textures/map/pause.png")
+pause_button = pygame.transform.scale(pause_button, (80, 80))
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
 player_list = pygame.sprite.Group()
@@ -261,6 +263,7 @@ def main_loop(start_lvl):
     player_list.draw(screen)
     ghost_list.draw(screen)
     draw_score(start_time)
+    screen.blit(pause_button, (15, 15))
     pygame.display.flip()
     time.sleep(2)
     start_time += 2
@@ -269,6 +272,9 @@ def main_loop(start_lvl):
     while main:
         temp += 1
         while(pause):
+            ouou.set_volume(0)
+            ghostBack.set_volume(0)
+            ghostScared.set_volume(0)
             screen.fill(Win.BGCOLOR)
             lvl.to_board(screen)
             player_list.draw(screen)
@@ -334,6 +340,10 @@ def main_loop(start_lvl):
                     pause = True
                 if event.key == ord('q'):
                     main = False
+            
+            if event.type == pygame.MOUSEBUTTONUP:
+                if(pygame.mouse.get_pos()[0] <= 120 and pygame.mouse.get_pos()[1] <= 120):
+                    pause = True;
 
         ghost_list.update(player.rect.center, lvl, time.time() - start_time, lvl.mapsCfg[Settings.difficulty][lvl.lvl], player.step)
         for ghost in ghost_tab:
@@ -369,11 +379,12 @@ def main_loop(start_lvl):
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)
+        screen.blit(pause_button, (15, 15))
         pygame.display.flip()
         clock.tick(Win.FPS)
 pygame.mixer.music.set_volume(0.1)
 while(True):
     pygame.mixer.music.load("../lib/sounds/pacmansoundtrack.mp3")
     pygame.mixer.music.play(-1)
-    start=menu_loop()
+    start = menu_loop()
     main_loop(start)
