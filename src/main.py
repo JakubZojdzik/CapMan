@@ -24,8 +24,11 @@ screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h),
 pygame.display.set_caption("CapMan Game")
 clock = pygame.time.Clock()
 
-menu = pygame.image.load('../lib/menu/capmenu.png')
+menu = pygame.image.load('../lib/menu/capmantitle.png')
 game_over = pygame.image.load('../lib/menu/game_over.png')
+play_button = pygame.image.load('../lib/menu/play_button.png')
+settings_button = pygame.image.load('../lib/menu/settings_button.png')
+credits_button = pygame.image.load('../lib/menu/credits_button.png')
 newlevel = pygame.image.load('../lib/menu/ekranstartowyzapasowy.png')
 credits = pygame.image.load('../lib/menu/credits01.png')
 paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
@@ -181,11 +184,15 @@ def menu_loop():
     Score.score = 0
     Score.bonus = 0
     Score.lives = 3
-    current=menu
-    current_width=Win.MENUWIDTH
+    current = menu
+    current_width = Win.MENUWIDTH
     while run:
         screen.fill(Win.BGCOLOR)
-        screen.blit(current, (((screen_info.current_w - current_width) // 2),0))
+        screen.blit(current, ((screen_info.current_w - current.get_width()) // 2, 0))
+        if(current == menu):
+            screen.blit(play_button, ((screen_info.current_w - play_button.get_width()) // 2, menu.get_height()))
+            screen.blit(settings_button, ((screen_info.current_w - settings_button.get_width()) // 2, menu.get_height() + play_button.get_height()))
+            screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
         ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
         if current != menu:
             back = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
@@ -225,22 +232,20 @@ def menu_loop():
                 y = pos[1]
                 if (x < ICON_SIZE and y < ICON_SIZE):
                     current = menu
-                    current_width = Win.MENUWIDTH
                 if (x > screen_info.current_w // 3 and x < (screen_info.current_w * 2) // 3):
                     name_bar_h = (screen_info.current_h * 2) // 5
                     remaining_h = screen_info.current_h - name_bar_h
-                    if (y > name_bar_h and y < name_bar_h + (remaining_h // 3)):
+                    if (y < menu.get_height() + play_button.get_height()):
                         lvl_number = options.drawmaps(screen)
                         if lvl_number != -1:
                             return(lvl_number)
-                    if (y > name_bar_h + (remaining_h // 3) and y < name_bar_h + (remaining_h * 2) // 3):
+                    elif (y < menu.get_height() + play_button.get_height() + settings_button.get_height()):
                         loudness = set.sound()
                         pygame.mixer.music.set_volume(loudness[0])
                         death_sound.set_volume(loudness[0])
                         points.volume = loudness[0]
-                    if (y > name_bar_h + (remaining_h * 2) // 3 and y < name_bar_h + remaining_h):
+                    else:
                         current = credits
-                        current_width = Win.SETTINSGWIDTH
 
 def main_loop(start_lvl):
     main = True
