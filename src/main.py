@@ -98,12 +98,12 @@ def new_lvl(number):
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
     player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
-    player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
+    player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][0]
     blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red", 0)
-    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink", lvl.mapsCfg[Settings.difficulty][lvl.lvl][3][0])
-    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue", lvl.mapsCfg[Settings.difficulty][lvl.lvl][3][1])
-    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange", lvl.mapsCfg[Settings.difficulty][lvl.lvl][3][2])
-    player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
+    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink", lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][0])
+    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue", lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][1])
+    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange", lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][2])
+    player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][0]
 
 def draw_score(start_time):
     score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(time.time() - start_time)), True, (0, 255, 255))
@@ -352,7 +352,7 @@ def main_loop(start_lvl):
                 if(pygame.mouse.get_pos()[0] <= 120 and pygame.mouse.get_pos()[1] <= 120):
                     pause = True;
 
-        ghost_list.update(player.rect.center, lvl, time.time() - start_time, lvl.mapsCfg[Settings.difficulty][lvl.lvl], player.step)
+        ghost_list.update(player.rect.center, lvl, time.time() - start_time, lvl.mapsCfg[lvl.lvl][Settings.difficulty], player.step)
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 if(ghost.mode == "scared"):
@@ -372,7 +372,7 @@ def main_loop(start_lvl):
             for ghost in ghost_list:
                 if ghost.mode != "closed":
                     ghost.mode = "scared"
-                    ghost.auxiliary_variable = ghost.auxiliary_variable = time.time() - start_time + lvl.mapsCfg[Settings.difficulty][lvl.lvl][2][0]
+                    ghost.auxiliary_variable = ghost.auxiliary_variable = time.time() - start_time + lvl.mapsCfg[lvl.lvl][Settings.difficulty][2][0]
 
         if len(Win.pixelPos_to_gridPos(player.rect.center)) == 1:
             is_any_ghost_scared = False
@@ -380,9 +380,9 @@ def main_loop(start_lvl):
                 if ghost.mode == "scared":
                     is_any_ghost_scared = True
             if is_any_ghost_scared:
-                player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][1]
+                player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][1]
             else:
-                player.step = lvl.mapsCfg[Settings.difficulty][lvl.lvl][4][0]
+                player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][0]
         player_list.draw(screen)
         ghost_list.draw(screen)
         draw_score(start_time)

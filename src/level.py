@@ -2,7 +2,9 @@ import pygame
 from win import Win
 
 # 24x25
-img = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
+block_space = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
+block_beach = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block_beach.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
+block_ice = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block_ice.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
 
 class Level:
     def __init__(self):
@@ -283,7 +285,7 @@ class Level:
             ]
         self.start_maps = self.maps
 
-        self.mapsCfg = [
+        '''self.mapsCfg2 = [
             [  # easy
                 [[2], [3, 2], [10, 30], [12, 24, 36], [4, 6]],
                 [[1], [3, 2], [10, 20], [15, 30, 45], [4, 6]],  # lvl 1
@@ -318,6 +320,73 @@ class Level:
                 [[1000], [3, 2], [7, 45], [8, 16, 24], [4, 4]],
             ],
             # [[ghosts collaboration skills],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
+        ]'''
+
+        self.mapsCfg = [
+            # lvl 0  (example)
+            [
+                # [[ghosts collaboration skills],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
+                [[2], [3, 2], [10, 30], [12, 24, 36], [4, 6]],
+                [[3], [3, 2], [10, 30], [12, 24, 36], [4, 6]],
+                [[10], [3, 2], [10, 35], [12, 24, 34], [4, 6]],
+                ['space']  # theme
+            ],
+            # lvl 1
+            [
+                [[1], [3, 2], [10, 20], [15, 30, 45], [4, 6]],
+                [[3], [3, 2], [10, 25], [15, 30, 45], [4, 6]],
+                [[10], [3, 2], [10, 35], [12, 24, 34], [4, 6]],
+                ['space']
+            ],
+            # lvl 2
+            [
+                [[2], [3, 2], [10, 25], [15, 30, 45], [4, 6]],
+                [[5], [3, 2], [10, 30], [12, 24, 36], [4, 6]],
+                [[10], [3, 2], [10, 35], [12, 24, 34], [4, 6]],
+                ['winter']
+            ],
+            # lvl 3
+            [
+                [[3], [3, 2], [10, 30], [12, 24, 36], [4, 6]],
+                [[8], [3, 2], [10, 30], [12, 24, 36], [4, 6]],
+                [[15], [3, 2], [8, 40], [12, 24, 36], [4, 4]],
+                ['space']
+            ],
+            # lvl 4
+            [
+                [[5], [3, 2], [10, 35], [12, 24, 34], [4, 6]],
+                [[10], [3, 2], [8, 35], [12, 24, 36], [4, 4]],
+                [[20], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                ['beach']
+            ],
+            # lvl 5
+            [
+                [[5], [3, 2], [10, 35], [12, 24, 34], [4, 4]],
+                [[15], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                [[25], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                ['space']
+            ],
+            # lvl 6
+            [
+                [[7], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                [[20], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                [[40], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                ['winter']
+            ],
+            # lvl 7
+            [
+                [[10], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                [[25], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                [[1000], [3, 2], [8, 45], [10, 20, 30], [4, 4]],
+                ['space']
+            ],
+            # lvl 8
+            [
+                [[12], [3, 2], [8, 40], [10, 20, 30], [4, 4]],
+                [[25], [3, 2], [7, 45], [10, 20, 30], [4, 4]],
+                [[1000], [3, 2], [7, 45], [8, 16, 24], [4, 4]],
+                ['beach']
+            ]
         ]
 
     def reset(self):
@@ -333,7 +402,16 @@ class Level:
         return self.maps[self.lvl].copy()
 
     def to_board(self, screen):
+        if self.mapsCfg[self.lvl][3][0] == 'beach':
+            pygame.draw.rect(screen,(226, 230, 218),(Win.MARGIN_LEFT, Win.MARGIN_TOP, Win.GRID_SIZE*25, Win.GRID_SIZE*24))
+        elif self.mapsCfg[self.lvl][3][0] == 'winter':
+            pygame.draw.rect(screen,(181, 231, 235),(Win.MARGIN_LEFT, Win.MARGIN_TOP, Win.GRID_SIZE*25, Win.GRID_SIZE*24))
         for i in range(25):
             for j in range(24):
                 if(self.maps[self.lvl][j][i] == 1):
-                    screen.blit(img, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
+                    if self.mapsCfg[self.lvl][3][0] == 'beach':
+                        screen.blit(block_beach, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
+                    elif self.mapsCfg[self.lvl][3][0] == 'winter':
+                        screen.blit(block_ice, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
+                    else:
+                        screen.blit(block_space, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
