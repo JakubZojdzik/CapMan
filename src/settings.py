@@ -5,67 +5,70 @@ from win import Win
 
 class Settings:
     difficulty = 1
-    def __init__(self):
-        self.title = pygame.image.load("../lib/menu/capmantitle.png")
-        self.position = 0.1
-        self.mutepicture=pygame.image.load("../lib/menu/mutepac.png")
-        self.loudpicture=pygame.image.load("../lib/menu/soundpac.png")
-        self.hardcolor=pygame.image.load("../lib/menu/hardcolor.png")
-        self.hardfaded=pygame.image.load("../lib/menu/hardfaded.png")
-        self.essacolor=pygame.image.load("../lib/menu/essacolor.png")
-        self.essafaded=pygame.image.load("../lib/menu/fadedessa.png")
-        self.mediumcolor = pygame.image.load("../lib/menu/mediumcolor.png")
-        self.mediumfaded = pygame.image.load("../lib/menu/mediumfaded.png")
-        self.comeback = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+    volume = 0.1
+    title = pygame.image.load("../lib/menu/capmantitle.png")
+    mutepicture=pygame.image.load("../lib/menu/mutepac.png")
+    loudpicture=pygame.image.load("../lib/menu/soundpac.png")
+    hardcolor=pygame.image.load("../lib/menu/hardcolor.png")
+    hardfaded=pygame.image.load("../lib/menu/hardfaded.png")
+    essacolor=pygame.image.load("../lib/menu/essacolor.png")
+    essafaded=pygame.image.load("../lib/menu/fadedessa.png")
+    mediumcolor = pygame.image.load("../lib/menu/mediumcolor.png")
+    mediumfaded = pygame.image.load("../lib/menu/mediumfaded.png")
+    comeback = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+    
+    @staticmethod
+    def set_volume(volume, sounds = []):
+        Settings.volume = volume
+        pygame.mixer.music.set_volume(Settings.volume)
+        for sound in sounds:
+            sound.set_volume(volume)
 
-
-    def sound(self):
-        pygame.init()
+    @staticmethod
+    def settings(sounds=[]):
         screen_info = pygame.display.Info()
-        screen = pygame.display.set_mode(
-            (screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
         width = screen_info.current_w//3
         height = screen_info.current_h//6
         ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
-        self.comeback = pygame.transform.scale(self.comeback, [ICON_SIZE // 2, ICON_SIZE // 2])
+        Settings.comeback = pygame.transform.scale(Settings.comeback, [ICON_SIZE // 2, ICON_SIZE // 2])
         margin_top = screen_info.current_h/3
         margin_left = int((screen_info.current_w - width) / 2)
-        margin_down = int((screen_info.current_h *(2/3))) #to działa tak jakby od góry stąd 2/3
-        self.title = pygame.transform.scale(self.title, [int(((7/8) *margin_top)*2.4), int((7/8) *margin_top)])
-        self.mutepicture= pygame.transform.scale(self.mutepicture,[height ,height] )
-        self.loudpicture= pygame.transform.scale(self.loudpicture,[height ,height])
+        margin_down = int((screen_info.current_h *(2/3)))
+        Settings.title = pygame.transform.scale(Settings.title, [int(((7/8) *margin_top)*2.4), int((7/8) *margin_top)])
+        Settings.mutepicture= pygame.transform.scale(Settings.mutepicture,[height ,height] )
+        Settings.loudpicture= pygame.transform.scale(Settings.loudpicture,[height ,height])
         LEVEL_ICON_SIZE=(width+2*height)//4
-        self.hardcolor = pygame.transform.scale(self.hardcolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
-        self.hardfaded = pygame.transform.scale(self.hardfaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
-        self.essacolor = pygame.transform.scale(self.essacolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
-        self.essafaded = pygame.transform.scale(self.essafaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE] )
-        self.mediumcolor = pygame.transform.scale(self.mediumcolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
-        self.mediumfaded = pygame.transform.scale(self.mediumfaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
+        Settings.hardcolor = pygame.transform.scale(Settings.hardcolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
+        Settings.hardfaded = pygame.transform.scale(Settings.hardfaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
+        Settings.essacolor = pygame.transform.scale(Settings.essacolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
+        Settings.essafaded = pygame.transform.scale(Settings.essafaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE] )
+        Settings.mediumcolor = pygame.transform.scale(Settings.mediumcolor, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
+        Settings.mediumfaded = pygame.transform.scale(Settings.mediumfaded, [LEVEL_ICON_SIZE, LEVEL_ICON_SIZE])
 
         blackColor = pygame.Color(0, 0, 0)
         yellowColor = pygame.Color(255, 255, 0)
-        screen.fill(Win.BGCOLOR)
-        screen.blit(self.title, (((screen_info.current_w - ((margin_top-20)*2.4)) / 2), 0))
-        screen.blit(self.mutepicture, (margin_left-height+1, margin_top))
-        screen.blit(self.loudpicture, (margin_left+width, margin_top))
+        Win.screen.fill(Win.BGCOLOR)
+        Win.screen.blit(Settings.title, (((screen_info.current_w - ((margin_top-20)*2.4)) / 2), 0))
+        Win.screen.blit(Settings.mutepicture, (margin_left-height+1, margin_top))
+        Win.screen.blit(Settings.loudpicture, (margin_left+width, margin_top))
 
-        # starting position
-        x = margin_left+width*self.position
-        pygame.draw.rect(screen, yellowColor, Rect(margin_left, margin_top, width, height))
-        pygame.draw.rect(screen, blackColor, Rect(x, margin_top + 5, width/40, height-10))
+        # starting volume
+        x = margin_left+width*Settings.volume
+        pygame.draw.rect(Win.screen, yellowColor, Rect(margin_left, margin_top, width, height))
+        pygame.draw.rect(Win.screen, blackColor, Rect(x, margin_top + 5, width/40, height-10))
         if (Settings.difficulty == 0):
-            screen.blit(self.essacolor, (margin_left - height + 1, margin_down))
-            screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
-            screen.blit(self.mediumfaded, (margin_left+(width-LEVEL_ICON_SIZE)//2, margin_down))
+            Win.screen.blit(Settings.essacolor, (margin_left - height + 1, margin_down))
+            Win.screen.blit(Settings.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
+            Win.screen.blit(Settings.mediumfaded, (margin_left+(width-LEVEL_ICON_SIZE)//2, margin_down))
         if(Settings.difficulty == 1):
-            screen.blit(self.essafaded, (margin_left-height+1, margin_down))
-            screen.blit(self.hardfaded, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
-            screen.blit(self.mediumcolor, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
+            Win.screen.blit(Settings.essafaded, (margin_left-height+1, margin_down))
+            Win.screen.blit(Settings.hardfaded, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
+            Win.screen.blit(Settings.mediumcolor, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
         if (Settings.difficulty == 2):
-            screen.blit(self.hardcolor, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
-            screen.blit(self.essafaded, (margin_left-height+1, margin_down))
-            screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
-        screen.blit(self.comeback, (0,0))
+            Win.screen.blit(Settings.hardcolor, (margin_left+width+height-LEVEL_ICON_SIZE, margin_down))
+            Win.screen.blit(Settings.essafaded, (margin_left-height+1, margin_down))
+            Win.screen.blit(Settings.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
+        Win.screen.blit(Settings.comeback, (0,0))
         pygame.display.update()
         a = x
         while True:
@@ -81,32 +84,30 @@ class Settings:
                         a = margin_left
                     if a > margin_left + width - width / 40:
                         a = margin_left + width - width / 40
-                    pygame.draw.rect(screen, yellowColor, Rect(
+                    Settings.set_volume((a - margin_left) / width, sounds)
+                    pygame.draw.rect(Win.screen, yellowColor, Rect(
                         margin_left, margin_top, width, height))
-                    pygame.draw.rect(screen, blackColor, Rect(
+                    pygame.draw.rect(Win.screen, blackColor, Rect(
                         a, margin_top + 5, width / 40, height - 10))
                     pygame.display.update()
 
                 if y>margin_down and (x>margin_left-height+1 and x<margin_left-height+1+LEVEL_ICON_SIZE):
                     Settings.difficulty=0
-                    print(Settings.difficulty)
-                    screen.blit(self.essacolor, (margin_left - height + 1, margin_down))
-                    screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
-                    screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
+                    Win.screen.blit(Settings.essacolor, (margin_left - height + 1, margin_down))
+                    Win.screen.blit(Settings.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
+                    Win.screen.blit(Settings.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
                     pygame.display.update()
                 if y>margin_down and (x>margin_left + (width - LEVEL_ICON_SIZE) // 2 and x<margin_left + (width - LEVEL_ICON_SIZE) // 2+LEVEL_ICON_SIZE):
                     Settings.difficulty=1
-                    print(Settings.difficulty)
-                    screen.blit(self.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
-                    screen.blit(self.essafaded, (margin_left - height + 1, margin_down))
-                    screen.blit(self.mediumcolor, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
+                    Win.screen.blit(Settings.hardfaded, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
+                    Win.screen.blit(Settings.essafaded, (margin_left - height + 1, margin_down))
+                    Win.screen.blit(Settings.mediumcolor, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
                     pygame.display.update()
                 if y>margin_down and (x>margin_left + width + height - LEVEL_ICON_SIZE and x<margin_left + width + height):
                     Settings.difficulty=2
-                    print(Settings.difficulty)
-                    screen.blit(self.hardcolor, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
-                    screen.blit(self.essafaded, (margin_left - height + 1, margin_down))
-                    screen.blit(self.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
+                    Win.screen.blit(Settings.hardcolor, (margin_left + width + height - LEVEL_ICON_SIZE, margin_down))
+                    Win.screen.blit(Settings.essafaded, (margin_left - height + 1, margin_down))
+                    Win.screen.blit(Settings.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
                     pygame.display.update()
 
 
@@ -114,12 +115,11 @@ class Settings:
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
                     if pos[0]<ICON_SIZE and pos[1]<ICON_SIZE:
-                        self.position = (a - margin_left) / width
-                        return ((a - margin_left) / width, Settings.difficulty)
+                        return (Settings.volume, Settings.difficulty)
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):  # wraca do menu głównego
-                        self.position = (a - margin_left) / width
-                        return ((a - margin_left) / width, Settings.difficulty)
+                        Settings.volume = (a - margin_left) / width
+                        return (Settings.volume, Settings.difficulty)

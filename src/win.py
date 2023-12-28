@@ -1,5 +1,5 @@
 from colors import Colors
-
+import pygame
 class Win:
     MENUWIDTH = 794
     GAMEOVERWIDTH = 794
@@ -13,6 +13,7 @@ class Win:
     GRID_SIZE = 24
     MARGIN_TOP = 120
     MARGIN_LEFT = 240
+    screen = pygame.Surface((0,0))
 
     @staticmethod
     def pixelPos_to_gridPos(pos):

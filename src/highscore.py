@@ -1,7 +1,9 @@
 import base64
 import codecs
+from os.path import exists
 
 def encode(value):
+    value = str(value)
     value = bytearray(value, "utf8")
     value = base64.b64encode(value)
     value = str(value)[2:-1]
@@ -36,40 +38,42 @@ def decode(value):
     value = base64.b64decode(value)
     return str(value)[2:-1]
 
+def createENF():
+    content = (encode(0)+'\n')*3
+    for i in range(7):
+        content += encode(-1) + '\n'
+        content += encode(-1) + '\n'
+        content += encode(-1) + '\n'
+    with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "w") as f:
+        f.write(content)
+
 class Highscore:
+    if not exists('../lib/ingame_textures/map/ExtremelyNormalFile.png'):
+        createENF()
+    
     @staticmethod
     def load_highscore(lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
-            w = f.readlines()
-        return(decode(str(w[lvl + 9 * difficulty])))
+        with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "r") as f:
+            content = f.readlines()
+        return(int(decode(str(content[lvl*3 + difficulty]))))
 
     @staticmethod
     def save_highscore(score, lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
-            w = f.readlines()
-        w[lvl + 9 * difficulty] = encode(score) + '\n'
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "w") as f:
-            f.writelines(w)
+        with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "r") as f:
+            content = f.readlines()
+        content[lvl*3 + difficulty] = encode(score) + '\n'
+        with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "w") as f:
+            f.writelines(content)
 
     @staticmethod
     def is_locked(lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
-            w = f.readlines()
-        return(str(w[lvl + 100 + 9 * difficulty][0]))
+        return Highscore.load_highscore(lvl, difficulty) == -1
 
     @staticmethod
     def lock(lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
-            w = f.readlines()
-        w[lvl + 100 + 9 * difficulty] = "1\n"
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "w") as f:
-            f.writelines(w)
+        Highscore.save_highscore(-1, lvl, difficulty)
 
     @staticmethod
     def unlock(lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "r") as f:
-            w = f.readlines()
-        w[lvl + 100 + 9 * difficulty] = "0\n"
-        with open('../lib/ingame_textures/map/ExtreamlyNormalFile.png', "w") as f:
-            f.writelines(w)
-        
+        if Highscore.is_locked(lvl, difficulty):
+            Highscore.save_highscore(0, lvl, difficulty)

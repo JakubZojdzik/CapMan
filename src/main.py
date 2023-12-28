@@ -11,8 +11,9 @@ from score import Score
 from maps import Bigmap
 from highscore import Highscore
 
-
 pygame.init()
+pygame.display.set_caption("CapMan")
+pygame.display.set_icon(pygame.image.load("../lib/ingame_textures/player/Player_right.png"))
 screen_info = pygame.display.Info()
 
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
@@ -20,8 +21,7 @@ Win.MARGIN_LEFT = Win.GRID_SIZE * round(Win.MARGIN_LEFT / Win.GRID_SIZE)
 Win.MARGIN_TOP = int((screen_info.current_h - Win.HEIGHT) / 2)
 Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRID_SIZE
 
-screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
-pygame.display.set_caption("CapMan Game")
+Win.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 
 menu = pygame.image.load('../lib/menu/capmantitle.png')
@@ -29,7 +29,6 @@ game_over = pygame.image.load('../lib/menu/game_over.png')
 play_button = pygame.image.load('../lib/menu/play_button.png')
 settings_button = pygame.image.load('../lib/menu/settings_button.png')
 credits_button = pygame.image.load('../lib/menu/credits_button.png')
-newlevel = pygame.image.load('../lib/menu/ekranstartowyzapasowy.png')
 credits = pygame.image.load('../lib/menu/credits01.png')
 paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
 pause_button = pygame.image.load("../lib/ingame_textures/map/pause.png")
@@ -60,15 +59,14 @@ ghost_tab = [blinky, pinky, inky, clyde]
 
 lvl = Level()
 options = Bigmap()
-set = Settings()
-pause = False
 
 font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
+soundtrack = pygame.mixer.Sound("../lib/sounds/pacmansoundtrack.mp3")
+soundtrack.set_volume(Settings.volume)
 death_sound = pygame.mixer.Sound('../lib/sounds/pacmandeath.mp3')
-death_sound.set_volume(0.3)
-
+death_sound.set_volume(Settings.volume)
 ghostDeath = pygame.mixer.Sound('../lib/sounds/eatGhost.mp3')
 ghostDeath.set_volume(0)
 ouou = pygame.mixer.Sound('../lib/sounds/ouou.mp3')
@@ -81,41 +79,57 @@ ghostScared = pygame.mixer.Sound('../lib/sounds/scaredGhost.mp3')
 ghostScared.set_volume(0)
 ghostScared.play(-1)
 
-loudness = [0.1, 0]
-
 start_time = time.time()
+pause_time = None
 
 points = Points()
 points.reset_points(lvl)
+
+def get_time():
+    global start_time
+    global pause_time
+    if pause_time is None:
+        return time.time() - start_time
+    return pause_time - start_time
+
+def pause_game():
+    global start_time
+    global pause_time
+    if pause_time is None:
+        pause_time = time.time()
+    else:
+        start_time += time.time() - pause_time
+        pause_time = None
+
 
 def new_lvl(number):
     Score.score = 0
     Score.lives = 3
     Score.bonus = 0
     global start_time
+    global pause_time
     start_time = time.time()
+    pause_time = None
     lvl.lvl = number
     lvl.lvl %= len(lvl.maps)
     points.reset_points(lvl)
     player.__init__(Win.MARGIN_LEFT+Win.GRID_SIZE*12 + Win.GRID_SIZE//2, Win.MARGIN_TOP+Win.GRID_SIZE*14 + Win.GRID_SIZE//2)
     player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][0]
-    blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red", 0)
-    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink", lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][0])
-    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue", lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][1])
-    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange", lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][2])
-    player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][0]
+    ghost_step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][1][0]
+    blinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 10 + Win.GRID_SIZE//2, "chase", "red", ghost_step, 0)
+    pinky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "pink", ghost_step, lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][0])
+    inky.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 12 + Win.GRID_SIZE//2, "closed", "blue", ghost_step, lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][1])
+    clyde.__init__(Win.MARGIN_LEFT + Win.GRID_SIZE * 13 + Win.GRID_SIZE//2, Win.MARGIN_TOP + Win.GRID_SIZE * 11 + Win.GRID_SIZE//2, "closed", "orange", ghost_step, lvl.mapsCfg[lvl.lvl][Settings.difficulty][3][2])
 
 def draw_score(start_time):
-    score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(time.time() - start_time)), True, (0, 255, 255))
+    score_img = font.render("Score: " + str(Score.score) + "     Lives: " + str(Score.lives) + "     Time: " + str(round(get_time())), True, (0, 255, 255))
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, Win.MARGIN_TOP + Win.HEIGHT + 50))
-    screen.blit(score_img, score_rect)
+    Win.screen.blit(score_img, score_rect)
 
-def calculate_score(done):
-    s = Score.score + Score.lives * Score.SCORE_LIFE
-    if done:
+def calculate_score(is_win):
+    s = Score.score
+    if is_win:
         s += Score.bonus
-    if(s > int(Highscore.load_highscore(lvl.lvl, Settings.difficulty))):
-        Highscore.save_highscore(str(s), lvl.lvl, Settings.difficulty)
     return s
 
 def death():
@@ -129,45 +143,44 @@ def death():
     global finalscore
     for ghost in ghost_tab:
         ghost.resetPos()
-    screen.fill(Win.BGCOLOR)
-    lvl.to_board(screen)
-    points.to_board(screen, player)
-    player_list.draw(screen)
-    ghost_list.draw(screen)
+    Win.screen.fill(Win.BGCOLOR)
+    lvl.to_board()
+    points.to_board(player)
+    player_list.draw(Win.screen)
+    ghost_list.draw(Win.screen)
     draw_score(start_time)
     pygame.display.flip()
-    if(Score.lives <= 0):
-        finalscore = calculate_score(False)
-        end_lvl(0)
-    else:
-        time.sleep(1.8)
-        start_time += 3
+    pause_game()
+    time.sleep(2)
+    pause_game()
 
 def end_lvl(is_win):
     global finalscore
+    finalscore = calculate_score(is_win)
+    if finalscore > Highscore.load_highscore(lvl.lvl, Settings.difficulty):
+        Highscore.save_highscore(finalscore, lvl.lvl, Settings.difficulty)
     ouou.set_volume(0)
     ghostBack.set_volume(0)
     ghostScared.set_volume(0)
     run = True
     if is_win==1:
         end_img = pygame.image.load("../lib/menu/win.png")
-        Highscore.unlock(lvl.lvl, Settings.difficulty)
+        if lvl.lvl < 7:
+            Highscore.unlock(lvl.lvl+1, Settings.difficulty)
     else:
         end_img = pygame.image.load("../lib/menu/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
     highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl, Settings.difficulty)), True, Colors.WHITE)
-    if(str(Highscore.load_highscore(lvl.lvl, Settings.difficulty) == '-1')):
-        highscore_img = font.render("Highscore: ?", True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:
-        screen.fill(Win.BGCOLOR)
-        screen.blit(end_img, (((screen_info.current_w - Win.MENUWIDTH) // 2),0))
-        screen.blit(score_img, score_rect)
-        screen.blit(highscore_img, highscore_rect)
+        Win.screen.fill(Win.BGCOLOR)
+        Win.screen.blit(end_img, (((screen_info.current_w - Win.MENUWIDTH) // 2),0))
+        Win.screen.blit(score_img, score_rect)
+        Win.screen.blit(highscore_img, highscore_rect)
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:  # zakończenie
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 run = False
             if event.type == pygame.KEYDOWN:
@@ -176,11 +189,12 @@ def end_lvl(is_win):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 run = False
 
-def menu_loop():
-    global loudness
+def main_loop():
     ouou.set_volume(0)
     ghostBack.set_volume(0)
     ghostScared.set_volume(0)
+    soundtrack.set_volume(Settings.volume)
+    soundtrack.play(-1)
     run = True
     lvl.reset()
     points.reset_points(lvl)
@@ -193,15 +207,15 @@ def menu_loop():
     current = menu
     current_width = Win.MENUWIDTH
     while run:
-        screen.fill(Win.BGCOLOR)
-        screen.blit(current, ((screen_info.current_w - current.get_width()) // 2, 0))
+        Win.screen.fill(Win.BGCOLOR)
+        Win.screen.blit(current, ((screen_info.current_w - current.get_width()) // 2, 0))
         if(current == menu):
-            screen.blit(play_button, ((screen_info.current_w - play_button.get_width()) // 2, menu.get_height()))
-            screen.blit(settings_button, ((screen_info.current_w - settings_button.get_width()) // 2, menu.get_height() + play_button.get_height()))
-            screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
+            Win.screen.blit(play_button, ((screen_info.current_w - play_button.get_width()) // 2, menu.get_height()))
+            Win.screen.blit(settings_button, ((screen_info.current_w - settings_button.get_width()) // 2, menu.get_height() + play_button.get_height()))
+            Win.screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
         ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
         if current != menu:
-            screen.blit(back_button, (15, 15))
+            Win.screen.blit(back_button, (15, 15))
 
         pygame.display.update()
         for event in pygame.event.get():
@@ -210,23 +224,21 @@ def menu_loop():
                 run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == ord(' ') or event.key==ord("p"):
-                    lvl_number=options.drawmaps(screen)
-                    if lvl_number!=-1:
-                        return(lvl_number)
+                    lvl_number=options.drawmaps()
+                    while lvl_number!=-1:
+                        game_loop(lvl_number)
+                        lvl_number=options.drawmaps()
                 if event.key == ord('c'):
                     current=credits
                     current_width=Win.SETTINSGWIDTH
 
                 if event.key == ord('s'):
-                    loudness=set.sound()
-                    pygame.mixer.music.set_volume(loudness[0])
-                    death_sound.set_volume(loudness[0])
-                    points.volume=loudness[0]
+                    Settings.settings([soundtrack, death_sound])
 
-                if event.key == pygame.K_LEFT: #wraca do menu głównego
+                if event.key == pygame.K_LEFT:
                     current=menu
                     current_width = Win.MENUWIDTH
-                if event.key == ord('q'): #wychodzi z gry
+                if event.key == ord('q'):
                     pygame.quit()
                     run = False
 
@@ -240,32 +252,32 @@ def menu_loop():
                     name_bar_h = (screen_info.current_h * 2) // 5
                     remaining_h = screen_info.current_h - name_bar_h
                     if (y < menu.get_height() + play_button.get_height()):
-                        lvl_number = options.drawmaps(screen)
-                        if lvl_number != -1:
-                            return(lvl_number)
+                        lvl_number=options.drawmaps()
+                        while lvl_number!=-1:
+                            game_loop(lvl_number)
+                            lvl_number=options.drawmaps()
                     elif (y < menu.get_height() + play_button.get_height() + settings_button.get_height()):
-                        loudness = set.sound()
-                        pygame.mixer.music.set_volume(loudness[0])
-                        death_sound.set_volume(loudness[0])
-                        points.volume = loudness[0]
+                        Settings.settings([soundtrack, death_sound])
                     else:
                         current = credits
 
-def main_loop(start_lvl):
+def game_loop(start_lvl):
     main = True
     global scary_time_off
     global start_time
     global finalscore
-    global pause
+    global pause_time
     start_time = time.time()
-    screen.fill(Win.BGCOLOR)
+    pause_time = None
+    soundtrack.stop()
+    Win.screen.fill(Win.BGCOLOR)
     new_lvl(start_lvl)
-    lvl.to_board(screen)
-    points.to_board(screen, player)
-    player_list.draw(screen)
-    ghost_list.draw(screen)
+    lvl.to_board()
+    points.to_board(player)
+    player_list.draw(Win.screen)
+    ghost_list.draw(Win.screen)
     draw_score(start_time)
-    screen.blit(pause_button, (15, 15))
+    Win.screen.blit(pause_button, (15, 15))
     pygame.display.flip()
     time.sleep(2)
     start_time += 2
@@ -273,61 +285,64 @@ def main_loop(start_lvl):
     temp = 0
     while main:
         temp += 1
-        while(pause):
+        while not pause_time is None:
             ouou.set_volume(0)
             ghostBack.set_volume(0)
             ghostScared.set_volume(0)
-            screen.fill(Win.BGCOLOR)
-            lvl.to_board(screen)
-            player_list.draw(screen)
-            ghost_list.draw(screen)
-            points.to_board(screen, player)
+            Win.screen.fill(Win.BGCOLOR)
+            lvl.to_board()
+            player_list.draw(Win.screen)
+            ghost_list.draw(Win.screen)
+            points.to_board(player)
             draw_score(start_time)
-            screen.blit(paused_screen, (Win.MARGIN_LEFT, Win.MARGIN_TOP))
-            screen.blit(back_button, (15, 15))
+            Win.screen.blit(paused_screen, (Win.MARGIN_LEFT, Win.MARGIN_TOP))
+            Win.screen.blit(back_button, (15, 15))
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     main = False
+                    pause_game()
                 if event.type == pygame.KEYDOWN:
                     if event.key == ord('p'):
-                        pause = False
+                        pause_game()
                     if event.key == ord('q'):
-                        pause = False
+                        pause_game()
                         main = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     if(pygame.mouse.get_pos()[0] <= 115 and pygame.mouse.get_pos()[1] <= 115):
-                        pause = False
+                        pause_game()
                         main = False
                     else:
-                        pause = False
+                        pause_game()
 
         if(Score.lives <= 0):
+            end_lvl(False)
             main = False
+            break
         if(points.is_all()):
-            Score.bonus += (180 - round(time.time() - start_time)) * Score.SCORE_TIME
-            finalscore = calculate_score(True)
-            end_lvl(1)
+            Score.bonus += max((180 - round(get_time())),0) * Score.SCORE_TIME
+            Score.bonus += Score.lives * Score.SCORE_LIFE
+            end_lvl(True)
             main = False
+            break
 
         r = False
         for ghost in ghost_tab:
             if(not r):
-                ouou.set_volume(loudness[0])
+                ouou.set_volume(Settings.volume)
                 ghostBack.set_volume(0)
                 ghostScared.set_volume(0)
             if(ghost.mode == "scared"):
                 ouou.set_volume(0)
                 ghostBack.set_volume(0)
-                ghostScared.set_volume(loudness[0])
+                ghostScared.set_volume(Settings.volume)
                 r = True
             if(ghost.mode == "return"):
                 ouou.set_volume(0)
-                ghostBack.set_volume(loudness[0])
+                ghostBack.set_volume(Settings.volume)
                 ghostScared.set_volume(0)
                 break
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -344,15 +359,15 @@ def main_loop(start_lvl):
                 if event.key == pygame.K_DOWN or event.key == ord('s'):
                     player.turn(3)
                 if event.key == ord('p'):
-                    pause = True
+                    pause_game()
                 if event.key == ord('q'):
                     main = False
             
             if event.type == pygame.MOUSEBUTTONUP:
                 if(pygame.mouse.get_pos()[0] <= 120 and pygame.mouse.get_pos()[1] <= 120):
-                    pause = True;
+                    pause_game()
 
-        ghost_list.update(player.rect.center, lvl, time.time() - start_time, lvl.mapsCfg[lvl.lvl][Settings.difficulty], player.step)
+        ghost_list.update(player.rect.center, lvl, get_time(), lvl.mapsCfg[lvl.lvl][Settings.difficulty], player.step)
         for ghost in ghost_tab:
             if(ghost.got_capman(player)):
                 if(ghost.mode == "scared"):
@@ -366,13 +381,13 @@ def main_loop(start_lvl):
         player.update(lvl, state)
         if temp % 8 == 0:
             state *= -1
-        screen.fill(Win.BGCOLOR)
-        lvl.to_board(screen)
-        if(points.to_board(screen, player)):
+        Win.screen.fill(Win.BGCOLOR)
+        lvl.to_board()
+        if(points.to_board(player)):
             for ghost in ghost_list:
                 if ghost.mode != "closed":
                     ghost.mode = "scared"
-                    ghost.auxiliary_variable = ghost.auxiliary_variable = time.time() - start_time + lvl.mapsCfg[lvl.lvl][Settings.difficulty][2][0]
+                    ghost.auxiliary_variable = ghost.auxiliary_variable = get_time() + lvl.mapsCfg[lvl.lvl][Settings.difficulty][2][0]
 
         if len(Win.pixelPos_to_gridPos(player.rect.center)) == 1:
             is_any_ghost_scared = False
@@ -383,15 +398,17 @@ def main_loop(start_lvl):
                 player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][1]
             else:
                 player.step = lvl.mapsCfg[lvl.lvl][Settings.difficulty][4][0]
-        player_list.draw(screen)
-        ghost_list.draw(screen)
+        player_list.draw(Win.screen)
+        ghost_list.draw(Win.screen)
         draw_score(start_time)
-        screen.blit(pause_button, (15, 15))
+        Win.screen.blit(pause_button, (15, 15))
         pygame.display.flip()
         clock.tick(Win.FPS)
-pygame.mixer.music.set_volume(0.1)
-while(True):
-    pygame.mixer.music.load("../lib/sounds/pacmansoundtrack.mp3")
-    pygame.mixer.music.play(-1)
-    start = menu_loop()
-    main_loop(start)
+
+    ouou.set_volume(0)
+    ghostBack.set_volume(0)
+    ghostScared.set_volume(0)
+    soundtrack.play(-1)
+
+pygame.mixer.music.set_volume(Settings.volume)
+main_loop()
