@@ -28,58 +28,53 @@ class Bigmap:
         self.comeback = pygame.transform.scale(self.comeback, [ICON_SIZE//2,ICON_SIZE//2])
         self.locked = [False, True, True, True, True, True, True, True, True]
 
-    def drawmaps(self, screen):
+    def drawmaps(self):
         run = True
-        self.locked = [False, True, True, True, True, True, True, True, True]
-        for i in range(1, 8):
-            if(Highscore.is_locked(i, Settings.difficulty) == "0"):
-                self.locked[i] = False
+        self.locked = [Highscore.is_locked(i, Settings.difficulty) for i in range(8)]
 
         while run:
-            screen.fill(Win.BGCOLOR)
+            Win.screen.fill(Win.BGCOLOR)
             
             d = int((screen_info.current_w - 4*ICON_SIZE) / 5)
             e = screen_info.current_h // 3 - 50
-            screen.blit(self.title, (int((screen_info.current_w - 365) / 2),0))
-            screen.blit(self.comeback, (0, 0))
+            Win.screen.blit(self.title, (int((screen_info.current_w - 365) / 2),0))
+            Win.screen.blit(self.comeback, (0, 0))
 
             for i in range(4):
                 score_img = font.render("Lvl: " + str(i+1), True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e - 30))
-                screen.blit(score_img, score_rect)
-                screen.blit(self.maps[i], ((i+1) * d + ICON_SIZE * i, e))
+                Win.screen.blit(score_img, score_rect)
+                Win.screen.blit(self.maps[i], ((i+1) * d + ICON_SIZE * i, e))
+                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i, Settings.difficulty)), True, (0, 255, 255))
                 if(self.locked[i]):
-                    screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e))
-                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+1, Settings.difficulty)), True, (0, 255, 255))
-                if(Highscore.load_highscore(i+1, Settings.difficulty)[0] == "-"):
-                    score_img = font.render("Highscore: ?", True, (0, 255, 255))
+                    Win.screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e))
+                    score_img = font.render("Locked", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e + ICON_SIZE + 25))
-                screen.blit(score_img, score_rect)
+                Win.screen.blit(score_img, score_rect)
 
             e2 = e + screen_info.current_h - (ICON_SIZE + 60) - screen_info.current_h // 3.2
             for i in range(4):
                 score_img = font.render("Lvl: " + str(i+5), True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 - 30))
-                screen.blit(score_img, score_rect)
-                screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e2))
+                Win.screen.blit(score_img, score_rect)
+                Win.screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e2))
+                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+4, Settings.difficulty)), True, (0, 255, 255))
                 if(self.locked[i+4]):
-                    screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e2))
-                score_img = font.render("Highscore: " + str(Highscore.load_highscore(i+5, Settings.difficulty)), True, (0, 255, 255))
-                if(str(Highscore.load_highscore(i+5, Settings.difficulty))[0] == '-'):
-                    score_img = font.render("Highscore: ?", True, (0, 255, 255))
+                    Win.screen.blit(lock_img, ((i+1) * d + ICON_SIZE * i, e2))
+                    score_img = font.render("Locked", True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 + ICON_SIZE + 25))
-                screen.blit(score_img, score_rect)
+                Win.screen.blit(score_img, score_rect)
 
             pygame.display.update()
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:  # zakończenie
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     run = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == ord('q'):
-                        run = False
-                    if event.key == pygame.K_LEFT: #wraca do menu głównego
-                        return (-1)
+                        return -1
+                    if event.key == pygame.K_LEFT:
+                        return -1
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
@@ -87,8 +82,8 @@ class Bigmap:
                         return -1
                     for i in range(4):
                         if((not self.locked[i]) and (pos[0] >= (i+1) * d + ICON_SIZE * i - 10 and pos[0] <= (i+1) * d + ICON_SIZE * (i + 1) + 10) and (pos[1] >= e - 10 and pos[1] <= e+10+ICON_SIZE)):
-                            return i+1
+                            return i
                     for i in range(4):
                         if((not self.locked[i+4]) and (pos[0] >= (i+1) * d + ICON_SIZE * i - 10 and pos[0] <= (i+1) * d + ICON_SIZE * (i + 1) + 10) and (pos[1] >= e2 - 10 and pos[1] <= e2+10+ICON_SIZE)):
-                            return i+5
+                            return i+4
 

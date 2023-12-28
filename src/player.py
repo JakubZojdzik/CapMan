@@ -12,7 +12,7 @@ img_l = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/player/
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, pos_x, pos_y, step=4):
         pygame.sprite.Sprite.__init__(self)
         self.image = img_r
         self.rect = self.image.get_rect()
@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 0  # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.trn = 0  # 0 - none, 1 - up, 2 - right, 3 - down, 4 - left
         self.frame = 0  # count frames
-        self.step = 4
+        self.step = step
     
     def turn(self, dir):
         self.trn = dir

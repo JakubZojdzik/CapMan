@@ -1,6 +1,7 @@
 from win import Win
 import pygame
 import copy
+from collections import deque
 
 LVL_WIDTH = Win.WIDTH // Win.GRID_SIZE
 LVL_HEIGHT = Win.HEIGHT // Win.GRID_SIZE
@@ -42,12 +43,12 @@ scatter_poses = [[[9, 9, 0]], [[15, 9, 0]], [[15, 14, 0]], [[9, 14, 0]]]
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, mode, color, auxiliary_variable=10):
+    def __init__(self, pos_x, pos_y, mode, color, step=3, auxiliary_variable=10):
         pygame.sprite.Sprite.__init__(self)
         self.start_pos_x = pos_x
         self.start_pos_y = pos_y
         self.color = color
-        self.step = 3
+        self.step = step
         self.mode = mode
         self.img_rot = []
         if(color == "pink"):
@@ -121,7 +122,7 @@ class Ghost(pygame.sprite.Sprite):
         for i in range(LVL_HEIGHT):
             for j in range(LVL_WIDTH):
                 result[i][j] = 1000000
-        queue = []
+        queue = deque()
 
         it = 10
         for i in cells:
@@ -132,7 +133,7 @@ class Ghost(pygame.sprite.Sprite):
                 it += 1
 
         while len(queue) > 0:
-            prev_cell = queue.pop(0)
+            prev_cell = queue.popleft()
             curr_x = prev_cell[0] - 1
             curr_y = prev_cell[1]
             if curr_x == -1:
