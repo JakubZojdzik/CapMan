@@ -75,6 +75,10 @@ class Bigmap:
                         return -1
                     if event.key == pygame.K_LEFT:
                         return -1
+                    if ord('1') <= event.key <= ord('8'):
+                        lvl = int(chr(event.key)) - 1
+                        if not self.locked[lvl]:
+                            return lvl
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()

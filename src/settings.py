@@ -1,11 +1,9 @@
-from io import SEEK_CUR
-from numpy import diff
 import pygame
 import sys
-import os
 from pygame.locals import *
 from win import Win
 from data import Data
+import time
 
 class Settings:
     difficulty = 1
@@ -63,13 +61,12 @@ class Settings:
         Win.screen.blit(Settings.loudpicture, (margin_left+width, margin_top))
 
         # starting volume
-        x = margin_left+width*Settings.volume
-        pygame.draw.rect(Win.screen, yellowColor, Rect(margin_left, margin_top, width, height))
-        pygame.draw.rect(Win.screen, blackColor, Rect(x, margin_top + 5, width/40, height-10))
         Win.screen.blit(Settings.comeback, (0,0))
         pygame.display.update()
-        a = x
         difficulty_displayed = -1
+        volume_displayed = -1
+        wasd_last_time_pressed = [time.time()+0.25]*4
+        keys = pygame.key.get_pressed()
         while True:
             if Settings.difficulty != difficulty_displayed:
                 if (Settings.difficulty == 0):
@@ -86,6 +83,13 @@ class Settings:
                     Win.screen.blit(Settings.mediumfaded, (margin_left + (width - LEVEL_ICON_SIZE) // 2, margin_down))
                 difficulty_displayed = Settings.difficulty
                 pygame.display.update()
+            
+            if Settings.volume != volume_displayed:
+                x = margin_left+(width-width/40)*Settings.volume
+                pygame.draw.rect(Win.screen, yellowColor, Rect(margin_left, margin_top, width, height))
+                pygame.draw.rect(Win.screen, blackColor, Rect(x, margin_top + 5, width/40, height-10))
+                volume_displayed = Settings.volume
+                pygame.display.update()
 
             button = pygame.mouse.get_pressed()
             if button[0] != 0:
@@ -99,12 +103,7 @@ class Settings:
                         a = margin_left
                     if a > margin_left + width - width / 40:
                         a = margin_left + width - width / 40
-                    Settings.set_volume((a - margin_left) / width, sounds)
-                    pygame.draw.rect(Win.screen, yellowColor, Rect(
-                        margin_left, margin_top, width, height))
-                    pygame.draw.rect(Win.screen, blackColor, Rect(
-                        a, margin_top + 5, width / 40, height - 10))
-                    pygame.display.update()
+                    Settings.set_volume((a - margin_left) / (width-width/40), sounds)
 
                 if y>margin_down and (x>margin_left-height+1 and x<margin_left-height+1+LEVEL_ICON_SIZE):
                     Settings.difficulty=0
@@ -127,6 +126,27 @@ class Settings:
                     if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):
                         Settings.save_settings()
                         return (Settings.volume, Settings.difficulty)
+                    elif event.key == ord('e'):
+                        Settings.difficulty = 0
+                    elif event.key == ord('m'):
+                        Settings.difficulty = 1
+                    elif event.key == ord('h'):
+                        Settings.difficulty = 2
+            keys = pygame.key.get_pressed()
+            wasd = [keys[i] for i in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]]
+            if wasd.count(True) == 1:
+                if wasd[0] and (time.time() - wasd_last_time_pressed[0] >= 0.1):
+                    Settings.set_volume(1, sounds)
+                    wasd_last_time_pressed[0] = time.time()
+                elif wasd[1] and (time.time() - wasd_last_time_pressed[1] >= 0.1):
+                    Settings.set_volume(max(Settings.volume-0.02, 0), sounds)
+                    wasd_last_time_pressed[1] = time.time()
+                elif wasd[2] and (time.time() - wasd_last_time_pressed[2] >= 0.1):
+                    Settings.set_volume(0, sounds)
+                    wasd_last_time_pressed[2] = time.time()
+                elif wasd[3] and (time.time() - wasd_last_time_pressed[3] >= 0.1):
+                    Settings.set_volume(min(Settings.volume+0.02, 1), sounds)
+                    wasd_last_time_pressed[3] = time.time()
     
     @staticmethod
     def create_settings_file():
