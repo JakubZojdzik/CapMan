@@ -3,9 +3,9 @@ from win import Win
 from colors import Colors
 
 # 24x25
-block_space = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
-block_beach = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block_beach.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
-block_ice = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/block_ice.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
+block_space = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/map/block.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
+block_beach = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/map/block_beach.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
+block_ice = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/map/block_ice.png"), [Win.GRID_SIZE, Win.GRID_SIZE])
 
 class Level:
     def __init__(self):
@@ -290,7 +290,7 @@ class Level:
             # [[ghosts collaboration skills],[chase speed, scary speed], [scary mode length, scatter mode time], [open ghost1, g2, g3], [player speed, player scary speed]]
             # lvl 0
             [
-                [[1], [3, 2], [12, 20], [15, 30, 45], [4, 6]],
+                [[1], [3, 2], [12, 20], [15, 30, 45], [12, 12]],
                 [[3], [3, 2], [10, 25], [15, 30, 45], [4, 6]],
                 [[10], [3, 2], [10, 35], [12, 24, 34], [4, 6]],
                 ['space']

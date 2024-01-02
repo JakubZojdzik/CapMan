@@ -13,7 +13,7 @@ from highscore import Highscore
 
 pygame.init()
 pygame.display.set_caption("CapMan")
-pygame.display.set_icon(pygame.image.load("../lib/ingame_textures/player/Player_right.png"))
+pygame.display.set_icon(pygame.image.load("../assets/ingame_textures/player/Player_right.png"))
 screen_info = pygame.display.Info()
 
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
@@ -24,16 +24,16 @@ Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRI
 Win.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 
-menu = pygame.image.load('../lib/menu/capmantitle.png')
-game_over = pygame.image.load('../lib/menu/game_over.png')
-play_button = pygame.image.load('../lib/menu/play_button.png')
-settings_button = pygame.image.load('../lib/menu/settings_button.png')
-credits_button = pygame.image.load('../lib/menu/credits_button.png')
-credits = pygame.image.load('../lib/menu/credits01.png')
-paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
-pause_button = pygame.image.load("../lib/ingame_textures/map/pause.png")
+menu = pygame.image.load('../assets/menu/capmantitle.png')
+game_over = pygame.image.load('../assets/menu/game_over.png')
+play_button = pygame.image.load('../assets/menu/play_button.png')
+settings_button = pygame.image.load('../assets/menu/settings_button.png')
+credits_button = pygame.image.load('../assets/menu/credits_button.png')
+credits = pygame.image.load('../assets/menu/credits01.png')
+paused_screen = pygame.image.load("../assets/ingame_textures/map/play_shade.png")
+pause_button = pygame.image.load("../assets/ingame_textures/map/pause.png")
 pause_button = pygame.transform.scale(pause_button, (80, 80))
-back_button = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+back_button = pygame.image.load("../assets/ingame_textures/map/yellowarrow.png")
 back_button = pygame.transform.scale(back_button, (80, 80))
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
@@ -60,22 +60,22 @@ ghost_tab = [blinky, pinky, inky, clyde]
 lvl = Level()
 options = Bigmap()
 
-font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
+font = pygame.font.Font("../assets/fonts/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
-soundtrack = pygame.mixer.Sound("../lib/sounds/pacmansoundtrack.mp3")
+soundtrack = pygame.mixer.Sound("../assets/sounds/pacmansoundtrack.mp3")
 soundtrack.set_volume(Settings.volume)
-death_sound = pygame.mixer.Sound('../lib/sounds/pacmandeath.mp3')
+death_sound = pygame.mixer.Sound('../assets/sounds/pacmandeath.mp3')
 death_sound.set_volume(Settings.volume)
-ghostDeath = pygame.mixer.Sound('../lib/sounds/eatGhost.mp3')
+ghostDeath = pygame.mixer.Sound('../assets/sounds/eatGhost.mp3')
 ghostDeath.set_volume(0)
-ouou = pygame.mixer.Sound('../lib/sounds/ouou.mp3')
+ouou = pygame.mixer.Sound('../assets/sounds/ouou.mp3')
 ouou.set_volume(0)
 ouou.play(-1)
-ghostBack = pygame.mixer.Sound('../lib/sounds/ghostBackToBase.mp3')
+ghostBack = pygame.mixer.Sound('../assets/sounds/ghostBackToBase.mp3')
 ghostBack.set_volume(0)
 ghostBack.play(-1)
-ghostScared = pygame.mixer.Sound('../lib/sounds/scaredGhost.mp3')
+ghostScared = pygame.mixer.Sound('../assets/sounds/scaredGhost.mp3')
 ghostScared.set_volume(0)
 ghostScared.play(-1)
 
@@ -157,21 +157,21 @@ def death():
 def end_lvl(is_win):
     global finalscore
     finalscore = calculate_score(is_win)
-    if finalscore > Highscore.load_highscore(lvl.lvl, Settings.difficulty):
-        Highscore.save_highscore(finalscore, lvl.lvl, Settings.difficulty)
+    if finalscore > Highscore.highscores[lvl.lvl][Settings.difficulty]:
+        Highscore.set_highscore(finalscore, lvl.lvl, Settings.difficulty)
     ouou.set_volume(0)
     ghostBack.set_volume(0)
     ghostScared.set_volume(0)
     run = True
     if is_win==1:
-        end_img = pygame.image.load("../lib/menu/win.png")
+        end_img = pygame.image.load("../assets/menu/win.png")
         if lvl.lvl < 7:
             Highscore.unlock(lvl.lvl+1, Settings.difficulty)
     else:
-        end_img = pygame.image.load("../lib/menu/game_over.png")
+        end_img = pygame.image.load("../assets/menu/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
-    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl, Settings.difficulty)), True, Colors.WHITE)
+    highscore_img = font.render("Highscore: " + str(Highscore.highscores[lvl.lvl][Settings.difficulty]), True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:
         Win.screen.fill(Win.BGCOLOR)

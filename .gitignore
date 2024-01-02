@@ -88,5 +88,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Extremely Normal File
-**/ExtremelyNormalFile.png
+# data
+/data

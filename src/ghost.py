@@ -10,32 +10,32 @@ SPRITE_WIDTH = Win.GRID_SIZE-8
 SPRITE_HEIGHT = Win.GRID_SIZE-8
 
 img_pink = [
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/pinkghost/pinkghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/pinkghost/pinkghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/pinkghost/pinkghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/pinkghost/pinkghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/pinkghost/pinkghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/pinkghost/pinkghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/pinkghost/pinkghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 ]
 img_blue = [
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/blueghost/blueghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/blueghost/blueghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/blueghost/blueghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/blueghost/blueghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/blueghost/blueghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/blueghost/blueghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/blueghost/blueghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 ]
 img_orange = [
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/orangeghost/orangeghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/orangeghost/orangeghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/orangeghost/orangeghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/orangeghost/orangeghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/orangeghost/orangeghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/orangeghost/orangeghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/orangeghost/orangeghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
 ]
 img_red = [
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/redghost/redghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/redghost/redghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
-    pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/redghost/redghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/redghost/redghostup.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/redghost/redghostright.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/redghost/redghostdown.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
+    pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/redghost/redghostleft.png"), [SPRITE_WIDTH, SPRITE_HEIGHT]),
 ]
 
 ghost_poses = [None, None, None, None]
@@ -68,8 +68,8 @@ class Ghost(pygame.sprite.Sprite):
         self.direction = 0
         self.prev_mode = "chase"
         self.auxiliary_variable = float(auxiliary_variable) # closed -> start_direction , scared -> time_left
-        self.img_scared = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/scaredghost.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
-        self.img_scared_white = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/ghosts/whiteghost.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+        self.img_scared = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/scaredghost.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
+        self.img_scared_white = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/ghosts/whiteghost.png"), [SPRITE_WIDTH, SPRITE_HEIGHT])
         self.upgrade_ghost_poses()
 
     def ghost_number(self):

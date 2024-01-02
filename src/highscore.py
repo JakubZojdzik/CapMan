@@ -1,79 +1,43 @@
-import base64
-import codecs
-from os.path import exists
-
-def encode(value):
-    value = str(value)
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = codecs.decode(value, 'rot_13')
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = bytearray(value, "utf8")
-    value = base64.b64encode(value)
-    value = str(value)[2:-1]
-    value = codecs.decode(value, 'rot_13')
-    return value
-
-def decode(value):
-    value = codecs.encode(value, 'rot_13')
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = base64.b64decode(value)
-    value = str(value)[2:-1]
-    value = codecs.encode(value, 'rot_13')
-    value = str(value)
-    value = base64.b64decode(value)
-    return str(value)[2:-1]
-
-def createENF():
-    content = (encode(0)+'\n')*3
-    for i in range(7):
-        content += encode(-1) + '\n'
-        content += encode(-1) + '\n'
-        content += encode(-1) + '\n'
-    with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "w") as f:
-        f.write(content)
+import os
+from data import Data
 
 class Highscore:
-    if not exists('../lib/ingame_textures/map/ExtremelyNormalFile.png'):
-        createENF()
-    
-    @staticmethod
-    def load_highscore(lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "r") as f:
-            content = f.readlines()
-        return(int(decode(str(content[lvl*3 + difficulty]))))
+    highscores = []
 
     @staticmethod
-    def save_highscore(score, lvl, difficulty):
-        with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "r") as f:
-            content = f.readlines()
-        content[lvl*3 + difficulty] = encode(score) + '\n'
-        with open('../lib/ingame_textures/map/ExtremelyNormalFile.png', "w") as f:
-            f.writelines(content)
+    def set_highscore(score, lvl, difficulty, save=True):
+        Highscore.highscores[lvl][difficulty] = score
+        if save:
+            Highscore.save_highscores()
+
+    @staticmethod
+    def create_highscores_file():
+        content = '0\t0\t0'
+        for _ in range(7):
+            content += '\n-1\t-1\t-1'
+        Data.create_file('highscores.txt', content)
+
+    @staticmethod
+    def load_highscores():
+        Highscore.highscores = [[int(score) for score in lvl.split('\t')] for lvl in Data.read_from_file('highscores.txt').split('\n')]
+
+    @staticmethod
+    def save_highscores():
+        content = '\n'.join('\t'.join(str(score) for score in lvl) for lvl in Highscore.highscores)
+        Data.write_to_file('highscores.txt', content)
 
     @staticmethod
     def is_locked(lvl, difficulty):
-        return Highscore.load_highscore(lvl, difficulty) == -1
+        return Highscore.highscores[lvl][difficulty] == -1
 
     @staticmethod
     def lock(lvl, difficulty):
-        Highscore.save_highscore(-1, lvl, difficulty)
+        Highscore.set_highscore(-1, lvl, difficulty)
 
     @staticmethod
     def unlock(lvl, difficulty):
         if Highscore.is_locked(lvl, difficulty):
-            Highscore.save_highscore(0, lvl, difficulty)
+            Highscore.set_highscore(0, lvl, difficulty)
+
+Highscore.create_highscores_file()
+Highscore.load_highscores()
