@@ -41,7 +41,7 @@ class Bigmap:
             Win.screen.blit(self.comeback, (0, 0))
 
             for i in range(4):
-                score_img = font.render("Lvl: " + str(i+1), True, (0, 255, 255))
+                score_img = font.render("Level " + str(i+1), True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e - 30))
                 Win.screen.blit(score_img, score_rect)
                 Win.screen.blit(self.maps[i], ((i+1) * d + ICON_SIZE * i, e))
@@ -54,7 +54,7 @@ class Bigmap:
 
             e2 = e + screen_info.current_h - (ICON_SIZE + 60) - screen_info.current_h // 3.2
             for i in range(4):
-                score_img = font.render("Lvl: " + str(i+5), True, (0, 255, 255))
+                score_img = font.render("Level " + str(i+5), True, (0, 255, 255))
                 score_rect = score_img.get_rect(center=((i+1) * d + ICON_SIZE * i + ICON_SIZE // 2, e2 - 30))
                 Win.screen.blit(score_img, score_rect)
                 Win.screen.blit(self.maps[i+4], ((i+1) * d + ICON_SIZE * i, e2))

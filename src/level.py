@@ -346,6 +346,13 @@ class Level:
             ]
         ]
 
+        self.themes = {
+            # name : board, block
+            'space': [Colors.DARK_GRAY, block_space],
+            'winter': [Colors.ICE, block_ice],
+            'beach': [Colors.SAND, block_beach]
+        }
+
     def reset(self):
         self.lvl = 0
         self.maps = self.start_maps
@@ -359,16 +366,9 @@ class Level:
         return self.maps[self.lvl].copy()
 
     def to_board(self):
-        if self.mapsCfg[self.lvl][3][0] == 'beach':
-            pygame.draw.rect(Win.screen, Colors.SAND,(Win.MARGIN_LEFT, Win.MARGIN_TOP, Win.GRID_SIZE*25, Win.GRID_SIZE*24))
-        elif self.mapsCfg[self.lvl][3][0] == 'winter':
-            pygame.draw.rect(Win.screen, Colors.ICE,(Win.MARGIN_LEFT, Win.MARGIN_TOP, Win.GRID_SIZE*25, Win.GRID_SIZE*24))
+        theme = self.mapsCfg[self.lvl][3][0]
+        pygame.draw.rect(Win.screen, self.themes[theme][0],(Win.MARGIN_LEFT, Win.MARGIN_TOP, Win.GRID_SIZE*25, Win.GRID_SIZE*24))
         for i in range(25):
             for j in range(24):
                 if(self.maps[self.lvl][j][i] == 1):
-                    if self.mapsCfg[self.lvl][3][0] == 'beach':
-                        Win.screen.blit(block_beach, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
-                    elif self.mapsCfg[self.lvl][3][0] == 'winter':
-                        Win.screen.blit(block_ice, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
-                    else:
-                        Win.screen.blit(block_space, (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))
+                    Win.screen.blit(self.themes[theme][1], (Win.MARGIN_LEFT + Win.GRID_SIZE * i, Win.MARGIN_TOP + Win.GRID_SIZE * j))

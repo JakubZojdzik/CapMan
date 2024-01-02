@@ -270,14 +270,13 @@ def game_loop(start_lvl):
     start_time = time.time()
     pause_time = None
     soundtrack.stop()
-    Win.screen.fill(Win.BGCOLOR)
     new_lvl(start_lvl)
+    Win.screen.fill(Win.BGCOLOR)
     lvl.to_board()
     points.to_board(player)
     player_list.draw(Win.screen)
     ghost_list.draw(Win.screen)
     draw_score(start_time)
-    Win.screen.blit(pause_button, (15, 15))
     pygame.display.flip()
     time.sleep(2)
     start_time += 2
@@ -310,7 +309,7 @@ def game_loop(start_lvl):
                         pause_game()
                         main = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    if(pygame.mouse.get_pos()[0] <= 115 and pygame.mouse.get_pos()[1] <= 115):
+                    if(pygame.mouse.get_pos()[0] <= 100 and pygame.mouse.get_pos()[1] <= 100):
                         pause_game()
                         main = False
                     else:
@@ -364,7 +363,7 @@ def game_loop(start_lvl):
                     main = False
             
             if event.type == pygame.MOUSEBUTTONUP:
-                if(pygame.mouse.get_pos()[0] <= 120 and pygame.mouse.get_pos()[1] <= 120):
+                if(120 <= pygame.mouse.get_pos()[0] <= 200 and pygame.mouse.get_pos()[1] <= 100):
                     pause_game()
 
         ghost_list.update(player.rect.center, lvl, get_time(), lvl.mapsCfg[lvl.lvl][Settings.difficulty], player.step)
@@ -401,7 +400,7 @@ def game_loop(start_lvl):
         player_list.draw(Win.screen)
         ghost_list.draw(Win.screen)
         draw_score(start_time)
-        Win.screen.blit(pause_button, (15, 15))
+        Win.screen.blit(pause_button, (120, 15))
         pygame.display.flip()
         clock.tick(Win.FPS)
 
