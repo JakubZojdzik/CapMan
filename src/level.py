@@ -318,9 +318,9 @@ class Level:
             ],
             # lvl 5
             [
-                [[5], [4, 3], [6, 30], [8, 16, 24], [6, 6]],
-                [[15], [6, 4], [4, 30], [6, 12, 18], [8, 8]],
-                [[25], [6, 6], [4, 35], [3, 8, 12], [8, 8]],
+                [[5], [4, 3], [7, 30], [8, 16, 24], [6, 6]],
+                [[15], [6, 4], [5, 30], [6, 12, 18], [8, 8]],
+                [[25], [6, 6], [5, 35], [3, 8, 12], [8, 8]],
                 ['space']
             ],
             # lvl 6
@@ -347,7 +347,7 @@ class Level:
         ]
 
         self.themes = {
-            # name : board, block
+            # name : board color, block
             'space': [Colors.DARK_GRAY, block_space],
             'winter': [Colors.ICE, block_ice],
             'beach': [Colors.SAND, block_beach]

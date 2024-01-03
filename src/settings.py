@@ -1,6 +1,6 @@
 import pygame
 import sys
-from pygame.locals import *
+from pygame.locals import Rect, QUIT
 from win import Win
 from data import Data
 import time
@@ -123,7 +123,7 @@ class Settings:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):
+                    if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         Settings.save_settings()
                         return (Settings.volume, Settings.difficulty)
                     elif event.key == ord('e'):

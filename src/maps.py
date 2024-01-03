@@ -1,9 +1,7 @@
-from typing import Set
 import pygame
 from win import Win
 from highscore import Highscore
 from settings import Settings
-
 
 pygame.init()
 font = pygame.font.Font("../assets/fonts/VT323/VT323-Regular.ttf", 48)

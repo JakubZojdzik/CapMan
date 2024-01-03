@@ -10,6 +10,7 @@ from ghost import Ghost
 from score import Score
 from maps import Bigmap
 from highscore import Highscore
+from credits import Credits
 
 pygame.init()
 pygame.display.set_caption("CapMan")
@@ -29,7 +30,6 @@ game_over = pygame.image.load('../assets/menu/game_over.png')
 play_button = pygame.image.load('../assets/menu/play_button.png')
 settings_button = pygame.image.load('../assets/menu/settings_button.png')
 credits_button = pygame.image.load('../assets/menu/credits_button.png')
-credits = pygame.image.load('../assets/menu/credits01.png')
 paused_screen = pygame.image.load("../assets/ingame_textures/map/play_shade.png")
 pause_button = pygame.image.load("../assets/ingame_textures/map/pause.png")
 pause_button = pygame.transform.scale(pause_button, (80, 80))
@@ -100,7 +100,6 @@ def pause_game():
     else:
         start_time += time.time() - pause_time
         pause_time = None
-
 
 def new_lvl(number):
     Score.score = 0
@@ -204,18 +203,13 @@ def main_loop():
     Score.score = 0
     Score.bonus = 0
     Score.lives = 3
-    current = menu
-    current_width = Win.MENUWIDTH
     while run:
         Win.screen.fill(Win.BGCOLOR)
-        Win.screen.blit(current, ((screen_info.current_w - current.get_width()) // 2, 0))
-        if(current == menu):
-            Win.screen.blit(play_button, ((screen_info.current_w - play_button.get_width()) // 2, menu.get_height()))
-            Win.screen.blit(settings_button, ((screen_info.current_w - settings_button.get_width()) // 2, menu.get_height() + play_button.get_height()))
-            Win.screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
+        Win.screen.blit(menu, ((screen_info.current_w - menu.get_width()) // 2, 0))
+        Win.screen.blit(play_button, ((screen_info.current_w - play_button.get_width()) // 2, menu.get_height()))
+        Win.screen.blit(settings_button, ((screen_info.current_w - settings_button.get_width()) // 2, menu.get_height() + play_button.get_height()))
+        Win.screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
         ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
-        if current != menu:
-            Win.screen.blit(back_button, (15, 15))
 
         pygame.display.update()
         for event in pygame.event.get():
@@ -229,15 +223,11 @@ def main_loop():
                         game_loop(lvl_number)
                         lvl_number=options.drawmaps()
                 if event.key == ord('c'):
-                    current=credits
-                    current_width=Win.SETTINSGWIDTH
+                    Credits.credits()
 
                 if event.key == ord('s'):
                     Settings.settings([soundtrack, death_sound])
-
-                if event.key == pygame.K_LEFT:
-                    current=menu
-                    current_width = Win.MENUWIDTH
+                
                 if event.key == ord('q'):
                     pygame.quit()
                     run = False
@@ -246,8 +236,6 @@ def main_loop():
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
-                if (x < 120 and y < 120):
-                    current = menu
                 if (x > screen_info.current_w // 3 and x < (screen_info.current_w * 2) // 3):
                     name_bar_h = (screen_info.current_h * 2) // 5
                     remaining_h = screen_info.current_h - name_bar_h
@@ -259,7 +247,7 @@ def main_loop():
                     elif (y < menu.get_height() + play_button.get_height() + settings_button.get_height()):
                         Settings.settings([soundtrack, death_sound])
                     else:
-                        current = credits
+                        Credits.credits()
 
 def game_loop(start_lvl):
     main = True
