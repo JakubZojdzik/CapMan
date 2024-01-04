@@ -5,10 +5,6 @@ import sys
 import webbrowser
 import time
 
-screen_info = pygame.display.Info()
-back_button = pygame.image.load("../assets/ingame_textures/map/yellowarrow.png")
-back_button = pygame.transform.scale(back_button, (80, 80))
-
 class Credits:
     @staticmethod
     def credits():
@@ -27,8 +23,9 @@ class Credits:
         small_font = pygame.font.Font("../assets/fonts/VT323/VT323-Regular.ttf", unit//2)
         Win.screen.fill(Win.BGCOLOR)
         title = pygame.transform.scale(pygame.image.load("../assets/menu/capman_developers.png"), [unit*12, unit*2])
-        Win.screen.blit(title, (unit*2+left_margin, 0))
-        Win.screen.blit(back_button, (15, 15))
+        back_button = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/map/yellowarrow.png"), [unit, unit])
+        button_back = Win.screen.blit(back_button, (0,0))
+        link_buttons = [[Win.screen.blit(title, (unit*2+left_margin, 0)), 'JakubZojdzik/CapMan']]
 
         SPRITE_WIDTH = unit * 8 // 5
         SPRITE_HEIGHT = unit * 8 // 5
@@ -49,14 +46,11 @@ class Credits:
         rect_padding = unit // 10
 
         for rect in rects:
-            pygame.draw.rect(Win.screen, rect[2], Rect(rect[0], rect[1], rect_size[0], rect_size[1]), border_radius=rect_padding*2)
+            link_buttons.append([pygame.draw.rect(Win.screen, rect[2], Rect(rect[0], rect[1], rect_size[0], rect_size[1]), border_radius=rect_padding*2), rect[7]])
             pygame.draw.rect(Win.screen, rect[3], Rect(rect[0]+rect_padding, rect[1]+rect_padding, rect_size[0]-rect_padding*2, rect_size[1]-rect_padding*2), border_radius=rect_padding*2)
             Win.screen.blit(rect[4], (rect[0]-unit*4//5, rect[1]+unit//5))
             Win.screen.blit(font.render(rect[5], True, (0,0,0)), Rect(rect[0]+unit, rect[1], rect_size[0]-unit, unit))
             Win.screen.blit(font.render(rect[6], True, (0,0,0)), Rect(rect[0]+unit, rect[1]+unit*9//10, rect_size[0]-unit, unit))
-        
-        buttons = [[rect[0], rect[1], *rect_size, rect[7]] for rect in rects]
-        buttons.append([unit*2, 0, unit*12, unit*2, 'JakubZojdzik/CapMan'])
 
         open_link_time = 0.0
         opened_link_url = ''
@@ -66,13 +60,12 @@ class Credits:
         while run:
             mouse_pos = pygame.mouse.get_pos()
             link_url = ''
-            for button in buttons:
-                if button[0] <= mouse_pos[0] <= button[0] + button[2] and button[1] <= mouse_pos[1] <= button[1] + button[3]:
-                    link_url = 'github.com/'+button[4]
+            for button in link_buttons:
+                if button[0].collidepoint(mouse_pos):
+                    link_url = 'github.com/'+button[1]
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONUP:
-                    pos = pygame.mouse.get_pos()
-                    if pos[0]<=100 and pos[1]<=100:
+                    if button_back.collidepoint(mouse_pos):
                         return
                     if link_url != '':
                         opened_link_url = link_url
@@ -82,19 +75,19 @@ class Credits:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    if event.key == pygame.K_LEFT or event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                         return
             
-            pygame.draw.rect(Win.screen, Win.BGCOLOR, Rect(0, unit*81/10, unit*16, unit*4/5))
-            if link_url != opened_link_url and link_url != '':
+            pygame.draw.rect(Win.screen, Win.BGCOLOR, Rect(0, unit*81/10, screen_info.current_w, unit*4/5))
+            if link_url != opened_link_url and link_url != '' and time.time() - open_link_time > 2:
                 opened_link_url = ''
-                open_link_time = time.time()
+                open_link_time = 0.0
 
-            if time.time() - open_link_time <= 4 and opened_link_url != '':
+            if time.time() - open_link_time <= 6 and opened_link_url != '':
                 text_img = small_font.render(f'Opened {opened_link_url} in your web browser', True, (255, 255, 255))
-                Win.screen.blit(text_img, text_img.get_rect(center = (unit*8, unit*17//2)))
+                Win.screen.blit(text_img, text_img.get_rect(center = (unit*8+left_margin, unit*17//2)))
             elif link_url != '':
                 text_img = small_font.render(link_url, True, (255, 255, 255))
-                Win.screen.blit(text_img, text_img.get_rect(center = (unit*8, unit*17//2)))
+                Win.screen.blit(text_img, text_img.get_rect(center = (unit*8+left_margin, unit*17//2)))
 
             pygame.display.update()

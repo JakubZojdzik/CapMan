@@ -69,7 +69,7 @@ class Bigmap:
                     pygame.quit()
                     run = False
                 if event.type == pygame.KEYDOWN:
-                    if event.key == ord('q'):
+                    if event.key == ord('q') or event.key == pygame.K_ESCAPE:
                         return -1
                     if event.key == pygame.K_LEFT:
                         return -1
