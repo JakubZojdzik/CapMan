@@ -16,6 +16,6 @@ class Colors:
     YELLOW = (255, 255, 0)
     ORANGE = (255, 128, 0)
     CYAN = (0, 255, 255)
-    DARK_GRAY = (12, 12, 13)
+    DARK_GRAY = (24, 24, 24)
     SAND = (226, 230, 218)
     ICE = (181, 231, 235)

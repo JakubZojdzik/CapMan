@@ -10,10 +10,11 @@ from ghost import Ghost
 from score import Score
 from maps import Bigmap
 from highscore import Highscore
+from credits import Credits
 
 pygame.init()
 pygame.display.set_caption("CapMan")
-pygame.display.set_icon(pygame.image.load("../lib/ingame_textures/player/Player_right.png"))
+pygame.display.set_icon(pygame.image.load("../assets/ingame_textures/player/Player_right.png"))
 screen_info = pygame.display.Info()
 
 Win.MARGIN_LEFT = int((screen_info.current_w - Win.WIDTH) / 2)
@@ -24,16 +25,15 @@ Win.MARGIN_TOP = Win.GRID_SIZE * round(Win.MARGIN_TOP / Win.GRID_SIZE) - Win.GRI
 Win.screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 
-menu = pygame.image.load('../lib/menu/capmantitle.png')
-game_over = pygame.image.load('../lib/menu/game_over.png')
-play_button = pygame.image.load('../lib/menu/play_button.png')
-settings_button = pygame.image.load('../lib/menu/settings_button.png')
-credits_button = pygame.image.load('../lib/menu/credits_button.png')
-credits = pygame.image.load('../lib/menu/credits01.png')
-paused_screen = pygame.image.load("../lib/ingame_textures/map/play_shade.png")
-pause_button = pygame.image.load("../lib/ingame_textures/map/pause.png")
+title = pygame.image.load('../assets/menu/capmantitle.png')
+game_over = pygame.image.load('../assets/menu/game_over.png')
+play_button = pygame.image.load('../assets/menu/play_button.png')
+settings_button = pygame.image.load('../assets/menu/settings_button.png')
+credits_button = pygame.image.load('../assets/menu/credits_button.png')
+paused_screen = pygame.image.load("../assets/ingame_textures/map/play_shade.png")
+pause_button = pygame.image.load("../assets/ingame_textures/map/pause.png")
 pause_button = pygame.transform.scale(pause_button, (80, 80))
-back_button = pygame.image.load("../lib/ingame_textures/map/yellowarrow.png")
+back_button = pygame.image.load("../assets/ingame_textures/map/yellowarrow.png")
 back_button = pygame.transform.scale(back_button, (80, 80))
 
 player = Player(Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
@@ -60,22 +60,22 @@ ghost_tab = [blinky, pinky, inky, clyde]
 lvl = Level()
 options = Bigmap()
 
-font = pygame.font.Font("../lib/fonts/VT323/VT323-Regular.ttf", 48)
+font = pygame.font.Font("../assets/fonts/VT323/VT323-Regular.ttf", 48)
 
 pygame.mixer.init()
-soundtrack = pygame.mixer.Sound("../lib/sounds/pacmansoundtrack.mp3")
+soundtrack = pygame.mixer.Sound("../assets/sounds/pacmansoundtrack.mp3")
 soundtrack.set_volume(Settings.volume)
-death_sound = pygame.mixer.Sound('../lib/sounds/pacmandeath.mp3')
+death_sound = pygame.mixer.Sound('../assets/sounds/pacmandeath.mp3')
 death_sound.set_volume(Settings.volume)
-ghostDeath = pygame.mixer.Sound('../lib/sounds/eatGhost.mp3')
+ghostDeath = pygame.mixer.Sound('../assets/sounds/eatGhost.mp3')
 ghostDeath.set_volume(0)
-ouou = pygame.mixer.Sound('../lib/sounds/ouou.mp3')
+ouou = pygame.mixer.Sound('../assets/sounds/ouou.mp3')
 ouou.set_volume(0)
 ouou.play(-1)
-ghostBack = pygame.mixer.Sound('../lib/sounds/ghostBackToBase.mp3')
+ghostBack = pygame.mixer.Sound('../assets/sounds/ghostBackToBase.mp3')
 ghostBack.set_volume(0)
 ghostBack.play(-1)
-ghostScared = pygame.mixer.Sound('../lib/sounds/scaredGhost.mp3')
+ghostScared = pygame.mixer.Sound('../assets/sounds/scaredGhost.mp3')
 ghostScared.set_volume(0)
 ghostScared.play(-1)
 
@@ -100,7 +100,6 @@ def pause_game():
     else:
         start_time += time.time() - pause_time
         pause_time = None
-
 
 def new_lvl(number):
     Score.score = 0
@@ -157,21 +156,21 @@ def death():
 def end_lvl(is_win):
     global finalscore
     finalscore = calculate_score(is_win)
-    if finalscore > Highscore.load_highscore(lvl.lvl, Settings.difficulty):
-        Highscore.save_highscore(finalscore, lvl.lvl, Settings.difficulty)
+    if finalscore > Highscore.highscores[lvl.lvl][Settings.difficulty]:
+        Highscore.set_highscore(finalscore, lvl.lvl, Settings.difficulty)
     ouou.set_volume(0)
     ghostBack.set_volume(0)
     ghostScared.set_volume(0)
     run = True
     if is_win==1:
-        end_img = pygame.image.load("../lib/menu/win.png")
+        end_img = pygame.image.load("../assets/menu/win.png")
         if lvl.lvl < 7:
             Highscore.unlock(lvl.lvl+1, Settings.difficulty)
     else:
-        end_img = pygame.image.load("../lib/menu/game_over.png")
+        end_img = pygame.image.load("../assets/menu/game_over.png")
     score_img = font.render("Score: " + str(finalscore), True, Colors.WHITE)
     score_rect = score_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4))
-    highscore_img = font.render("Highscore: " + str(Highscore.load_highscore(lvl.lvl, Settings.difficulty)), True, Colors.WHITE)
+    highscore_img = font.render("Highscore: " + str(Highscore.highscores[lvl.lvl][Settings.difficulty]), True, Colors.WHITE)
     highscore_rect = highscore_img.get_rect(center=(screen_info.current_w / 2, (screen_info.current_h * 3) // 4 + 60))
     while run:
         Win.screen.fill(Win.BGCOLOR)
@@ -184,7 +183,7 @@ def end_lvl(is_win):
                 pygame.quit()
                 run = False
             if event.type == pygame.KEYDOWN:
-                if event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == ord('p'):
+                if event.key == ord('q') or event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER or event.key == pygame.K_ESCAPE:
                     run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 run = False
@@ -195,7 +194,6 @@ def main_loop():
     ghostScared.set_volume(0)
     soundtrack.set_volume(Settings.volume)
     soundtrack.play(-1)
-    run = True
     lvl.reset()
     points.reset_points(lvl)
     player.rect.center = (Win.MARGIN_LEFT+Win.GRID_SIZE*12.5, Win.MARGIN_TOP+Win.GRID_SIZE*14.5)
@@ -204,18 +202,28 @@ def main_loop():
     Score.score = 0
     Score.bonus = 0
     Score.lives = 3
-    current = menu
-    current_width = Win.MENUWIDTH
+
+    width = screen_info.current_w
+    height = screen_info.current_h
+    if width*9 <= height*16:
+        height = width * 9 // 16
+    else:
+        width = height * 16 // 9
+    unit = width//16
+    left_margin = (screen_info.current_w - width) / 2
+    global title, play_button, settings_button, credits_button
+    title = pygame.transform.scale(title, [unit*15//2, unit*3])
+    play_button = pygame.transform.scale(play_button, [unit*4, unit])
+    settings_button = pygame.transform.scale(settings_button, [unit*4, unit])
+    credits_button = pygame.transform.scale(credits_button, [unit*4, unit])
+
+    run = True
     while run:
         Win.screen.fill(Win.BGCOLOR)
-        Win.screen.blit(current, ((screen_info.current_w - current.get_width()) // 2, 0))
-        if(current == menu):
-            Win.screen.blit(play_button, ((screen_info.current_w - play_button.get_width()) // 2, menu.get_height()))
-            Win.screen.blit(settings_button, ((screen_info.current_w - settings_button.get_width()) // 2, menu.get_height() + play_button.get_height()))
-            Win.screen.blit(credits_button, ((screen_info.current_w - credits_button.get_width()) // 2, menu.get_height() + play_button.get_height() + settings_button.get_height()))
-        ICON_SIZE = (screen_info.current_h - 365) // 4 + 70
-        if current != menu:
-            Win.screen.blit(back_button, (15, 15))
+        Win.screen.blit(title, title.get_rect(center=(left_margin+unit*8, unit*3//2)))
+        button_play = Win.screen.blit(play_button, play_button.get_rect(center=(left_margin+unit*8, unit*4)))
+        button_settings = Win.screen.blit(settings_button, settings_button.get_rect(center=(left_margin+unit*8, unit*6)))
+        button_credits = Win.screen.blit(credits_button, credits_button.get_rect(center=(left_margin+unit*8, unit*8)))
 
         pygame.display.update()
         for event in pygame.event.get():
@@ -229,37 +237,26 @@ def main_loop():
                         game_loop(lvl_number)
                         lvl_number=options.drawmaps()
                 if event.key == ord('c'):
-                    current=credits
-                    current_width=Win.SETTINSGWIDTH
+                    Credits.credits()
 
                 if event.key == ord('s'):
                     Settings.settings([soundtrack, death_sound])
-
-                if event.key == pygame.K_LEFT:
-                    current=menu
-                    current_width = Win.MENUWIDTH
-                if event.key == ord('q'):
+                
+                if event.key == ord('q') or event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     run = False
 
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                x = pos[0]
-                y = pos[1]
-                if (x < 120 and y < 120):
-                    current = menu
-                if (x > screen_info.current_w // 3 and x < (screen_info.current_w * 2) // 3):
-                    name_bar_h = (screen_info.current_h * 2) // 5
-                    remaining_h = screen_info.current_h - name_bar_h
-                    if (y < menu.get_height() + play_button.get_height()):
+                if button_play.collidepoint(pos):
+                    lvl_number=options.drawmaps()
+                    while lvl_number!=-1:
+                        game_loop(lvl_number)
                         lvl_number=options.drawmaps()
-                        while lvl_number!=-1:
-                            game_loop(lvl_number)
-                            lvl_number=options.drawmaps()
-                    elif (y < menu.get_height() + play_button.get_height() + settings_button.get_height()):
-                        Settings.settings([soundtrack, death_sound])
-                    else:
-                        current = credits
+                elif button_settings.collidepoint(pos):
+                    Settings.settings([soundtrack, death_sound])
+                elif button_credits.collidepoint(pos):
+                    Credits.credits()
 
 def game_loop(start_lvl):
     main = True
@@ -270,14 +267,13 @@ def game_loop(start_lvl):
     start_time = time.time()
     pause_time = None
     soundtrack.stop()
-    Win.screen.fill(Win.BGCOLOR)
     new_lvl(start_lvl)
+    Win.screen.fill(Win.BGCOLOR)
     lvl.to_board()
     points.to_board(player)
     player_list.draw(Win.screen)
     ghost_list.draw(Win.screen)
     draw_score(start_time)
-    Win.screen.blit(pause_button, (15, 15))
     pygame.display.flip()
     time.sleep(2)
     start_time += 2
@@ -306,11 +302,11 @@ def game_loop(start_lvl):
                 if event.type == pygame.KEYDOWN:
                     if event.key == ord('p'):
                         pause_game()
-                    if event.key == ord('q'):
+                    if event.key == ord('q') or event.key == pygame.K_ESCAPE:
                         pause_game()
                         main = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    if(pygame.mouse.get_pos()[0] <= 115 and pygame.mouse.get_pos()[1] <= 115):
+                    if(pygame.mouse.get_pos()[0] <= 100 and pygame.mouse.get_pos()[1] <= 100):
                         pause_game()
                         main = False
                     else:
@@ -360,11 +356,11 @@ def game_loop(start_lvl):
                     player.turn(3)
                 if event.key == ord('p'):
                     pause_game()
-                if event.key == ord('q'):
+                if event.key == ord('q') or event.key == pygame.K_ESCAPE:
                     main = False
             
             if event.type == pygame.MOUSEBUTTONUP:
-                if(pygame.mouse.get_pos()[0] <= 120 and pygame.mouse.get_pos()[1] <= 120):
+                if(120 <= pygame.mouse.get_pos()[0] <= 200 and pygame.mouse.get_pos()[1] <= 100):
                     pause_game()
 
         ghost_list.update(player.rect.center, lvl, get_time(), lvl.mapsCfg[lvl.lvl][Settings.difficulty], player.step)
@@ -401,7 +397,7 @@ def game_loop(start_lvl):
         player_list.draw(Win.screen)
         ghost_list.draw(Win.screen)
         draw_score(start_time)
-        Win.screen.blit(pause_button, (15, 15))
+        Win.screen.blit(pause_button, (120, 15))
         pygame.display.flip()
         clock.tick(Win.FPS)
 

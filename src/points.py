@@ -8,8 +8,8 @@ POINT_HEIGHT = int(Win.GRID_SIZE/2)
 BIG_POINT_WIDTH = int(Win.GRID_SIZE * 1.2)
 BIG_POINT_HEIGHT = int(Win.GRID_SIZE * 1.2)
 
-img = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/point.png"), [POINT_WIDTH, POINT_HEIGHT])
-img_big = pygame.transform.scale(pygame.image.load("../lib/ingame_textures/map/point.png"), [BIG_POINT_WIDTH, BIG_POINT_HEIGHT])
+img = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/map/point.png"), [POINT_WIDTH, POINT_HEIGHT])
+img_big = pygame.transform.scale(pygame.image.load("../assets/ingame_textures/map/point.png"), [BIG_POINT_WIDTH, BIG_POINT_HEIGHT])
 
 class Points:
     def __init__(self):
@@ -42,14 +42,14 @@ class Points:
                 if(plr.rect.collidepoint(Win.MARGIN_LEFT + Win.GRID_SIZE * i + int(Win.GRID_SIZE/2), Win.MARGIN_TOP + Win.GRID_SIZE * j + int(Win.GRID_SIZE/2)) == True):
                     if (self.map[j][i] == 1):
                         self.map[j][i] = 0
-                        pygame.mixer.music.load("../lib/sounds/waka.mp3")
+                        pygame.mixer.music.load("../assets/sounds/waka.mp3")
                         pygame.mixer.music.set_volume(Settings.volume)
                         pygame.mixer.music.play(0)
                         Score.score += Score.SCORE_POINT
                     if(self.map[j][i] == 3):
                         scary = True
                         self.map[j][i] = 0
-                        pygame.mixer.music.load("../lib/sounds/waka.mp3")
+                        pygame.mixer.music.load("../assets/sounds/waka.mp3")
                         pygame.mixer.music.set_volume(Settings.volume)
                         pygame.mixer.music.play(0)
                         Score.score += 2 * Score.SCORE_POINT
